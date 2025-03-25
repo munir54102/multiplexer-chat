@@ -1,5 +1,5 @@
 
-import { BrainCircuit, MessageSquare, BarChart3, Webhook, Language, Shield } from "lucide-react";
+import { BrainCircuit, MessageSquare, BarChart3, Webhook, Languages, Shield } from "lucide-react";
 
 const AIFeatures = () => {
   const features = [
@@ -26,7 +26,7 @@ const AIFeatures = () => {
     {
       title: "Multilingual Support",
       description: "Communicate with customers in over 50 languages with natural translations that preserve meaning and context.",
-      icon: <Language className="h-10 w-10 text-primary" />,
+      icon: <Languages className="h-10 w-10 text-primary" />,
     },
     {
       title: "Privacy & Security",

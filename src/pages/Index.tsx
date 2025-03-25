@@ -16,7 +16,6 @@ import OnboardingTutorial from "@/components/OnboardingTutorial";
 import BlogSection from "@/components/BlogSection";
 import CaseStudies from "@/components/CaseStudies";
 import FAQ from "@/components/FAQ";
-import APIDocumentation from "@/components/APIDocumentation";
 
 const Index = () => {
   return (
@@ -186,10 +185,18 @@ const Index = () => {
         </div>
       </section>
 
-      {/* API Documentation Section */}
+      {/* Documentation Link Section */}
       <section className="py-20 px-4 md:px-6 bg-gradient-to-br from-gray-50 to-gray-100">
-        <div className="container mx-auto">
-          <APIDocumentation />
+        <div className="container mx-auto text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold mb-4">Developer Resources</h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Access comprehensive documentation, API references, and integration guides to build powerful solutions with MultiplexAI.
+            </p>
+            <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
+              <Link to="/documentation">View Documentation</Link>
+            </Button>
+          </div>
         </div>
       </section>
 

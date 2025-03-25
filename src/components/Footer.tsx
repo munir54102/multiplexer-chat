@@ -50,13 +50,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/integrations" className="text-sm text-gray-600 hover:text-primary transition-colors">
-                  Integrations
+                <Link to="/documentation" className="text-sm text-gray-600 hover:text-primary transition-colors">
+                  Documentation
                 </Link>
               </li>
               <li>
-                <Link to="/api" className="text-sm text-gray-600 hover:text-primary transition-colors">
-                  API
+                <Link to="/integrations" className="text-sm text-gray-600 hover:text-primary transition-colors">
+                  Integrations
                 </Link>
               </li>
             </ul>
@@ -68,6 +68,11 @@ export default function Footer() {
               <li>
                 <Link to="/documentation" className="text-sm text-gray-600 hover:text-primary transition-colors">
                   Documentation
+                </Link>
+              </li>
+              <li>
+                <Link to="/documentation" className="text-sm text-gray-600 hover:text-primary transition-colors">
+                  API Reference
                 </Link>
               </li>
               <li>

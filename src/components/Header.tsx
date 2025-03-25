@@ -51,6 +51,9 @@ export default function Header() {
             <Link to="/about" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
               About
             </Link>
+            <Link to="/dashboard" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
+              Dashboard
+            </Link>
           </nav>
 
           {/* Desktop CTA Buttons */}
@@ -112,6 +115,13 @@ export default function Header() {
               className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md"
             >
               About
+            </Link>
+            <Link 
+              to="/dashboard" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md"
+            >
+              Dashboard
             </Link>
             <div className="flex flex-col space-y-2 pt-2">
               <Button variant="outline" className="justify-center" asChild>

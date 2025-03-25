@@ -13,7 +13,6 @@ import Testimonials from "@/components/Testimonials";
 import PlatformIntegrations from "@/components/PlatformIntegrations";
 import AIFeatures from "@/components/AIFeatures";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
-import BlogSection from "@/components/BlogSection";
 import CaseStudies from "@/components/CaseStudies";
 import FAQ from "@/components/FAQ";
 
@@ -178,10 +177,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Blog Section */}
+      {/* Latest Blog Preview */}
       <section className="py-20 px-4 md:px-6">
-        <div className="container mx-auto">
-          <BlogSection />
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Stay Updated</h2>
+          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            Check out our blog for the latest insights, guides, and news about AI chatbots and customer engagement.
+          </p>
+          <Button size="lg" asChild>
+            <Link to="/blog">Visit Our Blog</Link>
+          </Button>
         </div>
       </section>
 

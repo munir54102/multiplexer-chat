@@ -48,6 +48,9 @@ export default function Header() {
             <Link to="/pricing" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
               Pricing
             </Link>
+            <Link to="/blog" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
+              Blog
+            </Link>
             <Link to="/documentation" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
               Documentation
             </Link>
@@ -111,6 +114,13 @@ export default function Header() {
               className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md"
             >
               Pricing
+            </Link>
+            <Link 
+              to="/blog" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md"
+            >
+              Blog
             </Link>
             <Link 
               to="/documentation" 

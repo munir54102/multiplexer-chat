@@ -7,6 +7,16 @@ import Layout from "@/components/Layout";
 import FeatureCard from "@/components/FeatureCard";
 import ChatDemo from "@/components/ChatDemo";
 import PlatformCard from "@/components/PlatformCard";
+import LiveChatDemo from "@/components/LiveChatDemo";
+import PricingTable from "@/components/PricingTable";
+import Testimonials from "@/components/Testimonials";
+import PlatformIntegrations from "@/components/PlatformIntegrations";
+import AIFeatures from "@/components/AIFeatures";
+import OnboardingTutorial from "@/components/OnboardingTutorial";
+import BlogSection from "@/components/BlogSection";
+import CaseStudies from "@/components/CaseStudies";
+import FAQ from "@/components/FAQ";
+import APIDocumentation from "@/components/APIDocumentation";
 
 const Index = () => {
   return (
@@ -43,7 +53,7 @@ const Index = () => {
               </div>
             </div>
             <div className="hidden lg:block lg:animate-fade-in lg:animation-delay-200">
-              <ChatDemo />
+              <LiveChatDemo />
             </div>
           </div>
         </div>
@@ -102,44 +112,84 @@ const Index = () => {
         </div>
       </section>
 
+      {/* AI Features Section */}
+      <section className="py-20 px-4 md:px-6 bg-gradient-to-br from-blue-50 to-slate-50">
+        <div className="container mx-auto">
+          <AIFeatures />
+        </div>
+      </section>
+
       {/* Platforms Section */}
+      <section className="py-20 px-4 md:px-6">
+        <div className="container mx-auto">
+          <PlatformIntegrations />
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
       <section className="py-20 px-4 md:px-6 bg-gray-50">
         <div className="container mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in">
+          <Testimonials />
+        </div>
+      </section>
+
+      {/* Case Studies Section */}
+      <section className="py-20 px-4 md:px-6">
+        <div className="container mx-auto">
+          <CaseStudies />
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-20 px-4 md:px-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="container mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Connect Across Every Platform
+              Simple, Transparent Pricing
             </h2>
             <p className="text-lg text-gray-600">
-              Meet your customers where they are with our comprehensive platform integrations.
+              Choose the plan that works best for your business needs.
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <PlatformCard
-              icon={<Smartphone className="h-5 w-5" />}
-              name="WhatsApp"
-              description="Engage with customers on the world's most popular messaging app with rich media support."
-              delay={100}
-            />
-            <PlatformCard
-              icon={<Facebook className="h-5 w-5" />}
-              name="Facebook"
-              description="Automate responses to comments and messages on your Facebook page."
-              delay={200}
-            />
-            <PlatformCard
-              icon={<Instagram className="h-5 w-5" />}
-              name="Instagram"
-              description="Respond to DMs and comments on Instagram to boost social engagement."
-              delay={300}
-            />
-            <PlatformCard
-              icon={<MessageCircle className="h-5 w-5" />}
-              name="Website Chat"
-              description="Embed a customizable chat widget on your website for instant support."
-              delay={400}
-            />
+          
+          <PricingTable />
+          
+          <div className="text-center mt-12">
+            <p className="text-gray-600 mb-4">
+              All plans include a 14-day free trial. No credit card required.
+            </p>
+            <Button size="lg" asChild>
+              <Link to="/signup">Start Your Free Trial</Link>
+            </Button>
           </div>
+        </div>
+      </section>
+
+      {/* Onboarding Tutorial Section */}
+      <section className="py-20 px-4 md:px-6">
+        <div className="container mx-auto">
+          <OnboardingTutorial />
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 px-4 md:px-6 bg-gray-50">
+        <div className="container mx-auto">
+          <FAQ />
+        </div>
+      </section>
+
+      {/* Blog Section */}
+      <section className="py-20 px-4 md:px-6">
+        <div className="container mx-auto">
+          <BlogSection />
+        </div>
+      </section>
+
+      {/* API Documentation Section */}
+      <section className="py-20 px-4 md:px-6 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="container mx-auto">
+          <APIDocumentation />
         </div>
       </section>
 

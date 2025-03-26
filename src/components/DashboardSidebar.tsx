@@ -6,8 +6,7 @@ import {
   Shield, 
   Users, 
   Bell, 
-  Webhook, 
-  Globe 
+  Webhook
 } from "lucide-react";
 
 interface DashboardSidebarProps {
@@ -24,7 +23,6 @@ const DashboardSidebar = ({ activeSection, setActiveSection }: DashboardSidebarP
     { id: "leads", label: "Leads", icon: Users },
     { id: "notifications", label: "Notifications", icon: Bell },
     { id: "webhooks", label: "Webhooks", icon: Webhook },
-    { id: "domains", label: "Custom Domains", icon: Globe },
   ];
 
   return (

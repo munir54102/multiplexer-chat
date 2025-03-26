@@ -9,7 +9,7 @@ const Testimonials = () => {
       name: "Sarah Johnson",
       title: "Customer Support Manager",
       company: "TechSolutions Inc.",
-      avatar: "/testimonial-1.png"
+      avatar: "https://randomuser.me/api/portraits/women/44.jpg"
     },
     {
       id: 2,
@@ -17,7 +17,7 @@ const Testimonials = () => {
       name: "Michael Chen",
       title: "Digital Marketing Director",
       company: "GlobalRetail",
-      avatar: "/testimonial-2.png"
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg"
     },
     {
       id: 3,
@@ -25,7 +25,7 @@ const Testimonials = () => {
       name: "Jessica Patel",
       title: "Innovation Lead",
       company: "FinanceStream",
-      avatar: "/testimonial-3.png"
+      avatar: "https://randomuser.me/api/portraits/women/68.jpg"
     }
   ];
 
@@ -48,8 +48,12 @@ const Testimonials = () => {
             </div>
             <p className="text-gray-700 italic mb-6">"{testimonial.quote}"</p>
             <div className="flex items-center">
-              <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 mr-4">
-                {/* Placeholder for avatar */}
+              <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 mr-4 overflow-hidden">
+                <img 
+                  src={testimonial.avatar} 
+                  alt={testimonial.name} 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <h4 className="font-semibold">{testimonial.name}</h4>

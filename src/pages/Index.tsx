@@ -13,7 +13,6 @@ import Testimonials from "@/components/Testimonials";
 import PlatformIntegrations from "@/components/PlatformIntegrations";
 import AIFeatures from "@/components/AIFeatures";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
-import CaseStudies from "@/components/CaseStudies";
 import FAQ from "@/components/FAQ";
 
 const Index = () => {
@@ -128,13 +127,6 @@ const Index = () => {
       <section className="py-20 px-4 md:px-6 bg-gray-50">
         <div className="container mx-auto">
           <Testimonials />
-        </div>
-      </section>
-
-      {/* Case Studies Section */}
-      <section className="py-20 px-4 md:px-6">
-        <div className="container mx-auto">
-          <CaseStudies />
         </div>
       </section>
 

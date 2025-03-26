@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import Calendar from "@/components/Calendar";
+import Eye from "@/components/Eye";
 import { 
   MessageSquare, 
   RefreshCcw, 

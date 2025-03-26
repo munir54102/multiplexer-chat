@@ -9,7 +9,7 @@ import { Check, HelpCircle } from "lucide-react";
 const Pricing = () => {
   const enterpriseFeatures = [
     "Unlimited chatbots",
-    "Unlimited users",
+    "Unlimited messages",
     "Custom AI model training",
     "Dedicated account manager",
     "24/7 premium support",
@@ -79,17 +79,17 @@ const Pricing = () => {
             </div>
 
             {[
-              { name: "Number of chatbots", starter: "1", pro: "5", enterprise: "Unlimited" },
-              { name: "Monthly message limit", starter: "1,000", pro: "10,000", enterprise: "50,000+" },
+              { name: "Number of chatbots", starter: "10", pro: "10", enterprise: "Unlimited" },
+              { name: "Monthly message limit", starter: "Unlimited", pro: "Unlimited", enterprise: "Unlimited" },
               { name: "Website integration", starter: "Yes", pro: "Yes", enterprise: "Yes" },
-              { name: "WhatsApp integration", starter: "No", pro: "Yes", enterprise: "Yes" },
-              { name: "Facebook & Instagram", starter: "No", pro: "Yes", enterprise: "Yes" },
-              { name: "AI response accuracy", starter: "Standard", pro: "Enhanced", enterprise: "Custom-trained" },
-              { name: "Analytics", starter: "Basic", pro: "Advanced", enterprise: "Custom" },
-              { name: "Live agent takeover", starter: "No", pro: "Yes", enterprise: "Yes" },
-              { name: "Conversation flow builder", starter: "Basic", pro: "Advanced", enterprise: "Advanced" },
+              { name: "WhatsApp integration", starter: "Yes", pro: "Yes", enterprise: "Yes" },
+              { name: "Facebook & Instagram", starter: "Yes", pro: "Yes", enterprise: "Yes" },
+              { name: "AI response accuracy", starter: "Custom-trained", pro: "Custom-trained", enterprise: "Custom-trained" },
+              { name: "Analytics", starter: "Advanced", pro: "Advanced", enterprise: "Custom" },
+              { name: "Live agent takeover", starter: "Yes", pro: "Yes", enterprise: "Yes" },
+              { name: "Conversation flow builder", starter: "Advanced", pro: "Advanced", enterprise: "Advanced" },
               { name: "Support", starter: "Email", pro: "Priority", enterprise: "Dedicated" },
-              { name: "API access", starter: "No", pro: "Limited", enterprise: "Full" },
+              { name: "API access", starter: "Yes", pro: "Yes", enterprise: "Full" },
               { name: "White labeling", starter: "No", pro: "No", enterprise: "Yes" }
             ].map((feature) => (
               <div key={feature.name} className="grid grid-cols-4 border-b">

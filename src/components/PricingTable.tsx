@@ -11,10 +11,13 @@ const PricingTable = () => {
       period: "per month",
       description: "Perfect for small businesses just getting started with chatbots.",
       features: [
-        "1 chatbot",
-        "1,000 messages/month",
+        "10 chatbots",
+        "Unlimited messages",
+        "All platform integrations",
+        "Custom AI training",
+        "Advanced analytics",
+        "API access",
         "Website integration",
-        "Basic AI responses",
         "Email support"
       ],
       cta: "Start Free Trial",
@@ -26,12 +29,14 @@ const PricingTable = () => {
       period: "for six months",
       description: "For growing businesses ready to scale their customer engagement.",
       features: [
-        "5 chatbots",
-        "10,000 messages/month",
+        "10 chatbots",
+        "Unlimited messages",
+        "All platform integrations",
+        "Custom AI training",
+        "Advanced analytics",
+        "API access",
         "Website & WhatsApp integration",
-        "Advanced AI with training",
         "Live agent takeover",
-        "Analytics dashboard",
         "Priority support"
       ],
       cta: "Start Free Trial",
@@ -43,13 +48,15 @@ const PricingTable = () => {
       period: "per year",
       description: "Custom solutions for large businesses with complex requirements.",
       features: [
-        "Unlimited chatbots",
-        "50,000 messages/month",
+        "10 chatbots",
+        "Unlimited messages",
         "All platform integrations",
         "Custom AI training",
         "Advanced analytics",
         "API access",
-        "Dedicated support manager"
+        "Dedicated support manager",
+        "Custom integrations",
+        "SLA guarantees"
       ],
       cta: "Contact Sales",
       popular: false

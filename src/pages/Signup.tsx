@@ -48,10 +48,8 @@ const Signup = () => {
         description: "Welcome to MultiplexAI. Redirecting to dashboard...",
       });
       
-      // Redirect to dashboard after signup
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
+      // Redirect to dashboard immediately after successful signup
+      navigate("/dashboard");
     }, 1000);
   };
 

@@ -35,10 +35,8 @@ const Login = () => {
         description: "Welcome back to MultiplexAI. Redirecting to dashboard...",
       });
       
-      // Redirect to dashboard after login
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
+      // Redirect to dashboard immediately after successful login
+      navigate("/dashboard");
     }, 1000);
   };
 

@@ -7,7 +7,7 @@ interface DashboardContentProps {
 
 const DashboardContent = ({ children }: DashboardContentProps) => {
   return (
-    <div className="flex-1 p-6">
+    <div className="flex-1 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
       {children}
     </div>
   );

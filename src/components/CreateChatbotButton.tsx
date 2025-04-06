@@ -25,11 +25,17 @@ import { Label } from "@/components/ui/label";
 type ButtonVariant = "default" | "link" | "destructive" | "outline" | "secondary" | "ghost";
 type ButtonSize = "default" | "sm" | "lg" | "icon";
 
+interface CreateChatbotButtonProps {
+  size?: ButtonSize;
+  variant?: ButtonVariant;
+  fullWidth?: boolean;
+}
+
 const CreateChatbotButton = ({ 
-  size = "default" as ButtonSize, 
-  variant = "default" as ButtonVariant, 
+  size = "default",
+  variant = "default",
   fullWidth = false 
-}) => {
+}: CreateChatbotButtonProps) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1);

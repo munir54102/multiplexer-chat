@@ -14,7 +14,8 @@ import {
   Zap,
   Database,
   ArrowUpDown,
-  UserPlus
+  UserPlus,
+  Home
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -42,6 +43,7 @@ const DashboardSidebar = ({ activeSection, setActiveSection, activeTab, setActiv
   
   // Main navigation items
   const mainNavItems = [
+    { id: "overview", label: "Overview", icon: Home },
     { id: "playground", label: "Playground", icon: PlayCircle },
     { id: "activity", label: "Activity", icon: Clock },
     { id: "analytics", label: "Analytics", icon: BarChart3 },

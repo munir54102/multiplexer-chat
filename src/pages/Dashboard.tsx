@@ -2,8 +2,6 @@
 import { useState } from "react";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardContent from "@/components/DashboardContent";
-import DashboardTabs from "@/components/dashboard/DashboardTabs";
-import CreateChatbotButton from "@/components/CreateChatbotButton";
 import {
   GeneralSection,
   AISection,
@@ -11,22 +9,31 @@ import {
   SecuritySection,
   LeadsSection,
   NotificationsSection,
+  WebhooksSection
 } from "@/components/dashboard/settings";
-import WebhooksSection from "@/components/dashboard/settings/WebhooksSection";
-import ConnectTab from "@/components/dashboard/tabs/ConnectTab";
-import ActivityTab from "@/components/dashboard/tabs/ActivityTab";
-import AnalyticsTab from "@/components/dashboard/tabs/AnalyticsTab";
-import PlaygroundTab from "@/components/dashboard/tabs/PlaygroundTab";
-import { Clock, PlusCircle, Activity, BarChart3, Database, Zap, Users, Settings } from "lucide-react";
+import {
+  PlaygroundTab,
+  ActivityTab,
+  AnalyticsTab,
+  ConnectTab,
+  SourcesTab,
+  ActionsTab,
+  ContactsTab
+} from "@/components/dashboard/tabs";
+import ChatbotManagement from "@/components/dashboard/ChatbotManagement";
+import CreateChatbotButton from "@/components/CreateChatbotButton";
+import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("playground");
+  const [activeTab, setActiveTab] = useState("overview");
   const [activeSection, setActiveSection] = useState("general");
 
   // Content based on active tab
   const renderTabContent = () => {
     switch (activeTab) {
+      case "overview":
+        return <ChatbotManagement />;
       case "playground":
         return <PlaygroundTab />;
       case "activity":
@@ -35,8 +42,14 @@ const Dashboard = () => {
         return <AnalyticsTab />;
       case "connect":
         return <ConnectTab />;
+      case "sources":
+        return <SourcesTab />;
+      case "actions":
+        return <ActionsTab />;
+      case "contacts":
+        return <ContactsTab />;
       default:
-        return <PlaygroundTab />;
+        return <ChatbotManagement />;
     }
   };
 
@@ -77,6 +90,10 @@ const Dashboard = () => {
           <div className="flex space-x-2">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="hidden md:flex">
               <TabsList>
+                <TabsTrigger value="overview" className="flex items-center gap-1">
+                  <PlusCircle className="h-4 w-4" />
+                  <span>Overview</span>
+                </TabsTrigger>
                 <TabsTrigger value="playground" className="flex items-center gap-1">
                   <PlusCircle className="h-4 w-4" />
                   <span>Playground</span>

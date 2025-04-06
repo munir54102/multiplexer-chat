@@ -14,6 +14,8 @@ import PlatformIntegrations from "@/components/PlatformIntegrations";
 import AIFeatures from "@/components/AIFeatures";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
 import FAQ from "@/components/FAQ";
+import ChatbotCreationSection from "@/components/ChatbotCreationSection";
+import CreateChatbotButton from "@/components/CreateChatbotButton";
 
 const Index = () => {
   return (
@@ -31,9 +33,7 @@ const Index = () => {
                 Connect with your customers across WhatsApp, Facebook, Instagram, and your website with intelligent chatbots that drive sales and streamline support.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
-                  <Link to="/signup">Get Started</Link>
-                </Button>
+                <CreateChatbotButton size="lg" variant="default" fullWidth={false} />
                 <Button size="lg" variant="outline" asChild>
                   <Link to="/features">See Features</Link>
                 </Button>
@@ -109,6 +109,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* New Chatbot Creation Section */}
+      <ChatbotCreationSection />
+
       {/* AI Features Section */}
       <section className="py-20 px-4 md:px-6 bg-gradient-to-br from-blue-50 to-slate-50">
         <div className="container mx-auto">
@@ -148,9 +151,7 @@ const Index = () => {
             <p className="text-gray-600 mb-4">
               All plans include a 14-day free trial. No credit card required.
             </p>
-            <Button size="lg" asChild>
-              <Link to="/signup">Start Your Free Trial</Link>
-            </Button>
+            <CreateChatbotButton size="lg" />
           </div>
         </div>
       </section>
@@ -212,9 +213,7 @@ const Index = () => {
                 </p>
               </div>
               <div className="md:w-1/3 flex justify-center md:justify-end animate-fade-in animation-delay-200">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90" asChild>
-                  <Link to="/signup">Start Free Trial</Link>
-                </Button>
+                <CreateChatbotButton size="lg" variant="secondary" />
               </div>
             </div>
           </div>

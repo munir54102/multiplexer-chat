@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Smartphone, MessageSquare, Instagram, Slack, Twitter } from "lucide-react";
+import { Smartphone, MessageSquare, Instagram, Slack, Twitter, MessageCircle } from "lucide-react";
 import PlatformIntegration from "./PlatformIntegration";
 
 const MessagingPlatforms = () => {
@@ -42,6 +42,13 @@ const MessagingPlatforms = () => {
           icon={<Twitter className="h-5 w-5 text-blue-400" />}
           name="Twitter"
           description="Automate responses to mentions and direct messages on Twitter."
+          buttonText="Connect"
+        />
+        
+        <PlatformIntegration
+          icon={<MessageCircle className="h-5 w-5 text-blue-500" />}
+          name="Telegram"
+          description="Connect your Telegram bot to engage with users on this popular platform."
           buttonText="Connect"
         />
       </div>

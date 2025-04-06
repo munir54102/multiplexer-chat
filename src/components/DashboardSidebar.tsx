@@ -10,11 +10,13 @@ import {
 } from "lucide-react";
 
 interface DashboardSidebarProps {
-  activeSection: string;
-  setActiveSection: (section: string) => void;
+  activeSection?: string;
+  setActiveSection?: (section: string) => void;
+  activeTab?: string;
+  setActiveTab?: (tab: string) => void;
 }
 
-const DashboardSidebar = ({ activeSection, setActiveSection }: DashboardSidebarProps) => {
+const DashboardSidebar = ({ activeSection, setActiveSection, activeTab, setActiveTab }: DashboardSidebarProps) => {
   const sidebarItems = [
     { id: "general", label: "General", icon: Settings },
     { id: "ai", label: "AI", icon: BrainCircuit },
@@ -32,7 +34,7 @@ const DashboardSidebar = ({ activeSection, setActiveSection }: DashboardSidebarP
         {sidebarItems.map((item) => (
           <li key={item.id}>
             <button
-              onClick={() => setActiveSection(item.id)}
+              onClick={() => setActiveSection ? setActiveSection(item.id) : null}
               className={`flex items-center space-x-2 w-full p-2 rounded-lg text-left ${
                 activeSection === item.id
                   ? "bg-primary/10 text-primary"

@@ -17,7 +17,7 @@ const Dashboard = () => {
           <CreateChatbotButton />
         </div>
         <DashboardContent>
-          <DashboardTabs activeTab={activeTab} />
+          <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         </DashboardContent>
       </main>
     </div>

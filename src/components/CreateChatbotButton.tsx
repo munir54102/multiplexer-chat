@@ -22,7 +22,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const CreateChatbotButton = ({ size = "default", variant = "default", fullWidth = false }) => {
+type ButtonVariant = "default" | "link" | "destructive" | "outline" | "secondary" | "ghost";
+type ButtonSize = "default" | "sm" | "lg" | "icon";
+
+const CreateChatbotButton = ({ 
+  size = "default" as ButtonSize, 
+  variant = "default" as ButtonVariant, 
+  fullWidth = false 
+}) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1);

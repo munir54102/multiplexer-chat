@@ -1,8 +1,29 @@
 
 import React from "react";
 import { Copy } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import DiscountSection from "./DiscountSection";
 
 const GeneralSection = () => {
+  const { toast } = useToast();
+  
+  const copyToClipboard = (text: string, message: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied!",
+      description: message,
+    });
+  };
+
   return (
     <div>
       <h2 className="text-xl font-semibold mb-6">General Settings</h2>
@@ -10,15 +31,15 @@ const GeneralSection = () => {
         <div>
           <h3 className="text-sm font-medium text-gray-700 mb-1">Agent ID</h3>
           <div className="flex">
-            <input 
+            <Input 
               type="text" 
               value="Dkkn7kDrggtcMDYtrHkP" 
               disabled
-              className="flex-1 border border-gray-300 rounded-lg p-2 bg-gray-50"
+              className="flex-1 border border-gray-300 rounded-lg rounded-r-none p-2 bg-gray-50"
             />
-            <button className="ml-2 p-2 border border-gray-300 rounded-lg">
+            <Button variant="outline" className="rounded-l-none" onClick={() => copyToClipboard("Dkkn7kDrggtcMDYtrHkP", "Agent ID copied to clipboard")}>
               <Copy className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
         
@@ -29,10 +50,10 @@ const GeneralSection = () => {
         
         <div>
           <h3 className="text-sm font-medium text-gray-700 mb-1">Name</h3>
-          <input 
+          <Input 
             type="text" 
             value="MultiplexAI Agent" 
-            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full"
           />
         </div>
         
@@ -55,23 +76,38 @@ const GeneralSection = () => {
         
         <div>
           <h3 className="text-sm font-medium text-gray-700 mb-2">Language</h3>
-          <select className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary">
-            <option>English (US)</option>
-            <option>Spanish</option>
-            <option>French</option>
-            <option>German</option>
-            <option>Chinese (Simplified)</option>
-          </select>
+          <Select defaultValue="en-US">
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select language" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="en-US">English (US)</SelectItem>
+              <SelectItem value="es">Spanish</SelectItem>
+              <SelectItem value="fr">French</SelectItem>
+              <SelectItem value="de">German</SelectItem>
+              <SelectItem value="zh-CN">Chinese (Simplified)</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         
         <div>
           <h3 className="text-sm font-medium text-gray-700 mb-2">Timezone</h3>
-          <select className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary">
-            <option>(GMT-05:00) Eastern Time (US & Canada)</option>
-            <option>(GMT+00:00) UTC</option>
-            <option>(GMT+01:00) Central European Time</option>
-            <option>(GMT+08:00) China Standard Time</option>
-          </select>
+          <Select defaultValue="GMT-05:00">
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select timezone" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="GMT-05:00">(GMT-05:00) Eastern Time (US & Canada)</SelectItem>
+              <SelectItem value="GMT+00:00">(GMT+00:00) UTC</SelectItem>
+              <SelectItem value="GMT+01:00">(GMT+01:00) Central European Time</SelectItem>
+              <SelectItem value="GMT+08:00">(GMT+08:00) China Standard Time</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        {/* Add the new Discount Section component */}
+        <div className="border-t pt-6 mt-6">
+          <DiscountSection />
         </div>
       </div>
     </div>

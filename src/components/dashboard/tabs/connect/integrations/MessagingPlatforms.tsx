@@ -1,39 +1,47 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { MessageSquare, Smartphone } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import IntegrationCard from "./IntegrationCard";
+import { Smartphone, MessageSquare, Instagram, Slack, Twitter } from "lucide-react";
+import PlatformIntegration from "./PlatformIntegration";
 
 const MessagingPlatforms = () => {
   return (
     <div className="border border-gray-200 rounded-lg p-6">
       <h3 className="text-lg font-medium mb-4">Messaging Platforms</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <IntegrationCard
-          icon={<Smartphone className="h-5 w-5 text-green-600 mr-2" />}
-          title="WhatsApp"
+        <PlatformIntegration
+          icon={<Smartphone className="h-5 w-5 text-green-600" />}
+          name="WhatsApp"
           description="Connect your WhatsApp Business account to chat with customers directly."
-          status="Active"
-          statusColor="green"
           buttonText="Configure"
+          isConnected={true}
+          isVerified={true}
         />
         
-        <IntegrationCard
-          icon={<MessageSquare className="h-5 w-5 text-blue-600 mr-2" />}
-          title="Facebook Messenger"
+        <PlatformIntegration
+          icon={<MessageSquare className="h-5 w-5 text-blue-600" />}
+          name="Facebook Messenger"
           description="Engage with your Facebook audience through Messenger bots."
-          status="Not Connected"
-          statusColor="gray"
           buttonText="Connect"
         />
         
-        <IntegrationCard
-          icon={<MessageSquare className="h-5 w-5 text-purple-600 mr-2" />}
-          title="Instagram"
+        <PlatformIntegration
+          icon={<Instagram className="h-5 w-5 text-purple-600" />}
+          name="Instagram"
           description="Respond to Instagram DMs and comments with intelligent automation."
-          status="Not Connected"
-          statusColor="gray"
+          buttonText="Connect"
+        />
+        
+        <PlatformIntegration
+          icon={<Slack className="h-5 w-5 text-amber-600" />}
+          name="Slack"
+          description="Integrate with your Slack workspace for seamless team collaboration."
+          buttonText="Connect"
+        />
+        
+        <PlatformIntegration
+          icon={<Twitter className="h-5 w-5 text-blue-400" />}
+          name="Twitter"
+          description="Automate responses to mentions and direct messages on Twitter."
           buttonText="Connect"
         />
       </div>

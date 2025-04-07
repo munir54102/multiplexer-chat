@@ -48,7 +48,39 @@ const AuthRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+// Admin route component
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  
+  if (!isAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
+  
+  return <>{children}</>;
+};
+
 const App = () => {
+  // Initialize auth state from localStorage when app loads
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    // Check if we need to set initial auth state
+    if (localStorage.getItem('auth') === null) {
+      localStorage.setItem('auth', 'false');
+    }
+    
+    // Check if we need to set initial admin state
+    if (localStorage.getItem('isAdmin') === null) {
+      localStorage.setItem('isAdmin', 'false');
+    }
+    
+    setIsInitialized(true);
+  }, []);
+
+  if (!isInitialized) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -61,6 +93,16 @@ const App = () => {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/:section" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/:section/:tab" element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
@@ -78,7 +120,11 @@ const App = () => {
             } />
             <Route path="/blog" element={<Blog />} />
             <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/dashboard" element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

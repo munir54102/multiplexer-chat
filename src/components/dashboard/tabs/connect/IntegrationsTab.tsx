@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import MessagingPlatforms from "./integrations/MessagingPlatforms";
 import BusinessTools from "./integrations/BusinessTools";
 import KnowledgeBases from "./integrations/KnowledgeBases";
+import EcommerceIntegrations from "./integrations/EcommerceIntegrations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Filter, Plus } from "lucide-react";
+import { Search, Filter, Plus, ShoppingCart } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -25,6 +26,7 @@ const IntegrationsTab = () => {
     { id: "messaging", label: "Messaging" },
     { id: "crm", label: "CRM & Sales" },
     { id: "marketing", label: "Marketing" },
+    { id: "ecommerce", label: "E-commerce" },
     { id: "knowledge", label: "Knowledge Base" },
     { id: "automation", label: "Automation" },
     { id: "custom", label: "Custom" },
@@ -96,6 +98,17 @@ const IntegrationsTab = () => {
                     </div>
                   </TabsContent>
                   
+                  <TabsContent value="ecommerce" className="space-y-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      {["WooCommerce", "Shopify", "Magento", "BigCommerce", "Etsy", "Amazon"].map((platform) => (
+                        <div key={platform} className="border rounded-lg p-3 hover:border-primary hover:bg-gray-50 cursor-pointer">
+                          <h4 className="font-medium">{platform}</h4>
+                          <p className="text-sm text-gray-500">Connect to {platform}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </TabsContent>
+                  
                   {/* Similar content for other tabs */}
                 </Tabs>
               </div>
@@ -110,6 +123,7 @@ const IntegrationsTab = () => {
       </div>
       
       <MessagingPlatforms />
+      <EcommerceIntegrations />
       <BusinessTools />
       <KnowledgeBases />
       

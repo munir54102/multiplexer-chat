@@ -82,7 +82,6 @@ import SubscriptionManagement from "@/components/admin/SubscriptionManagement";
 import RevenueAnalytics from "@/components/admin/RevenueAnalytics";
 import CouponManagement from "@/components/admin/CouponManagement";
 
-// Dummy user data for demonstration
 const dummyUsers = [
   {
     id: 1,
@@ -140,7 +139,6 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Authentication check
   useEffect(() => {
     const isAdminAuth = localStorage.getItem("adminAuth") === "true";
     if (!isAdminAuth) {
@@ -148,7 +146,6 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
-  // Filter users based on search and filters
   const filteredUsers = users.filter(user => {
     const matchesSearch = 
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -215,7 +212,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Dashboard overview stats
   const dashboardStats = {
     newUsers: 24,
     activeSubscriptions: 243,
@@ -230,7 +226,6 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="flex h-screen">
-        {/* Sidebar */}
         <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
           <div className="p-6">
             <h1 className="text-xl font-bold">Admin Panel</h1>
@@ -388,7 +383,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 overflow-auto">
           <header className="bg-white p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
@@ -426,7 +420,6 @@ const AdminDashboard = () => {
             </div>
           </header>
 
-          {/* Tab Content */}
           <div className="p-6">
             {activeTab === "dashboard" && (
               <div className="space-y-6">
@@ -884,4 +877,61 @@ const AdminDashboard = () => {
                         <Button variant="outline">Enable</Button>
                       </div>
                     </div>
-                    <div className="flex items-center justify-
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Failed payments</h4>
+                        <p className="text-sm text-gray-500">Get notified when a payment fails</p>
+                      </div>
+                      <div>
+                        <Button variant="outline">Enable</Button>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">New support messages</h4>
+                        <p className="text-sm text-gray-500">Get notified when you receive new messages</p>
+                      </div>
+                      <div>
+                        <Button variant="outline">Enable</Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {activeTab === "messages" && (
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Customer Messages</CardTitle>
+                    <CardDescription>Recent support inquiries from users</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-center text-gray-500 py-8">Message dashboard coming soon</p>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {activeTab === "marketing" && (
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Marketing Campaigns</CardTitle>
+                    <CardDescription>Plan and manage email campaigns</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-center text-gray-500 py-8">Marketing dashboard coming soon</p>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;

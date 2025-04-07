@@ -1,12 +1,16 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X, LogOut } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,9 +21,31 @@ export default function Header() {
       }
     };
 
+    const checkAuth = () => {
+      const auth = localStorage.getItem('auth') === 'true';
+      setIsAuthenticated(auth);
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    checkAuth();
+    window.addEventListener('storage', checkAuth);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('storage', checkAuth);
+    };
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('auth');
+    localStorage.removeItem('user');
+    setIsAuthenticated(false);
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account."
+    });
+    navigate('/');
+  };
 
   return (
     <header 
@@ -57,19 +83,30 @@ export default function Header() {
             <Link to="/about" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
               About
             </Link>
-            <Link to="/dashboard" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
-              Dashboard
-            </Link>
+            {isAuthenticated && (
+              <Link to="/dashboard" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
+                Dashboard
+              </Link>
+            )}
           </nav>
 
           {/* Desktop CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/login">Log in</Link>
-            </Button>
-            <Button size="sm" className="bg-primary hover:bg-primary/90" asChild>
-              <Link to="/signup">Sign up</Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Log out
+              </Button>
+            ) : (
+              <>
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/login">Log in</Link>
+                </Button>
+                <Button size="sm" className="bg-primary hover:bg-primary/90" asChild>
+                  <Link to="/signup">Sign up</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -136,24 +173,38 @@ export default function Header() {
             >
               About
             </Link>
-            <Link 
-              to="/dashboard" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md"
-            >
-              Dashboard
-            </Link>
+            {isAuthenticated && (
+              <Link 
+                to="/dashboard" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md"
+              >
+                Dashboard
+              </Link>
+            )}
             <div className="flex flex-col space-y-2 pt-2">
-              <Button variant="outline" className="justify-center" asChild>
-                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                  Log in
-                </Link>
-              </Button>
-              <Button className="justify-center bg-primary hover:bg-primary/90" asChild>
-                <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
-                  Sign up
-                </Link>
-              </Button>
+              {isAuthenticated ? (
+                <Button variant="outline" className="justify-center" onClick={() => {
+                  handleLogout();
+                  setIsMobileMenuOpen(false);
+                }}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Log out
+                </Button>
+              ) : (
+                <>
+                  <Button variant="outline" className="justify-center" asChild>
+                    <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                      Log in
+                    </Link>
+                  </Button>
+                  <Button className="justify-center bg-primary hover:bg-primary/90" asChild>
+                    <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                      Sign up
+                    </Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

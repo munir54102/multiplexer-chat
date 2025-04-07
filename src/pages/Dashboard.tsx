@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardContent from "@/components/DashboardContent";
 import {
@@ -24,15 +24,27 @@ import ChatbotManagement from "@/components/dashboard/ChatbotManagement";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
 import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [activeSection, setActiveSection] = useState("general");
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Check if user is authenticated
+    const isAuthenticated = localStorage.getItem('auth') === 'true';
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   // Content based on active tab
   const renderTabContent = () => {
     switch (activeTab) {
       case "overview":
+        return <ChatbotManagement />;
+      case "create":
         return <ChatbotManagement />;
       case "playground":
         return <PlaygroundTab />;
@@ -75,6 +87,24 @@ const Dashboard = () => {
     }
   };
 
+  // Get the tab section title
+  const getTabTitle = () => {
+    switch (activeTab) {
+      case "overview":
+        return "Dashboard";
+      case "create":
+        return "Create Chatbot";
+      case "sources":
+        return "Build Your Chatbot";
+      case "connect":
+        return "Connect Your Chatbot";
+      case "settings":
+        return "Settings";
+      default:
+        return activeTab.charAt(0).toUpperCase() + activeTab.slice(1);
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
       <DashboardSidebar 
@@ -86,33 +116,11 @@ const Dashboard = () => {
       
       <main className="flex-1 p-4 md:p-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-2xl font-bold">{getTabTitle()}</h1>
           <div className="flex space-x-2">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="hidden md:flex">
-              <TabsList>
-                <TabsTrigger value="overview" className="flex items-center gap-1">
-                  <PlusCircle className="h-4 w-4" />
-                  <span>Overview</span>
-                </TabsTrigger>
-                <TabsTrigger value="playground" className="flex items-center gap-1">
-                  <PlusCircle className="h-4 w-4" />
-                  <span>Playground</span>
-                </TabsTrigger>
-                <TabsTrigger value="activity" className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  <span>Activity</span>
-                </TabsTrigger>
-                <TabsTrigger value="analytics" className="flex items-center gap-1">
-                  <BarChart3 className="h-4 w-4" />
-                  <span>Analytics</span>
-                </TabsTrigger>
-                <TabsTrigger value="connect" className="flex items-center gap-1">
-                  <Zap className="h-4 w-4" />
-                  <span>Connect</span>
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-            <CreateChatbotButton />
+            {(activeTab === "overview" || activeTab === "create") && (
+              <CreateChatbotButton />
+            )}
           </div>
         </div>
         

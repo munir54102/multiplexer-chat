@@ -30,6 +30,13 @@ const Login = () => {
     
     // Simulate login process
     setTimeout(() => {
+      // Set auth state in localStorage
+      localStorage.setItem('auth', 'true');
+      localStorage.setItem('user', JSON.stringify({
+        name: formData.email.split('@')[0],
+        email: formData.email
+      }));
+      
       toast({
         title: "Login successful!",
         description: "Welcome back to MultiplexAI. Redirecting to dashboard...",
@@ -37,6 +44,7 @@ const Login = () => {
       
       // Redirect to dashboard immediately after successful login
       navigate("/dashboard");
+      setIsLoading(false);
     }, 1000);
   };
 

@@ -43,6 +43,13 @@ const Signup = () => {
     
     // Simulate signup process
     setTimeout(() => {
+      // Set auth state in localStorage
+      localStorage.setItem('auth', 'true');
+      localStorage.setItem('user', JSON.stringify({
+        name: formData.name,
+        email: formData.email
+      }));
+      
       toast({
         title: "Account created successfully!",
         description: "Welcome to MultiplexAI. Redirecting to dashboard...",
@@ -50,6 +57,7 @@ const Signup = () => {
       
       // Redirect to dashboard immediately after successful signup
       navigate("/dashboard");
+      setIsLoading(false);
     }, 1000);
   };
 

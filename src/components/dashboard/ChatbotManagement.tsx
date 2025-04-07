@@ -34,8 +34,10 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Bot, MoreHorizontal, Edit, Copy, Trash, MessageSquare, BarChart3, Clock, Users } from "lucide-react";
+import { Bot, MoreHorizontal, Edit, Copy, Trash, MessageSquare, BarChart3, Clock, Users, ArrowRight, Database, Link, Zap } from "lucide-react";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
+import { Progress } from "@/components/ui/progress";
+import { useNavigate } from "react-router-dom";
 
 // Mock data for chatbots
 const initialChatbots = [
@@ -47,7 +49,8 @@ const initialChatbots = [
     status: "active",
     lastModified: "2 hours ago",
     messagesCount: 2543,
-    integrationsCount: 3
+    integrationsCount: 3,
+    progress: 100
   },
   {
     id: 2,
@@ -57,7 +60,8 @@ const initialChatbots = [
     status: "active",
     lastModified: "1 day ago",
     messagesCount: 1283,
-    integrationsCount: 2
+    integrationsCount: 2,
+    progress: 80
   },
   {
     id: 3,
@@ -67,7 +71,8 @@ const initialChatbots = [
     status: "inactive",
     lastModified: "1 week ago",
     messagesCount: 763,
-    integrationsCount: 1
+    integrationsCount: 1,
+    progress: 40
   }
 ];
 
@@ -75,6 +80,7 @@ const ChatbotManagement = () => {
   const [chatbots, setChatbots] = useState(initialChatbots);
   const [currentTab, setCurrentTab] = useState("all");
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   // Filter chatbots based on tab
   const filteredChatbots = chatbots.filter(chatbot => {
@@ -116,7 +122,8 @@ const ChatbotManagement = () => {
       ...botToDuplicate,
       id: Math.max(...chatbots.map(b => b.id)) + 1,
       name: `${botToDuplicate.name} (Copy)`,
-      status: "inactive"
+      status: "inactive",
+      progress: 20
     };
     
     setChatbots([...chatbots, newBot]);
@@ -125,6 +132,11 @@ const ChatbotManagement = () => {
       title: "Chatbot duplicated",
       description: `"${botToDuplicate.name}" has been duplicated.`
     });
+  };
+
+  const setActiveTab = (tabId: string) => {
+    navigate(`/dashboard`);
+    // Additional logic if needed
   };
   
   return (
@@ -152,6 +164,7 @@ const ChatbotManagement = () => {
                 onToggleStatus={toggleStatus}
                 onDelete={deleteChatbot}
                 onDuplicate={duplicateChatbot}
+                setActiveTab={setActiveTab}
               />
             ))}
           </div>
@@ -166,6 +179,7 @@ const ChatbotManagement = () => {
                 onToggleStatus={toggleStatus}
                 onDelete={deleteChatbot}
                 onDuplicate={duplicateChatbot}
+                setActiveTab={setActiveTab}
               />
             ))}
           </div>
@@ -180,6 +194,7 @@ const ChatbotManagement = () => {
                 onToggleStatus={toggleStatus}
                 onDelete={deleteChatbot}
                 onDuplicate={duplicateChatbot}
+                setActiveTab={setActiveTab}
               />
             ))}
           </div>
@@ -194,11 +209,31 @@ interface ChatbotCardProps {
   onToggleStatus: (id: number) => void;
   onDelete: (id: number) => void;
   onDuplicate: (id: number) => void;
+  setActiveTab: (tab: string) => void;
 }
 
-const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate }: ChatbotCardProps) => {
+const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate, setActiveTab }: ChatbotCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { toast } = useToast();
+  
+  const getBuildStage = (progress: number) => {
+    if (progress < 25) return "Create";
+    if (progress < 50) return "Build";
+    if (progress < 75) return "Connect";
+    return "Complete";
+  };
+  
+  const handleContinue = () => {
+    const stage = getBuildStage(chatbot.progress);
+    if (stage === "Create") setActiveTab("create");
+    if (stage === "Build") setActiveTab("sources");
+    if (stage === "Connect") setActiveTab("connect");
+    
+    toast({
+      title: "Continuing setup",
+      description: `Navigating to the ${stage} stage for "${chatbot.name}"`
+    });
+  };
   
   return (
     <Card className={chatbot.status === "inactive" ? "opacity-75" : ""}>
@@ -215,7 +250,7 @@ const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate }: Chatbot
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleContinue()}>
                 <Edit className="mr-2 h-4 w-4" /> Edit
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onDuplicate(chatbot.id)}>
@@ -254,16 +289,31 @@ const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate }: Chatbot
           </DropdownMenu>
         </div>
         <div className="flex items-center space-x-2 mt-2">
-          <Badge variant={chatbot.type === "customer-support" ? "default" : "secondary"}>
-            {chatbot.type === "customer-support" ? "Support" : 
-             chatbot.type === "sales" ? "Sales" : "Marketing"}
-          </Badge>
-          <Badge variant={chatbot.status === "active" ? "outline" : "secondary"} className="border-green-500 text-green-700">
+          <Badge variant={chatbot.status === "active" ? "outline" : "secondary"} className={chatbot.status === "active" ? "border-green-500 text-green-700" : ""}>
             {chatbot.status === "active" ? "Active" : "Inactive"}
+          </Badge>
+          
+          <Badge variant="secondary" className="text-xs">
+            {getBuildStage(chatbot.progress)}
           </Badge>
         </div>
       </CardHeader>
       <CardContent>
+        {chatbot.progress < 100 && (
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs text-gray-500">Setup progress</span>
+              <span className="text-xs font-medium">{chatbot.progress}%</span>
+            </div>
+            <Progress value={chatbot.progress} className="h-1" />
+            <div className="mt-1 flex justify-between text-xs text-gray-400">
+              <span>Create</span>
+              <span>Build</span>
+              <span>Connect</span>
+            </div>
+          </div>
+        )}
+        
         <div className="grid grid-cols-3 gap-2 text-sm">
           <div className="flex flex-col items-center p-2 bg-gray-50 rounded-lg">
             <MessageSquare className="h-4 w-4 mb-1 text-gray-500" />
@@ -293,9 +343,16 @@ const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate }: Chatbot
             {chatbot.status === "active" ? "Active" : "Inactive"}
           </Label>
         </div>
-        <Button variant="outline" size="sm">
-          <BarChart3 className="h-4 w-4 mr-2" /> Stats
-        </Button>
+        
+        {chatbot.progress < 100 ? (
+          <Button variant="default" size="sm" onClick={handleContinue}>
+            Continue Setup <ArrowRight className="ml-1 h-4 w-4" />
+          </Button>
+        ) : (
+          <Button variant="outline" size="sm">
+            <BarChart3 className="h-4 w-4 mr-2" /> Stats
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

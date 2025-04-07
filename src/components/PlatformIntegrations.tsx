@@ -1,4 +1,5 @@
-import { MessageCircle, Smartphone, Facebook, Instagram, Globe, ArrowRight, Bot, Code, Database, Lock, Zap, Webhook, ShoppingCart, Check } from "lucide-react";
+
+import { MessageCircle, Smartphone, Facebook, Instagram, Globe, ArrowRight, Bot, Code, Database, Lock, Zap, Webhook, ShoppingCart, Check, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -61,7 +62,7 @@ const PlatformIntegrations = () => {
     },
     {
       name: "Knowledge Sources",
-      icon: <Link className="h-10 w-10 text-green-600" />,
+      icon: <ExternalLink className="h-10 w-10 text-green-600" />,
       description: "Import knowledge from various sources to train your AI.",
       items: ["SharePoint", "Google Drive", "Notion", "Confluence", "Website Crawler"]
     },

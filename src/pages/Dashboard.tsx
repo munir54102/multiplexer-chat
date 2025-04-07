@@ -1,5 +1,7 @@
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "@/components/Header";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardContent from "@/components/DashboardContent";
 import {
@@ -18,13 +20,13 @@ import {
   ConnectTab,
   SourcesTab,
   ActionsTab,
-  ContactsTab
+  ContactsTab,
+  CreateTab
 } from "@/components/dashboard/tabs";
 import ChatbotManagement from "@/components/dashboard/ChatbotManagement";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
 import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -45,7 +47,7 @@ const Dashboard = () => {
       case "overview":
         return <ChatbotManagement />;
       case "create":
-        return <ChatbotManagement />;
+        return <CreateTab />;
       case "playground":
         return <PlaygroundTab />;
       case "activity":
@@ -106,32 +108,35 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
-      <DashboardSidebar 
-        activeSection={activeSection} 
-        setActiveSection={setActiveSection}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
-      
-      <main className="flex-1 p-4 md:p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">{getTabTitle()}</h1>
-          <div className="flex space-x-2">
-            {(activeTab === "overview" || activeTab === "create") && (
-              <CreateChatbotButton />
-            )}
-          </div>
-        </div>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <Header />
+      <div className="flex flex-col md:flex-row pt-16 min-h-[calc(100vh-64px)]">
+        <DashboardSidebar 
+          activeSection={activeSection} 
+          setActiveSection={setActiveSection}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
         
-        <DashboardContent>
-          {activeTab === "settings" ? (
-            renderSettingsContent()
-          ) : (
-            renderTabContent()
-          )}
-        </DashboardContent>
-      </main>
+        <main className="flex-1 p-4 md:p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">{getTabTitle()}</h1>
+            <div className="flex space-x-2">
+              {(activeTab === "overview" || activeTab === "create") && (
+                <CreateChatbotButton />
+              )}
+            </div>
+          </div>
+          
+          <DashboardContent>
+            {activeTab === "settings" ? (
+              renderSettingsContent()
+            ) : (
+              renderTabContent()
+            )}
+          </DashboardContent>
+        </main>
+      </div>
     </div>
   );
 };

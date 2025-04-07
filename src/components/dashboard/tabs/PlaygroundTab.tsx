@@ -1,32 +1,130 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ChatbotTesting from "@/components/dashboard/ChatbotTesting";
 
 const PlaygroundTab = () => {
+  const [selectedBot, setSelectedBot] = useState("Customer Support Bot");
+
+  const botOptions = [
+    "Customer Support Bot",
+    "Sales Assistant",
+    "Marketing Bot"
+  ];
+
   return (
-    <div>
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Playground</h2>
-        <Button variant="outline" size="sm">Compare</Button>
-      </div>
-      <div className="mt-6 border border-gray-200 rounded-lg p-6 min-h-[400px] bg-gray-50 flex flex-col items-center justify-center">
-        <div className="w-full max-w-md bg-white rounded-lg shadow-sm p-4 mb-auto mt-16">
-          <div className="bg-gray-100 rounded-lg p-3 text-sm mb-4">
-            Hi! What can I help you with?
-          </div>
-          <div className="flex mt-auto">
-            <input 
-              type="text" 
-              placeholder="Message..." 
-              className="flex-1 p-2 border border-gray-200 rounded-l-lg focus:outline-none" 
-            />
-            <button className="bg-primary text-white p-2 rounded-r-lg">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9"/>
-              </svg>
-            </button>
-          </div>
+        <div className="flex items-center space-x-4">
+          <Select value={selectedBot} onValueChange={setSelectedBot}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select a chatbot" />
+            </SelectTrigger>
+            <SelectContent>
+              {botOptions.map((bot) => (
+                <SelectItem key={bot} value={bot}>
+                  {bot}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button variant="outline" size="sm">Compare</Button>
         </div>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ChatbotTesting botName={selectedBot} />
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Performance Analytics</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="accuracy">
+              <TabsList className="mb-4">
+                <TabsTrigger value="accuracy">Response Accuracy</TabsTrigger>
+                <TabsTrigger value="speed">Response Time</TabsTrigger>
+                <TabsTrigger value="usage">Usage</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="accuracy">
+                <div className="flex flex-col items-center justify-center h-[350px] border rounded-lg p-6 bg-gray-50">
+                  <div className="w-32 h-32 rounded-full border-8 border-primary flex items-center justify-center mb-4">
+                    <span className="text-3xl font-bold">92%</span>
+                  </div>
+                  <p className="text-gray-600">Response accuracy based on user feedback</p>
+                  
+                  <div className="grid grid-cols-3 gap-4 w-full mt-8">
+                    <div className="text-center">
+                      <div className="text-lg font-medium">350</div>
+                      <div className="text-xs text-gray-500">INTERACTIONS</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-medium">26</div>
+                      <div className="text-xs text-gray-500">FALLBACKS</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-medium">8%</div>
+                      <div className="text-xs text-gray-500">ERROR RATE</div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="speed">
+                <div className="flex flex-col items-center justify-center h-[350px] border rounded-lg p-6 bg-gray-50">
+                  <div className="w-32 h-32 rounded-full border-8 border-green-500 flex items-center justify-center mb-4">
+                    <span className="text-2xl font-bold">1.2s</span>
+                  </div>
+                  <p className="text-gray-600">Average response time</p>
+                  
+                  <div className="grid grid-cols-3 gap-4 w-full mt-8">
+                    <div className="text-center">
+                      <div className="text-lg font-medium">0.8s</div>
+                      <div className="text-xs text-gray-500">FASTEST</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-medium">1.2s</div>
+                      <div className="text-xs text-gray-500">AVERAGE</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-medium">2.3s</div>
+                      <div className="text-xs text-gray-500">SLOWEST</div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="usage">
+                <div className="flex flex-col items-center justify-center h-[350px] border rounded-lg p-6 bg-gray-50">
+                  <div className="w-32 h-32 rounded-full border-8 border-blue-500 flex items-center justify-center mb-4">
+                    <span className="text-2xl font-bold">2,543</span>
+                  </div>
+                  <p className="text-gray-600">Total interactions this month</p>
+                  
+                  <div className="grid grid-cols-3 gap-4 w-full mt-8">
+                    <div className="text-center">
+                      <div className="text-lg font-medium">85</div>
+                      <div className="text-xs text-gray-500">PER DAY</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-medium">+12%</div>
+                      <div className="text-xs text-gray-500">VS LAST MONTH</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-medium">62%</div>
+                      <div className="text-xs text-gray-500">COMPLETION RATE</div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
-
-import { MessageCircle, Smartphone, Facebook, Instagram, Globe, ArrowRight, Bot, Code, Database, Link, Zap, Webhook, ShoppingCart } from "lucide-react";
+import { MessageCircle, Smartphone, Facebook, Instagram, Globe, ArrowRight, Bot, Code, Database, Lock, Zap, Webhook, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

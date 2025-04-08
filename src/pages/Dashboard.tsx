@@ -4,15 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardContent from "@/components/DashboardContent";
-import {
-  GeneralSection,
-  AISection,
-  ChatInterfaceSection,
-  SecuritySection,
-  LeadsSection,
-  NotificationsSection,
-  WebhooksSection
-} from "@/components/dashboard/settings";
+import { getSettingsComponent } from "@/components/dashboard/settings";
 import {
   PlaygroundTab,
   ActivityTab,
@@ -29,8 +21,6 @@ import OnboardingTutorial from "@/components/OnboardingTutorial";
 import ABTesting from "@/components/dashboard/ABTesting";
 import SentimentAnalysis from "@/components/dashboard/SentimentAnalysis";
 import TemplateLibrary from "@/components/dashboard/TemplateLibrary";
-import LanguageSettings from "@/components/dashboard/settings/LanguageSettings";
-import VoiceSettings from "@/components/dashboard/settings/VoiceSettings";
 import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -89,28 +79,7 @@ const Dashboard = () => {
 
   // Content based on active settings section
   const renderSettingsContent = () => {
-    switch (activeSection) {
-      case "general":
-        return <GeneralSection />;
-      case "ai":
-        return <AISection />;
-      case "chat":
-        return <ChatInterfaceSection />;
-      case "security":
-        return <SecuritySection />;
-      case "leads":
-        return <LeadsSection />;
-      case "notifications":
-        return <NotificationsSection />;
-      case "webhooks":
-        return <WebhooksSection />;
-      case "language":
-        return <LanguageSettings />;
-      case "voice":
-        return <VoiceSettings />;
-      default:
-        return <GeneralSection />;
-    }
+    return getSettingsComponent(activeSection);
   };
 
   // Get the tab section title

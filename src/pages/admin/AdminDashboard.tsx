@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import AdminSidebar from "@/components/admin/dashboard/AdminSidebar";
 import AdminHeader from "@/components/admin/dashboard/AdminHeader";
 import DashboardOverview from "@/components/admin/dashboard/DashboardOverview";
-import UserManagement from "@/components/admin/dashboard/UserManagement";
+import UserManagement, { User } from "@/components/admin/dashboard/UserManagement";
 import SettingsPanel from "@/components/admin/dashboard/SettingsPanel";
 import MessagesPanel from "@/components/admin/dashboard/MessagesPanel";
 import MarketingPanel from "@/components/admin/dashboard/MarketingPanel";
@@ -18,7 +18,7 @@ import RevenueAnalytics from "@/components/admin/RevenueAnalytics";
 import CouponManagement from "@/components/admin/CouponManagement";
 
 // Dummy user data for demonstration
-const dummyUsers = [
+const dummyUsers: User[] = [
   {
     id: 1,
     name: "Jane Cooper",
@@ -59,14 +59,15 @@ const dummyUsers = [
     id: 5,
     name: "Sarah Taylor",
     email: "sarah.taylor@example.com",
-    plan: "pending",
+    plan: "Monthly",
+    status: "pending",
     lastLogin: "Never",
     joined: "May 10, 2023"
   }
 ];
 
 const AdminDashboard = () => {
-  const [users, setUsers] = useState(dummyUsers);
+  const [users, setUsers] = useState<User[]>(dummyUsers);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterPlan, setFilterPlan] = useState("all");

@@ -37,12 +37,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-interface User {
+export interface User {
   id: number;
   name: string;
   email: string;
   plan: string;
-  status: string;
+  status: string;  // Making sure this is required
   lastLogin: string;
   joined: string;
 }

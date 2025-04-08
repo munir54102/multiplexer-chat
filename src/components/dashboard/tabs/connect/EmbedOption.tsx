@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface EmbedOptionProps {
   id: string;
@@ -22,6 +23,16 @@ const EmbedOption = ({
   codeSnippet,
   codeLabel,
 }: EmbedOptionProps) => {
+  const { toast } = useToast();
+  
+  const handleCopy = () => {
+    navigator.clipboard.writeText(codeSnippet);
+    toast({
+      title: "Copied!",
+      description: "Code snippet copied to clipboard",
+    });
+  };
+  
   return (
     <div className="border border-gray-200 rounded-lg p-4">
       <div className="flex items-start mb-3">
@@ -42,7 +53,7 @@ const EmbedOption = ({
       <div className="border border-dashed border-gray-200 rounded-lg p-3 bg-gray-50 mt-3">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium">{codeLabel}</span>
-          <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+          <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={handleCopy}>
             <Copy className="h-4 w-4" />
           </Button>
         </div>

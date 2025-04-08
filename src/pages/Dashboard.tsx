@@ -25,12 +25,19 @@ import {
 } from "@/components/dashboard/tabs";
 import ChatbotManagement from "@/components/dashboard/ChatbotManagement";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
-import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap } from "lucide-react";
+import OnboardingTutorial from "@/components/OnboardingTutorial";
+import ABTesting from "@/components/dashboard/ABTesting";
+import SentimentAnalysis from "@/components/dashboard/SentimentAnalysis";
+import TemplateLibrary from "@/components/dashboard/TemplateLibrary";
+import LanguageSettings from "@/components/dashboard/settings/LanguageSettings";
+import VoiceSettings from "@/components/dashboard/settings/VoiceSettings";
+import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [activeSection, setActiveSection] = useState("general");
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -38,6 +45,13 @@ const Dashboard = () => {
     const isAuthenticated = localStorage.getItem('auth') === 'true';
     if (!isAuthenticated) {
       navigate('/login');
+    }
+    
+    // Check if this is the first visit
+    const hasVisitedBefore = localStorage.getItem('hasVisitedDashboard') === 'true';
+    if (!hasVisitedBefore) {
+      setShowOnboarding(true);
+      localStorage.setItem('hasVisitedDashboard', 'true');
     }
   }, [navigate]);
 
@@ -62,6 +76,12 @@ const Dashboard = () => {
         return <ActionsTab />;
       case "contacts":
         return <ContactsTab />;
+      case "templates":
+        return <TemplateLibrary />;
+      case "abtesting":
+        return <ABTesting />;
+      case "sentiment":
+        return <SentimentAnalysis />;
       default:
         return <ChatbotManagement />;
     }
@@ -84,6 +104,10 @@ const Dashboard = () => {
         return <NotificationsSection />;
       case "webhooks":
         return <WebhooksSection />;
+      case "language":
+        return <LanguageSettings />;
+      case "voice":
+        return <VoiceSettings />;
       default:
         return <GeneralSection />;
     }
@@ -102,6 +126,12 @@ const Dashboard = () => {
         return "Connect Your Chatbot";
       case "settings":
         return "Settings";
+      case "templates":
+        return "Template Library";
+      case "abtesting":
+        return "A/B Testing";
+      case "sentiment":
+        return "Sentiment Analysis";
       default:
         return activeTab.charAt(0).toUpperCase() + activeTab.slice(1);
     }
@@ -110,6 +140,7 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
+      {showOnboarding && <OnboardingTutorial />}
       <div className="flex flex-col md:flex-row pt-16 min-h-[calc(100vh-64px)]">
         <DashboardSidebar 
           activeSection={activeSection} 
@@ -122,7 +153,7 @@ const Dashboard = () => {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">{getTabTitle()}</h1>
             <div className="flex space-x-2">
-              {(activeTab === "overview" || activeTab === "create") && (
+              {(activeTab === "overview" || activeTab === "create" || activeTab === "templates") && (
                 <CreateChatbotButton />
               )}
             </div>

@@ -1,17 +1,19 @@
 
 import { useState } from "react";
-import { MessageSquare, Database, Zap, Settings, ArrowRight, ArrowLeft } from "lucide-react";
+import { MessageSquare, Database, Zap, Settings, ArrowRight, ArrowLeft, Globe, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 
 const OnboardingTutorial = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(true);
   
   const steps = [
     {
       title: "Create Your First Chatbot",
       description: "Getting started is easy. Simply name your chatbot, choose a primary platform, and set your business goals.",
       icon: <MessageSquare className="h-12 w-12 text-primary" />,
-      image: "/onboarding-1.png" // Placeholder image paths
+      image: "/onboarding-1.png"
     },
     {
       title: "Build Your Knowledge Base",
@@ -34,51 +36,53 @@ const OnboardingTutorial = () => {
   ];
 
   const handleNext = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+    if (currentStep < steps.length - 1) {
+      setCurrentStep((prev) => prev + 1);
+    } else {
+      setShowTutorial(false);
+      // Save to localStorage that tutorial has been completed
+      localStorage.setItem('tutorialCompleted', 'true');
+    }
   };
 
   const handlePrev = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
+  const handleSkip = () => {
+    setShowTutorial(false);
+    localStorage.setItem('tutorialCompleted', 'true');
+  };
+
+  // Check if tutorial should be shown (first time users)
+  if (!showTutorial || localStorage.getItem('tutorialCompleted') === 'true') {
+    return null;
+  }
+
   return (
-    <div className="py-12">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold">Getting Started is Easy</h2>
-        <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-          Follow our simple four-step process to set up your intelligent chatbot and start engaging with customers in minutes.
-        </p>
-      </div>
-
-      <div className="max-w-4xl mx-auto">
-        <div className="flex mb-8 justify-between">
-          {steps.map((step, index) => (
-            <div key={index} className="relative flex-1">
-              <div 
-                className={`
-                  w-10 h-10 mx-auto rounded-full flex items-center justify-center z-10 relative
-                  ${currentStep >= index ? "bg-primary text-white" : "bg-gray-200 text-gray-500"}
-                `}
-              >
-                {index + 1}
-              </div>
-              {index < steps.length - 1 && (
-                <div 
-                  className={`absolute top-5 left-1/2 w-full h-1 -z-10
-                    ${currentStep > index ? "bg-primary" : "bg-gray-200"}
-                  `}
-                ></div>
-              )}
-              <div className="text-center mt-2 text-xs text-gray-500">
-                {step.title.split(" ")[0]}
-              </div>
-            </div>
-          ))}
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl w-full">
+        <div className="p-4 bg-primary text-white flex justify-between items-center">
+          <div className="flex items-center">
+            <BookOpen className="h-5 w-5 mr-2" />
+            <span className="font-medium">Getting Started Tutorial</span>
+          </div>
+          <Button variant="ghost" className="text-white hover:bg-primary/80" onClick={handleSkip}>
+            Skip Tutorial
+          </Button>
         </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2">
-            <div className="p-8">
+        
+        <div className="p-6">
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium">Progress</span>
+              <span className="text-sm">{currentStep + 1} of {steps.length}</span>
+            </div>
+            <Progress value={((currentStep + 1) / steps.length) * 100} className="h-2" />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
               <div className="mb-4">{steps[currentStep].icon}</div>
               <h3 className="text-xl font-bold mb-4">{steps[currentStep].title}</h3>
               <p className="text-gray-600 mb-6">{steps[currentStep].description}</p>
@@ -94,18 +98,18 @@ const OnboardingTutorial = () => {
                 </Button>
                 <Button 
                   onClick={handleNext} 
-                  disabled={currentStep === steps.length - 1}
                   className="flex items-center"
                 >
-                  Next <ArrowRight className="h-4 w-4 ml-2" />
+                  {currentStep === steps.length - 1 ? 'Finish' : 'Next'} 
+                  {currentStep < steps.length - 1 && <ArrowRight className="h-4 w-4 ml-2" />}
                 </Button>
               </div>
             </div>
-            <div className="bg-gray-100 flex items-center justify-center p-4">
-              <div className="rounded-lg bg-gray-300 w-full aspect-video">
-                {/* Placeholder for screenshot/illustration */}
-                <div className="flex items-center justify-center h-full text-gray-500">
-                  Screenshot {currentStep + 1}
+            <div className="bg-gray-100 rounded-lg p-4 flex items-center justify-center">
+              <div className="relative w-full aspect-video bg-gray-200 rounded-md overflow-hidden">
+                {/* Replace with actual tutorial images */}
+                <div className="absolute inset-0 flex items-center justify-center text-gray-500">
+                  {steps[currentStep].title} Screenshot
                 </div>
               </div>
             </div>

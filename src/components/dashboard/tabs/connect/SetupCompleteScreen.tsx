@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
   Check, CheckCircle, MessageSquare, Bot, Zap, Globe, Upload,
-  Copy, ChevronLeft, Share2, Download, Settings, BarChart3, Users
+  Copy, ChevronLeft, Share2, Download, Settings, BarChart3, Users,
+  FileText, Headphones, Languages, Mic, Volume2, PieChart, 
+  Shield, BarChart, Bell, Briefcase, Calendar
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -89,6 +91,7 @@ const SetupCompleteScreen = ({ onBackToEmbed }: SetupCompleteScreenProps) => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="share">Share</TabsTrigger>
           <TabsTrigger value="features">Features</TabsTrigger>
+          <TabsTrigger value="next-steps">Next Steps</TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview">
@@ -193,33 +196,69 @@ const SetupCompleteScreen = ({ onBackToEmbed }: SetupCompleteScreenProps) => {
                 status: "Available"
               },
               { 
-                title: "Advanced Customization", 
-                description: "Personalize your chatbot appearance and behavior", 
-                icon: <Settings className="h-5 w-5 text-purple-500" />,
+                title: "Multi-language Support", 
+                description: "Communicate with users in their preferred language", 
+                icon: <Languages className="h-5 w-5 text-purple-500" />,
                 status: "Available"
               },
               { 
-                title: "User Management", 
-                description: "Manage access and permissions for team members", 
-                icon: <Users className="h-5 w-5 text-green-500" />,
+                title: "Voice Capabilities", 
+                description: "Enable speech input and output for your chatbot", 
+                icon: <Mic className="h-5 w-5 text-green-500" />,
                 status: "Available"
               },
               { 
-                title: "WhatsApp Integration", 
-                description: "Connect your chatbot to WhatsApp for wider reach", 
-                icon: <MessageSquare className="h-5 w-5 text-green-600" />,
-                status: "Premium"
+                title: "Sentiment Analysis", 
+                description: "Understand the emotional tone of user messages", 
+                icon: <PieChart className="h-5 w-5 text-amber-500" />,
+                status: "Available"
               },
               { 
-                title: "Multilingual Support", 
-                description: "Communicate with users in multiple languages", 
+                title: "A/B Testing", 
+                description: "Test different responses to optimize effectiveness", 
+                icon: <BarChart className="h-5 w-5 text-indigo-500" />,
+                status: "Available"
+              },
+              { 
+                title: "Document Processing", 
+                description: "Extract information from uploaded documents", 
+                icon: <FileText className="h-5 w-5 text-red-500" />,
+                status: "Available"
+              },
+              { 
+                title: "Custom Domain", 
+                description: "Host your chatbot on your own domain", 
                 icon: <Globe className="h-5 w-5 text-blue-600" />,
                 status: "Premium"
               },
               { 
-                title: "API Access", 
-                description: "Integrate chatbot with your custom applications", 
-                icon: <Zap className="h-5 w-5 text-amber-500" />,
+                title: "Team Collaboration", 
+                description: "Work together with your team on chatbot development", 
+                icon: <Users className="h-5 w-5 text-green-600" />,
+                status: "Premium"
+              },
+              { 
+                title: "Advanced Security", 
+                description: "Enterprise-grade security for sensitive data", 
+                icon: <Shield className="h-5 w-5 text-purple-600" />,
+                status: "Premium"
+              },
+              { 
+                title: "Scheduling", 
+                description: "Allow users to book appointments through your chatbot", 
+                icon: <Calendar className="h-5 w-5 text-orange-500" />,
+                status: "Premium"
+              },
+              { 
+                title: "CRM Integration", 
+                description: "Connect your chatbot to your CRM system", 
+                icon: <Briefcase className="h-5 w-5 text-gray-700" />,
+                status: "Premium"
+              },
+              { 
+                title: "Custom Notifications", 
+                description: "Set up alerts for important chatbot events", 
+                icon: <Bell className="h-5 w-5 text-yellow-600" />,
                 status: "Premium"
               }
             ].map((feature, index) => (
@@ -246,6 +285,64 @@ const SetupCompleteScreen = ({ onBackToEmbed }: SetupCompleteScreenProps) => {
                 </CardFooter>
               </Card>
             ))}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="next-steps">
+          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+            <h3 className="text-lg font-medium mb-4">Recommended Next Steps</h3>
+            
+            <div className="space-y-4">
+              {[
+                {
+                  title: "Publish Your Chatbot",
+                  description: "Make your chatbot live and accessible to users",
+                  action: "Publish Now",
+                  icon: <Upload className="h-5 w-5 text-green-600" />
+                },
+                {
+                  title: "Configure Analytics",
+                  description: "Set up tracking to monitor your chatbot's performance",
+                  action: "Set Up Analytics",
+                  icon: <BarChart3 className="h-5 w-5 text-blue-600" />
+                },
+                {
+                  title: "Test with Real Users",
+                  description: "Share your chatbot with a small group to gather feedback",
+                  action: "Create Test Group",
+                  icon: <Users className="h-5 w-5 text-purple-600" />
+                },
+                {
+                  title: "Enable Multi-language Support",
+                  description: "Allow your chatbot to communicate in different languages",
+                  action: "Add Languages",
+                  icon: <Languages className="h-5 w-5 text-indigo-600" />
+                },
+                {
+                  title: "Set Up Voice Capabilities",
+                  description: "Enable voice input and output for your chatbot",
+                  action: "Configure Voice",
+                  icon: <Volume2 className="h-5 w-5 text-orange-600" />
+                },
+                {
+                  title: "Create A/B Tests",
+                  description: "Test different responses to optimize your chatbot",
+                  action: "Start Testing",
+                  icon: <BarChart className="h-5 w-5 text-red-600" />
+                }
+              ].map((step, index) => (
+                <div key={index} className="flex items-start p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4 mt-1">
+                    {step.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-medium text-base mb-1">{step.title}</h4>
+                    <p className="text-gray-600 text-sm mb-3">{step.description}</p>
+                    <Button size="sm">{step.action}</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </TabsContent>
       </Tabs>

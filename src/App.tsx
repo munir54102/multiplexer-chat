@@ -107,6 +107,26 @@ const App = () => {
                 <Dashboard />
               </ProtectedRoute>
             } />
+            <Route path="/templates" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/abtesting" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/sentimentanalysis" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/voicesettings" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
             <Route path="/documentation" element={<Documentation />} />
             <Route path="/login" element={
               <AuthRoute>

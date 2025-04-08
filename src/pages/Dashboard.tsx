@@ -21,13 +21,17 @@ import OnboardingTutorial from "@/components/OnboardingTutorial";
 import ABTesting from "@/components/dashboard/ABTesting";
 import SentimentAnalysis from "@/components/dashboard/SentimentAnalysis";
 import TemplateLibrary from "@/components/dashboard/TemplateLibrary";
-import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages } from "lucide-react";
+import GuidedTutorial from "@/components/GuidedTutorial";
+import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages, HelpCircle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [activeSection, setActiveSection] = useState("general");
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -110,6 +114,7 @@ const Dashboard = () => {
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
       {showOnboarding && <OnboardingTutorial />}
+      {showTutorial && <GuidedTutorial onComplete={() => setShowTutorial(false)} />}
       <div className="flex flex-col md:flex-row pt-16 min-h-[calc(100vh-64px)]">
         <DashboardSidebar 
           activeSection={activeSection} 
@@ -125,6 +130,23 @@ const Dashboard = () => {
               {(activeTab === "overview" || activeTab === "create" || activeTab === "templates") && (
                 <CreateChatbotButton />
               )}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      onClick={() => setShowTutorial(true)}
+                      className="ml-2"
+                    >
+                      <HelpCircle className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Open Guided Tutorial</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
           

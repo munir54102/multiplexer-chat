@@ -1,4 +1,5 @@
 
+import React from "react";
 import GeneralSection from "./GeneralSection";
 import AISection from "./AISection";
 import ChatInterfaceSection from "./ChatInterfaceSection";
@@ -8,7 +9,6 @@ import NotificationsSection from "./NotificationsSection";
 import WebhooksSection from "./WebhooksSection";
 import LanguageSettings from "./LanguageSettings";
 import VoiceSettings from "./VoiceSettings";
-import React from "react";
 
 // Export individual components
 export {
@@ -21,8 +21,21 @@ export {
   WebhooksSection
 };
 
-// Create a settings map that returns the components as functions
-// This avoids using JSX directly in a .ts file
+// Create a settings map for tab navigation
+// Using React.createElement instead of JSX in a .ts file
+export const settings = {
+  "general": React.createElement(GeneralSection),
+  "ai": React.createElement(AISection),
+  "chat": React.createElement(ChatInterfaceSection),
+  "security": React.createElement(SecuritySection),
+  "leads": React.createElement(LeadsSection),
+  "notifications": React.createElement(NotificationsSection),
+  "webhooks": React.createElement(WebhooksSection),
+  "language": React.createElement(LanguageSettings),
+  "voice": React.createElement(VoiceSettings)
+};
+
+// Create a function to get the settings component
 export const getSettingsComponent = (section: string) => {
   switch (section) {
     case "general":

@@ -7,6 +7,9 @@ import SourcesTab from "./SourcesTab";
 import ActionsTab from "./ActionsTab";
 import ContactsTab from "./ContactsTab";
 import CreateTab from "./CreateTab";
+import LanguageSettingsTab from "./LanguageSettingsTab";
+import TeamCollaborationTab from "./TeamCollaborationTab";
+import HelpTab from "./HelpTab";
 
 export {
   CreateTab,
@@ -16,5 +19,8 @@ export {
   ConnectTab,
   SourcesTab,
   ActionsTab,
-  ContactsTab
+  ContactsTab,
+  LanguageSettingsTab,
+  TeamCollaborationTab,
+  HelpTab
 };

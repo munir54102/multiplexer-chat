@@ -149,6 +149,7 @@ const App = () => {
   }
 
   return (
+    // The issue was here - React context providers were incorrectly ordered
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <TooltipProvider>

@@ -7,11 +7,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ChevronRight, BarChart2, TrendingUp, Users, MessageSquare } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { 
+  ChevronRight, BarChart2, TrendingUp, Users, MessageSquare, 
+  CornerRightDown, BarChart, Calendar, Clock, PercentCircle, 
+  GanttChartSquare, LucideLineChart, LineChart 
+} from "lucide-react";
 
 const ABTesting = () => {
   const [activeTab, setActiveTab] = useState("active");
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const { toast } = useToast();
   
   return (
     <div className="space-y-6">
@@ -59,6 +65,8 @@ const ABTesting = () => {
                   conversions={124}
                 />
               </div>
+              
+              <TestDetailsPanel />
             </>
           ) : showCreateForm ? (
             <CreateTestForm onCancel={() => setShowCreateForm(false)} />
@@ -159,7 +167,186 @@ const TestCard = ({
   );
 };
 
+const TestDetailsPanel = () => {
+  return (
+    <Card className="mt-8">
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle>Welcome Message Test Details</CardTitle>
+            <CardDescription>
+              Testing different welcome messages to improve engagement
+            </CardDescription>
+          </div>
+          <div className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+            Running (9 days left)
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <h3 className="text-lg font-medium mb-4">Performance Comparison</h3>
+            <div className="border rounded-lg p-6 h-64 flex items-center justify-center">
+              {/* This would be a chart in a real implementation */}
+              <div className="text-center">
+                <LineChart className="h-16 w-16 text-gray-300 mx-auto mb-2" />
+                <p className="text-gray-500">Performance chart visualization</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6 mt-6">
+              <div>
+                <h4 className="font-medium mb-3 flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                  Variation A (Original)
+                </h4>
+                <div className="border rounded-lg p-4">
+                  <p className="mb-3 text-gray-800">
+                    "Welcome to our support chat! How can I help you today?"
+                  </p>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div>
+                      <div className="text-sm text-gray-500">Impressions</div>
+                      <div className="font-medium">620</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Responses</div>
+                      <div className="font-medium">118</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Rate</div>
+                      <div className="font-medium">19.0%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-3 flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                  Variation B (Leading)
+                </h4>
+                <div className="border rounded-lg p-4 border-green-200 bg-green-50">
+                  <p className="mb-3 text-gray-800">
+                    "Hi there! I'm your personal assistant. What can I help you with today?"
+                  </p>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div>
+                      <div className="text-sm text-gray-500">Impressions</div>
+                      <div className="font-medium">620</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Responses</div>
+                      <div className="font-medium">150</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Rate</div>
+                      <div className="font-medium text-green-600">24.2%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-medium mb-4">Test Information</h3>
+            <div className="space-y-4">
+              <div className="border rounded-lg p-4">
+                <div className="grid grid-cols-2 gap-y-3">
+                  <div className="text-sm text-gray-500">Status</div>
+                  <div className="font-medium">Running</div>
+                  
+                  <div className="text-sm text-gray-500">Start Date</div>
+                  <div className="font-medium">Apr 1, 2025</div>
+                  
+                  <div className="text-sm text-gray-500">End Date</div>
+                  <div className="font-medium">Apr 14, 2025</div>
+                  
+                  <div className="text-sm text-gray-500">Traffic Split</div>
+                  <div className="font-medium">50% / 50%</div>
+                  
+                  <div className="text-sm text-gray-500">Created By</div>
+                  <div className="font-medium">Alex Johnson</div>
+                </div>
+              </div>
+              
+              <div className="border rounded-lg p-4">
+                <h4 className="font-medium mb-2">Test Metrics</h4>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <Users className="h-4 w-4 text-gray-500 mr-2" />
+                      <span className="text-sm">Total Visitors</span>
+                    </div>
+                    <span className="font-medium">1,240</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <MessageSquare className="h-4 w-4 text-gray-500 mr-2" />
+                      <span className="text-sm">Conversations</span>
+                    </div>
+                    <span className="font-medium">268</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <PercentCircle className="h-4 w-4 text-gray-500 mr-2" />
+                      <span className="text-sm">Improvement</span>
+                    </div>
+                    <span className="font-medium text-green-600">+5.2%</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <CornerRightDown className="h-4 w-4 text-gray-500 mr-2" />
+                      <span className="text-sm">Confidence</span>
+                    </div>
+                    <span className="font-medium">92%</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <Button className="w-full">
+                  End Test
+                </Button>
+                <Button variant="outline" className="w-full">
+                  Edit
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 const CreateTestForm = ({ onCancel }: { onCancel: () => void }) => {
+  const { toast } = useToast();
+  const [testName, setTestName] = useState("");
+  
+  const handleSubmit = () => {
+    if (!testName.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Test name required",
+        description: "Please provide a name for your A/B test"
+      });
+      return;
+    }
+    
+    toast({
+      title: "A/B Test created",
+      description: "Your new A/B test has been created successfully."
+    });
+    
+    onCancel();
+  };
+  
   return (
     <Card>
       <CardHeader>
@@ -171,7 +358,12 @@ const CreateTestForm = ({ onCancel }: { onCancel: () => void }) => {
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="test-name">Test Name</Label>
-          <Input id="test-name" placeholder="e.g., Welcome Message Test" />
+          <Input 
+            id="test-name" 
+            placeholder="e.g., Welcome Message Test" 
+            value={testName}
+            onChange={(e) => setTestName(e.target.value)}
+          />
         </div>
         
         <div className="space-y-2">
@@ -182,11 +374,17 @@ const CreateTestForm = ({ onCancel }: { onCancel: () => void }) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="test-start">Start Date</Label>
-            <Input id="test-start" type="date" />
+            <div className="relative">
+              <Input id="test-start" type="date" />
+              <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="test-end">End Date</Label>
-            <Input id="test-end" type="date" />
+            <div className="relative">
+              <Input id="test-end" type="date" />
+              <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
+            </div>
           </div>
         </div>
         
@@ -253,7 +451,7 @@ const CreateTestForm = ({ onCancel }: { onCancel: () => void }) => {
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button>Create Test</Button>
+        <Button onClick={handleSubmit}>Create Test</Button>
       </CardFooter>
     </Card>
   );

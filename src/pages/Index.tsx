@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { MessageSquare, Zap, Lock, Globe, PenTool, BarChart3, Users, Smartphone, Facebook, Instagram, MessageCircle } from "lucide-react";
@@ -16,10 +16,34 @@ import OnboardingTutorial from "@/components/OnboardingTutorial";
 import FAQ from "@/components/FAQ";
 import ChatbotCreationSection from "@/components/ChatbotCreationSection";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
+import GuidedTutorial from "@/components/GuidedTutorial";
+import MultiLanguageChatDemo from "@/components/MultiLanguageChatDemo";
 
 const Index = () => {
+  const [showGuidedTutorial, setShowGuidedTutorial] = useState(false);
+  
+  useEffect(() => {
+    // Show guided tutorial for first-time visitors
+    const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
+    
+    if (!hasVisitedBefore) {
+      // Set a small delay to allow the page to load first
+      const timer = setTimeout(() => {
+        setShowGuidedTutorial(true);
+        localStorage.setItem('hasVisitedBefore', 'true');
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, []);
+  
   return (
     <Layout>
+      {/* Show guided tutorial for first-time users */}
+      {showGuidedTutorial && (
+        <GuidedTutorial onComplete={() => setShowGuidedTutorial(false)} />
+      )}
+      
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 md:px-6 lg:pt-40 lg:pb-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-50 to-white -z-10"></div>
@@ -50,7 +74,11 @@ const Index = () => {
               </div>
             </div>
             <div className="hidden lg:block lg:animate-fade-in lg:animation-delay-200">
-              <LiveChatDemo />
+              <MultiLanguageChatDemo 
+                initialLanguage="en"
+                showLanguageSelector={true}
+                bubbleStyle="modern"
+              />
             </div>
           </div>
         </div>

@@ -149,9 +149,9 @@ const App = () => {
   }
 
   return (
-    // The issue was here - React context providers were incorrectly ordered
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        {/* Fixed the order: TooltipProvider must be inside BrowserRouter */}
         <TooltipProvider>
           <Toaster />
           <Sonner />

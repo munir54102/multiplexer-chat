@@ -42,7 +42,7 @@ export interface User {
   name: string;
   email: string;
   plan: string;
-  status: string;  // Making sure this is required
+  status: string;
   lastLogin: string;
   joined: string;
 }

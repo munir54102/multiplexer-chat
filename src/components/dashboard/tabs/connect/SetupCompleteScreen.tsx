@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { 
   Check, CheckCircle, MessageSquare, Bot, Zap, Globe, Upload,
   Copy, ChevronLeft, Share2, Download, Settings, BarChart3, Users

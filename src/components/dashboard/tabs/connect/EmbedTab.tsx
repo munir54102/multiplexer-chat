@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Upload, Rocket } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
@@ -13,6 +13,7 @@ import SetupCompleteScreen from "./SetupCompleteScreen";
 const EmbedTab = () => {
   const { toast } = useToast();
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   
   const handleCopy = (code: string) => {
     navigator.clipboard.writeText(code);
@@ -26,17 +27,54 @@ const EmbedTab = () => {
     setShowSuccessScreen(!showSuccessScreen);
   };
 
+  const handlePublish = () => {
+    setIsPublishing(true);
+    
+    // Simulate publishing process
+    toast({
+      title: "Publishing chatbot",
+      description: "Your chatbot is being published. This may take a few moments."
+    });
+    
+    // Simulate publishing delay
+    setTimeout(() => {
+      setIsPublishing(false);
+      toast({
+        title: "Chatbot published!",
+        description: "Your chatbot is now live and ready to use."
+      });
+      // Show the success screen after publishing
+      setShowSuccessScreen(true);
+    }, 2000);
+  };
+
   if (showSuccessScreen) {
-    return <SetupCompleteScreen />;
+    return <SetupCompleteScreen onBackToEmbed={() => setShowSuccessScreen(false)} />;
   }
 
   return (
     <div className="border border-gray-200 rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium">Embed Options</h3>
-        <Button onClick={toggleCompleteScreen}>
-          View Complete Setup
-        </Button>
+        <div className="flex space-x-3">
+          <Button variant="outline" onClick={toggleCompleteScreen}>
+            View Setup Details
+          </Button>
+          <Button 
+            onClick={handlePublish} 
+            disabled={isPublishing}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            {isPublishing ? (
+              <>Publishing...</>
+            ) : (
+              <>
+                <Rocket className="mr-2 h-4 w-4" />
+                Publish Chatbot
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -83,6 +121,24 @@ const EmbedTab = () => {
       </div>
       
       <EmbedCustomization />
+      
+      <div className="mt-8 flex justify-center">
+        <Button 
+          onClick={handlePublish} 
+          disabled={isPublishing} 
+          size="lg" 
+          className="bg-green-600 hover:bg-green-700"
+        >
+          {isPublishing ? (
+            <>Publishing...</>
+          ) : (
+            <>
+              <Upload className="mr-2 h-5 w-5" />
+              Publish Your Chatbot
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 };

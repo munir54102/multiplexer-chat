@@ -1,12 +1,21 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Check, Check as CheckIcon, CheckCircle, MessageSquare, Bot, Zap, Globe, Upload } from "lucide-react";
+import { 
+  Check, CheckCircle, MessageSquare, Bot, Zap, Globe, Upload,
+  Copy, ChevronLeft, Share2, Download, Settings, BarChart3, Users
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const SetupCompleteScreen = () => {
+interface SetupCompleteScreenProps {
+  onBackToEmbed?: () => void;
+}
+
+const SetupCompleteScreen = ({ onBackToEmbed }: SetupCompleteScreenProps) => {
   const { toast } = useToast();
   
   const handlePublish = () => {
@@ -23,9 +32,29 @@ const SetupCompleteScreen = () => {
       });
     }, 2000);
   };
+
+  const handleShareChatbot = () => {
+    navigator.clipboard.writeText("https://multiplexai.com/chat/YOUR_BOT_ID");
+    toast({
+      title: "Link copied!",
+      description: "Shareable link has been copied to clipboard"
+    });
+  };
   
   return (
     <div className="border border-gray-200 rounded-lg p-6">
+      {onBackToEmbed && (
+        <Button 
+          variant="ghost" 
+          onClick={onBackToEmbed} 
+          className="mb-4"
+          size="sm"
+        >
+          <ChevronLeft className="h-4 w-4 mr-1" />
+          Back to Embed Options
+        </Button>
+      )}
+      
       <div className="flex flex-col items-center text-center mb-8">
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
           <CheckCircle className="h-8 w-8 text-green-600" />
@@ -46,7 +75,7 @@ const SetupCompleteScreen = () => {
           {["Create", "Build", "Connect"].map((step, index) => (
             <div key={index} className="flex flex-col items-center text-primary">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                <CheckIcon className="h-5 w-5 text-primary" />
+                <Check className="h-5 w-5 text-primary" />
               </div>
               <span className="mt-1">{step}</span>
             </div>
@@ -54,100 +83,181 @@ const SetupCompleteScreen = () => {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {[
-          {
-            title: "Create",
-            description: "Name your chatbot and define its purpose",
-            icon: Bot,
-            status: "Complete"
-          },
-          {
-            title: "Build",
-            description: "Add knowledge from files, websites, or custom text",
-            icon: Zap,
-            status: "Complete"
-          },
-          {
-            title: "Connect",
-            description: "Deploy your chatbot to your website or other platforms",
-            icon: Globe,
-            status: "Complete"
-          }
-        ].map((step, index) => (
-          <Card key={index} className="bg-gray-50">
-            <CardHeader>
-              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-2">
-                <CheckCircle className="h-6 w-6 text-primary" />
+      <Tabs defaultValue="overview">
+        <TabsList className="mb-6 w-full justify-start">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="share">Share</TabsTrigger>
+          <TabsTrigger value="features">Features</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="overview">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {[
+              {
+                title: "Create",
+                description: "Name your chatbot and define its purpose",
+                icon: Bot,
+                status: "Complete"
+              },
+              {
+                title: "Build",
+                description: "Add knowledge from files, websites, or custom text",
+                icon: Zap,
+                status: "Complete"
+              },
+              {
+                title: "Connect",
+                description: "Deploy your chatbot to your website or other platforms",
+                icon: Globe,
+                status: "Complete"
+              }
+            ].map((step, index) => (
+              <Card key={index} className="bg-gray-50">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-2">
+                    <CheckCircle className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="flex items-center text-base">
+                    {index + 1}. {step.title}
+                    <span className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
+                      {step.status}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-500">{step.description}</p>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="secondary" className="w-full" size="sm">
+                    Edit
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="share">
+          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+            <h3 className="text-lg font-medium mb-4">Share Your Chatbot</h3>
+            
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-sm font-medium mb-2">Direct Link</h4>
+                <div className="flex gap-2">
+                  <Input value="https://multiplexai.com/chat/YOUR_BOT_ID" readOnly className="flex-1" />
+                  <Button variant="outline" onClick={handleShareChatbot}>
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-              <CardTitle className="flex items-center">
-                {index + 1}. {step.title}
-                <span className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
-                  {step.status}
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500">{step.description}</p>
-            </CardContent>
-            <CardFooter>
-              <Button variant="secondary" className="w-full">
-                Edit
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+              
+              <div>
+                <h4 className="text-sm font-medium mb-2">Share on Social Media</h4>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="flex-1">
+                    <Share2 className="h-4 w-4 mr-2" /> Facebook
+                  </Button>
+                  <Button variant="outline" className="flex-1">
+                    <Share2 className="h-4 w-4 mr-2" /> Twitter
+                  </Button>
+                  <Button variant="outline" className="flex-1">
+                    <Share2 className="h-4 w-4 mr-2" /> LinkedIn
+                  </Button>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="text-sm font-medium mb-2">QR Code</h4>
+                <div className="flex items-center gap-4">
+                  <div className="w-32 h-32 border-2 border-dashed border-gray-300 flex items-center justify-center">
+                    QR Code
+                  </div>
+                  <Button variant="outline">
+                    <Download className="h-4 w-4 mr-2" /> Download QR Code
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="features">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            {[
+              { 
+                title: "Analytics Dashboard", 
+                description: "Track chatbot performance and user engagement", 
+                icon: <BarChart3 className="h-5 w-5 text-blue-500" />,
+                status: "Available"
+              },
+              { 
+                title: "Advanced Customization", 
+                description: "Personalize your chatbot appearance and behavior", 
+                icon: <Settings className="h-5 w-5 text-purple-500" />,
+                status: "Available"
+              },
+              { 
+                title: "User Management", 
+                description: "Manage access and permissions for team members", 
+                icon: <Users className="h-5 w-5 text-green-500" />,
+                status: "Available"
+              },
+              { 
+                title: "WhatsApp Integration", 
+                description: "Connect your chatbot to WhatsApp for wider reach", 
+                icon: <MessageSquare className="h-5 w-5 text-green-600" />,
+                status: "Premium"
+              },
+              { 
+                title: "Multilingual Support", 
+                description: "Communicate with users in multiple languages", 
+                icon: <Globe className="h-5 w-5 text-blue-600" />,
+                status: "Premium"
+              },
+              { 
+                title: "API Access", 
+                description: "Integrate chatbot with your custom applications", 
+                icon: <Zap className="h-5 w-5 text-amber-500" />,
+                status: "Premium"
+              }
+            ].map((feature, index) => (
+              <Card key={index} className="hover:shadow-md transition-all">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center mb-2">
+                    {feature.icon}
+                    <CardTitle className="text-base ml-2">{feature.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600">{feature.description}</p>
+                </CardContent>
+                <CardFooter className="flex justify-between items-center">
+                  <Badge 
+                    variant={feature.status === "Available" ? "outline" : "secondary"}
+                    className={feature.status === "Available" ? "border-green-500 text-green-700" : ""}
+                  >
+                    {feature.status}
+                  </Badge>
+                  <Button size="sm" variant={feature.status === "Available" ? "default" : "outline"}>
+                    {feature.status === "Available" ? "Access" : "Upgrade"}
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
       
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mt-8">
         <h3 className="text-xl font-semibold mb-4">Ready to Go Live?</h3>
-        <Button size="lg" onClick={handlePublish} className="px-8">
+        <Button size="lg" onClick={handlePublish} className="px-8 bg-green-600 hover:bg-green-700">
           <Upload className="mr-2 h-5 w-5" />
           Publish Your Chatbot
         </Button>
         <p className="text-sm text-gray-500 mt-4">
           Publishing will make your chatbot available on all configured platforms.
         </p>
-      </div>
-      
-      <div className="mt-12 pt-8 border-t border-gray-200">
-        <h3 className="text-lg font-semibold mb-4">Popular Use Cases</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            {
-              title: "Customer Support",
-              description: "Handle common questions and reduce support tickets",
-              icon: <MessageSquare className="h-5 w-5 text-blue-500" />
-            },
-            {
-              title: "Lead Generation",
-              description: "Capture and qualify leads from website visitors",
-              icon: <Bot className="h-5 w-5 text-green-500" />
-            },
-            {
-              title: "FAQ Assistant",
-              description: "Answer frequently asked questions instantly",
-              icon: <Zap className="h-5 w-5 text-amber-500" />
-            }
-          ].map((useCase, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-2">
-                <div className="flex items-center mb-2">
-                  {useCase.icon}
-                  <CardTitle className="text-base ml-2">{useCase.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600">{useCase.description}</p>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full" variant="outline" size="sm">
-                  Create New Chatbot
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
       </div>
     </div>
   );

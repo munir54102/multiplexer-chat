@@ -1,7 +1,7 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface EmbedOptionProps {
@@ -24,19 +24,33 @@ const EmbedOption = ({
   codeLabel,
 }: EmbedOptionProps) => {
   const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
   
   const handleCopy = () => {
     navigator.clipboard.writeText(codeSnippet);
+    setCopied(true);
+    
     toast({
       title: "Copied!",
       description: "Code snippet copied to clipboard",
     });
+    
+    // Reset copied state after 2 seconds
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
   
   return (
-    <div className="border border-gray-200 rounded-lg p-4">
+    <div className="border border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-colors">
       <div className="flex items-start mb-3">
-        <input type="radio" checked={checked} id={id} className="mt-1 mr-2" />
+        <input 
+          type="radio" 
+          checked={checked} 
+          id={id} 
+          className="mt-1 mr-2" 
+          onChange={() => {}} // Add empty handler to avoid React warnings
+        />
         <div>
           <label htmlFor={id} className="font-medium block mb-1">
             {title}
@@ -53,13 +67,24 @@ const EmbedOption = ({
       <div className="border border-dashed border-gray-200 rounded-lg p-3 bg-gray-50 mt-3">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium">{codeLabel}</span>
-          <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={handleCopy}>
-            <Copy className="h-4 w-4" />
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-7 w-7 p-0" 
+            onClick={handleCopy}
+            title="Copy to clipboard"
+          >
+            {copied ? (
+              <Check className="h-4 w-4 text-green-500" />
+            ) : (
+              <Copy className="h-4 w-4" />
+            )}
           </Button>
         </div>
-        <pre className="text-xs bg-black text-green-400 p-3 rounded overflow-x-auto">
+        <pre className="text-xs bg-black text-green-400 p-3 rounded overflow-x-auto cursor-pointer" onClick={handleCopy}>
           {codeSnippet}
         </pre>
+        <p className="text-xs text-gray-500 mt-2">Click the code or the copy button to copy to clipboard</p>
       </div>
     </div>
   );

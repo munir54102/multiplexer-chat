@@ -1,240 +1,261 @@
 
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { BarChart, ChartContainer, ChartBar, Play, Pause, Plus, MessageSquare, ThumbsUp, ThumbsDown, BarChart3 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { ChevronRight, BarChart2, TrendingUp, Users, MessageSquare } from "lucide-react";
 
 const ABTesting = () => {
-  const { toast } = useToast();
-  const [activeTest, setActiveTest] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("active");
+  const [showCreateForm, setShowCreateForm] = useState(false);
   
-  const testScenarios = [
-    {
-      id: "test1",
-      name: "Welcome Message Test",
-      status: "Running",
-      variantA: "Welcome! How can I assist you today?",
-      variantB: "Hi there! I'm your AI assistant. What can I help you with?",
-      impressions: { A: 245, B: 258 },
-      conversions: { A: 87, B: 112 },
-      startDate: "2025-03-27",
-      endDate: "2025-04-14",
-    },
-    {
-      id: "test2",
-      name: "Product Recommendation Style",
-      status: "Paused",
-      variantA: "Based on your preferences, I recommend Product X.",
-      variantB: "Many customers like you have enjoyed Product X. Would you like to learn more?",
-      impressions: { A: 189, B: 192 },
-      conversions: { A: 42, B: 58 },
-      startDate: "2025-03-20",
-      endDate: "2025-04-03",
-    },
-  ];
-
-  const handleCreateTest = () => {
-    toast({
-      title: "New A/B Test Created",
-      description: "Your test has been created and is ready to start running."
-    });
-  };
-
-  const handleToggleTest = (testId: string, currentStatus: string) => {
-    const newStatus = currentStatus === "Running" ? "Paused" : "Running";
-    toast({
-      title: `Test ${newStatus}`,
-      description: `The A/B test has been ${newStatus.toLowerCase()}.`
-    });
-  };
-
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold">A/B Testing</h2>
-          <p className="text-sm text-muted-foreground">Optimize your chatbot responses by testing different variations</p>
+          <h2 className="text-3xl font-bold tracking-tight">A/B Testing</h2>
+          <p className="text-muted-foreground">
+            Compare different versions of your chatbot to optimize performance
+          </p>
         </div>
-        <Button onClick={() => setActiveTest("new")}>
-          <Plus className="h-4 w-4 mr-2" />
-          Create New Test
+        <Button onClick={() => setShowCreateForm(true)}>
+          Create A/B Test
         </Button>
       </div>
 
-      {activeTest === "new" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Create New A/B Test</CardTitle>
-            <CardDescription>
-              Set up a test to compare two different versions of a chatbot response
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="test-name">Test Name</Label>
-                <Input id="test-name" placeholder="e.g., Welcome Message Test" />
+      <Tabs defaultValue="active" onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="active">Active Tests</TabsTrigger>
+          <TabsTrigger value="completed">Completed</TabsTrigger>
+          <TabsTrigger value="draft">Drafts</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="active" className="space-y-4">
+          {activeTab === "active" && !showCreateForm ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <TestCard 
+                  title="Welcome Message Test"
+                  description="Testing different welcome messages for engagement"
+                  status="Running"
+                  startDate="Apr 1, 2025"
+                  endDate="Apr 14, 2025"
+                  impressions={1240}
+                  conversions={268}
+                  winner="Variation B"
+                />
+                
+                <TestCard 
+                  title="Button Color Test"
+                  description="Testing blue vs. green CTA buttons"
+                  status="Running"
+                  startDate="Apr 5, 2025"
+                  endDate="Apr 19, 2025"
+                  impressions={876}
+                  conversions={124}
+                />
               </div>
-              
-              <div>
-                <Label htmlFor="test-type">Test Type</Label>
-                <Select defaultValue="message">
-                  <SelectTrigger id="test-type">
-                    <SelectValue placeholder="Select test type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="message">Message Content</SelectItem>
-                    <SelectItem value="style">Response Style</SelectItem>
-                    <SelectItem value="flow">Conversation Flow</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="variant-a">Variant A (Control)</Label>
-                  <Textarea id="variant-a" placeholder="Enter response for Variant A" />
-                </div>
-                <div>
-                  <Label htmlFor="variant-b">Variant B (Test)</Label>
-                  <Textarea id="variant-b" placeholder="Enter response for Variant B" />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="start-date">Start Date</Label>
-                  <Input id="start-date" type="date" />
-                </div>
-                <div>
-                  <Label htmlFor="end-date">End Date</Label>
-                  <Input id="end-date" type="date" />
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="success-metric">Success Metric</Label>
-                <Select defaultValue="conversion">
-                  <SelectTrigger id="success-metric">
-                    <SelectValue placeholder="Select success metric" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="conversion">Conversion Rate</SelectItem>
-                    <SelectItem value="satisfaction">User Satisfaction</SelectItem>
-                    <SelectItem value="completion">Task Completion</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Switch id="start-immediately" />
-                <Label htmlFor="start-immediately">Start test immediately</Label>
-              </div>
+            </>
+          ) : showCreateForm ? (
+            <CreateTestForm onCancel={() => setShowCreateForm(false)} />
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-lg text-gray-500">No completed or draft tests yet</p>
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={() => setActiveTest(null)}>Cancel</Button>
-            <Button onClick={handleCreateTest}>Create Test</Button>
-          </CardFooter>
-        </Card>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {testScenarios.map((test) => (
-              <Card key={test.id}>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-lg">{test.name}</CardTitle>
-                    <div className={`px-2 py-1 text-xs rounded-full ${
-                      test.status === "Running" ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
-                    }`}>
-                      {test.status}
-                    </div>
-                  </div>
-                  <CardDescription>
-                    {test.startDate} - {test.endDate}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="p-3 border rounded-md">
-                      <div className="text-xs text-gray-500 mb-1">Variant A</div>
-                      <div className="text-sm">{test.variantA}</div>
-                    </div>
-                    <div className="p-3 border rounded-md">
-                      <div className="text-xs text-gray-500 mb-1">Variant B</div>
-                      <div className="text-sm">{test.variantB}</div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div>
-                      <div className="text-xs text-gray-500 mb-1">Impressions</div>
-                      <div className="flex h-4 mb-1">
-                        <div 
-                          className="bg-blue-500 rounded-l-full" 
-                          style={{ width: `${(test.impressions.A / (test.impressions.A + test.impressions.B)) * 100}%` }}
-                        ></div>
-                        <div 
-                          className="bg-purple-500 rounded-r-full" 
-                          style={{ width: `${(test.impressions.B / (test.impressions.A + test.impressions.B)) * 100}%` }}
-                        ></div>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span>A: {test.impressions.A}</span>
-                        <span>B: {test.impressions.B}</span>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div className="text-xs text-gray-500 mb-1">Conversions</div>
-                      <div className="flex h-4 mb-1">
-                        <div 
-                          className="bg-blue-500 rounded-l-full" 
-                          style={{ width: `${(test.conversions.A / (test.conversions.A + test.conversions.B)) * 100}%` }}
-                        ></div>
-                        <div 
-                          className="bg-purple-500 rounded-r-full" 
-                          style={{ width: `${(test.conversions.B / (test.conversions.A + test.conversions.B)) * 100}%` }}
-                        ></div>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span>A: {test.conversions.A} ({Math.round((test.conversions.A / test.impressions.A) * 100)}%)</span>
-                        <span>B: {test.conversions.B} ({Math.round((test.conversions.B / test.impressions.B) * 100)}%)</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="flex justify-between pt-2">
-                  <Button variant="outline" size="sm">
-                    <BarChart3 className="h-4 w-4 mr-1" />
-                    View Details
-                  </Button>
-                  <Button 
-                    variant={test.status === "Running" ? "destructive" : "default"} 
-                    size="sm"
-                    onClick={() => handleToggleTest(test.id, test.status)}
-                  >
-                    {test.status === "Running" ? (
-                      <><Pause className="h-4 w-4 mr-1" /> Pause</>
-                    ) : (
-                      <><Play className="h-4 w-4 mr-1" /> Start</>
-                    )}
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </>
-      )}
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
+  );
+};
+
+interface TestCardProps {
+  title: string;
+  description: string;
+  status: "Running" | "Completed" | "Draft";
+  startDate: string;
+  endDate: string;
+  impressions: number;
+  conversions: number;
+  winner?: string;
+}
+
+const TestCard = ({ 
+  title, 
+  description, 
+  status, 
+  startDate, 
+  endDate, 
+  impressions, 
+  conversions,
+  winner
+}: TestCardProps) => {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription>{description}</CardDescription>
+          </div>
+          <div className={`px-2 py-1 rounded text-xs font-medium ${
+            status === "Running" ? "bg-green-100 text-green-800" : 
+            status === "Completed" ? "bg-blue-100 text-blue-800" : 
+            "bg-gray-100 text-gray-800"
+          }`}>
+            {status}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <p className="text-sm text-gray-500">Start Date</p>
+            <p className="font-medium">{startDate}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">End Date</p>
+            <p className="font-medium">{endDate}</p>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-3 gap-4">
+          <div className="flex flex-col items-center p-2 bg-gray-50 rounded">
+            <Users className="h-4 w-4 text-gray-500 mb-1" />
+            <p className="text-xs text-gray-500">Impressions</p>
+            <p className="font-medium">{impressions.toLocaleString()}</p>
+          </div>
+          <div className="flex flex-col items-center p-2 bg-gray-50 rounded">
+            <MessageSquare className="h-4 w-4 text-gray-500 mb-1" />
+            <p className="text-xs text-gray-500">Conversions</p>
+            <p className="font-medium">{conversions.toLocaleString()}</p>
+          </div>
+          <div className="flex flex-col items-center p-2 bg-gray-50 rounded">
+            <BarChart2 className="h-4 w-4 text-gray-500 mb-1" />
+            <p className="text-xs text-gray-500">Rate</p>
+            <p className="font-medium">{(conversions/impressions*100).toFixed(1)}%</p>
+          </div>
+        </div>
+        
+        {winner && (
+          <div className="mt-4 p-2 bg-blue-50 rounded flex items-center">
+            <TrendingUp className="h-4 w-4 text-blue-500 mr-2" />
+            <p className="text-sm">
+              <span className="font-medium">{winner}</span> is outperforming
+            </p>
+          </div>
+        )}
+      </CardContent>
+      <CardFooter className="justify-end">
+        <Button variant="ghost" size="sm" className="text-xs">
+          View Details <ChevronRight className="ml-1 h-3 w-3" />
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
+const CreateTestForm = ({ onCancel }: { onCancel: () => void }) => {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Create New A/B Test</CardTitle>
+        <CardDescription>
+          Compare two versions of your chatbot to see which performs better
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="test-name">Test Name</Label>
+          <Input id="test-name" placeholder="e.g., Welcome Message Test" />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="test-description">Description</Label>
+          <Input id="test-description" placeholder="Brief description of what you're testing" />
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="test-start">Start Date</Label>
+            <Input id="test-start" type="date" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="test-end">End Date</Label>
+            <Input id="test-end" type="date" />
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="test-bot">Select Chatbot</Label>
+          <Select>
+            <SelectTrigger id="test-bot">
+              <SelectValue placeholder="Select a chatbot" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="support-bot">Customer Support Bot</SelectItem>
+              <SelectItem value="sales-bot">Sales Assistant</SelectItem>
+              <SelectItem value="faq-bot">FAQ Bot</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div className="space-y-4 border p-4 rounded-lg">
+          <div className="flex justify-between">
+            <h4 className="font-medium">Variation A (Original)</h4>
+            <div className="flex items-center space-x-2">
+              <Label htmlFor="control-traffic">Traffic %</Label>
+              <Input id="control-traffic" type="number" className="w-20" defaultValue="50" />
+            </div>
+          </div>
+          
+          {/* Original settings would be shown here */}
+        </div>
+        
+        <div className="space-y-4 border p-4 rounded-lg">
+          <div className="flex justify-between">
+            <h4 className="font-medium">Variation B</h4>
+            <div className="flex items-center space-x-2">
+              <Label htmlFor="variant-traffic">Traffic %</Label>
+              <Input id="variant-traffic" type="number" className="w-20" defaultValue="50" />
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="variation-type">What to vary</Label>
+            <Select>
+              <SelectTrigger id="variation-type">
+                <SelectValue placeholder="Select element to vary" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="welcome">Welcome Message</SelectItem>
+                <SelectItem value="button">Button Style</SelectItem>
+                <SelectItem value="layout">Layout</SelectItem>
+                <SelectItem value="tone">Tone of Voice</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="variation-value">Variant Value</Label>
+            <Input id="variation-value" placeholder="Enter new value for this variation" />
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          <Switch id="auto-winner" />
+          <Label htmlFor="auto-winner">Automatically select winner at end of test</Label>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+        <Button>Create Test</Button>
+      </CardFooter>
+    </Card>
   );
 };
 

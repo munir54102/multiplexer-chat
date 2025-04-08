@@ -1,666 +1,561 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Check, Copy, Image, Download, Upload, Palette, Type, Monitor, Smartphone, Settings, Save, PlusCircle, MinusCircle, MessageSquare, UserCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Palette, Layout, Type, Image, MessageSquare, 
-  PanelLeft, Monitor, Smartphone, Tablet, Save, 
-  Undo, Eye, EyeOff, Check, X, ArrowRight
-} from "lucide-react";
 
 const AppearanceCustomization = () => {
   const { toast } = useToast();
-  const [activePreset, setActivePreset] = useState("modern");
-  const [primaryColor, setPrimaryColor] = useState("#4f46e5");
-  const [secondaryColor, setSecondaryColor] = useState("#f9fafb");
-  const [accentColor, setAccentColor] = useState("#10b981");
-  const [borderRadius, setBorderRadius] = useState([8]);
-  const [showUserAvatar, setShowUserAvatar] = useState(true);
-  const [showBotAvatar, setShowBotAvatar] = useState(true);
-  const [chatWindowHeight, setChatWindowHeight] = useState([400]);
+  const [activeTab, setActiveTab] = useState("desktop");
+  const [colorScheme, setColorScheme] = useState("light");
+  const [primaryColor, setPrimaryColor] = useState("#3e63dd");
+  const [secondaryColor, setSecondaryColor] = useState("#f7f9fc");
+  const [accentColor, setAccentColor] = useState("#7c3aed");
   const [fontFamily, setFontFamily] = useState("Inter");
-  const [headerText, setHeaderText] = useState("Chat with our AI Assistant");
-  const [welcomeMessage, setWelcomeMessage] = useState("Hi there! How can I help you today?");
-  
-  const presets = [
-    { id: "modern", name: "Modern", 
-      preview: "bg-indigo-50 border border-indigo-200 rounded-lg" },
-    { id: "minimal", name: "Minimal", 
-      preview: "bg-gray-50 border border-gray-200 rounded-lg" },
-    { id: "colorful", name: "Colorful", 
-      preview: "bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-lg" },
-    { id: "dark", name: "Dark Mode", 
-      preview: "bg-gray-800 border border-gray-700 rounded-lg" },
-    { id: "bubbles", name: "Bubbles", 
-      preview: "bg-blue-50 border border-blue-200 rounded-xl" },
-    { id: "enterprise", name: "Enterprise", 
-      preview: "bg-slate-50 border border-slate-200 rounded-md" },
-  ];
-  
-  const handleSelectPreset = (presetId: string) => {
-    setActivePreset(presetId);
-    
-    // Update settings based on the selected preset
-    switch (presetId) {
-      case "modern":
-        setPrimaryColor("#4f46e5");
-        setSecondaryColor("#f9fafb");
-        setAccentColor("#10b981");
-        setBorderRadius([8]);
-        setShowUserAvatar(true);
-        setShowBotAvatar(true);
-        setFontFamily("Inter");
-        break;
-      case "minimal":
-        setPrimaryColor("#1f2937");
-        setSecondaryColor("#ffffff");
-        setAccentColor("#6b7280");
-        setBorderRadius([4]);
-        setShowUserAvatar(false);
-        setShowBotAvatar(false);
-        setFontFamily("System UI");
-        break;
-      case "colorful":
-        setPrimaryColor("#8b5cf6");
-        setSecondaryColor("#fdf4ff");
-        setAccentColor("#ec4899");
-        setBorderRadius([12]);
-        setShowUserAvatar(true);
-        setShowBotAvatar(true);
-        setFontFamily("Poppins");
-        break;
-      case "dark":
-        setPrimaryColor("#cbd5e1");
-        setSecondaryColor("#1e293b");
-        setAccentColor("#3b82f6");
-        setBorderRadius([6]);
-        setShowUserAvatar(true);
-        setShowBotAvatar(true);
-        setFontFamily("System UI");
-        break;
-      case "bubbles":
-        setPrimaryColor("#3b82f6");
-        setSecondaryColor("#eff6ff");
-        setAccentColor("#10b981");
-        setBorderRadius([20]);
-        setShowUserAvatar(true);
-        setShowBotAvatar(true);
-        setFontFamily("Nunito");
-        break;
-      case "enterprise":
-        setPrimaryColor("#0f172a");
-        setSecondaryColor("#f8fafc");
-        setAccentColor("#0ea5e9");
-        setBorderRadius([2]);
-        setShowUserAvatar(false);
-        setShowBotAvatar(true);
-        setFontFamily("IBM Plex Sans");
-        break;
-    }
-    
-    toast({
-      title: "Preset Applied",
-      description: `The ${presets.find(p => p.id === presetId)?.name} preset has been applied.`
-    });
-  };
+  const [fontSize, setFontSize] = useState(16);
+  const [borderRadius, setBorderRadius] = useState(8);
+  const [showBranding, setShowBranding] = useState(true);
+  const [position, setPosition] = useState("right");
+  const [customCssMode, setCustomCssMode] = useState(false);
+  const [customCss, setCustomCss] = useState("");
+  const [previewImage, setPreviewImage] = useState("/placeholder.svg");
+  const [chatHeight, setChatHeight] = useState(70);
+  const [chatWidth, setChatWidth] = useState(80);
   
   const handleSaveChanges = () => {
     toast({
-      title: "Appearance Settings Saved",
-      description: "Your chatbot appearance has been updated successfully."
+      title: "Changes saved",
+      description: "Your customizations have been applied to the chatbot."
     });
   };
   
   const resetToDefaults = () => {
-    handleSelectPreset("modern");
+    setPrimaryColor("#3e63dd");
+    setSecondaryColor("#f7f9fc");
+    setAccentColor("#7c3aed");
+    setFontFamily("Inter");
+    setFontSize(16);
+    setBorderRadius(8);
+    setShowBranding(true);
+    setPosition("right");
+    
     toast({
-      title: "Reset to Defaults",
-      description: "Appearance settings have been reset to default values."
+      title: "Reset to defaults",
+      description: "All appearance settings have been reset to their default values."
     });
   };
-
+  
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold">Chatbot Appearance</h2>
-          <p className="text-sm text-muted-foreground">Customize how your chatbot looks and feels</p>
+          <h2 className="text-3xl font-bold tracking-tight">Appearance</h2>
+          <p className="text-muted-foreground">
+            Customize how your chatbot looks on your website
+          </p>
+        </div>
+        <div className="flex space-x-2">
+          <Button variant="outline" onClick={resetToDefaults}>
+            Reset to Defaults
+          </Button>
+          <Button onClick={handleSaveChanges}>
+            <Save className="mr-2 h-4 w-4" />
+            Save Changes
+          </Button>
         </div>
       </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-3 space-y-6">
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-7 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Style Presets</CardTitle>
-              <CardDescription>
-                Choose a ready-made style for your chatbot
-              </CardDescription>
+              <CardTitle>Visual Editor</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {presets.map(preset => (
-                  <div key={preset.id} className="text-center">
-                    <button
-                      className={`w-full aspect-square ${preset.preview} p-3 mb-2 flex flex-col items-center justify-center relative transition-all ${
-                        activePreset === preset.id ? 'ring-2 ring-primary ring-offset-2' : 'hover:border-primary/50'
-                      }`}
-                      onClick={() => handleSelectPreset(preset.id)}
-                    >
-                      {activePreset === preset.id && (
-                        <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                          <Check className="h-3 w-3 text-white" />
-                        </div>
-                      )}
-                      <div className={`w-full h-2 ${
-                        preset.id === "dark" ? "bg-gray-700" : 
-                        preset.id === "colorful" ? "bg-purple-400" : 
-                        preset.id === "bubbles" ? "bg-blue-400" : 
-                        preset.id === "enterprise" ? "bg-slate-800" :
-                        "bg-indigo-500"
-                      } rounded-t-sm mb-1`}></div>
-                      <div className="w-2/3 h-1.5 mb-1 rounded-sm bg-gray-400 opacity-50"></div>
-                      <div className="w-full h-1.5 mb-1 rounded-sm bg-gray-400 opacity-30"></div>
-                      <div className="w-5/6 h-1.5 mb-1 rounded-sm bg-gray-400 opacity-30"></div>
-                      <div className="w-full h-1.5 mb-1 rounded-sm bg-gray-400 opacity-30"></div>
-                      <div className="w-1/2 h-1.5 rounded-sm bg-gray-400 opacity-50 ml-auto"></div>
-                    </button>
-                    <span className="text-sm font-medium">{preset.name}</span>
+              <Tabs defaultValue="general" className="space-y-4">
+                <TabsList>
+                  <TabsTrigger value="general">General</TabsTrigger>
+                  <TabsTrigger value="colors">Colors</TabsTrigger>
+                  <TabsTrigger value="typography">Typography</TabsTrigger>
+                  <TabsTrigger value="layout">Layout</TabsTrigger>
+                  <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="general" className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label htmlFor="border-radius">Border Radius</Label>
+                      <span className="text-sm text-gray-500">{borderRadius}px</span>
+                    </div>
+                    <Slider
+                      id="border-radius"
+                      min={0}
+                      max={20}
+                      step={1}
+                      value={[borderRadius]}
+                      onValueChange={(value) => setBorderRadius(value[0])}
+                    />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Tabs defaultValue="colors">
-            <TabsList className="mb-4">
-              <TabsTrigger value="colors"><Palette className="h-4 w-4 mr-1" /> Colors</TabsTrigger>
-              <TabsTrigger value="layout"><Layout className="h-4 w-4 mr-1" /> Layout</TabsTrigger>
-              <TabsTrigger value="typography"><Type className="h-4 w-4 mr-1" /> Typography</TabsTrigger>
-              <TabsTrigger value="content"><MessageSquare className="h-4 w-4 mr-1" /> Content</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="colors" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Color Scheme</CardTitle>
-                  <CardDescription>
-                    Customize the colors of your chatbot
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
+                  
+                  <div className="space-y-2">
+                    <Label>Position</Label>
+                    <RadioGroup 
+                      defaultValue={position} 
+                      onValueChange={setPosition}
+                      className="grid grid-cols-2 gap-4"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="left" id="left" />
+                        <Label htmlFor="left">Left</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="right" id="right" />
+                        <Label htmlFor="right">Right</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="show-branding"
+                      checked={showBranding}
+                      onCheckedChange={setShowBranding}
+                    />
+                    <Label htmlFor="show-branding">Show "Powered by MultiplexAI" branding</Label>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="colors" className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Color Scheme</Label>
+                    <RadioGroup 
+                      defaultValue={colorScheme} 
+                      onValueChange={setColorScheme}
+                      className="grid grid-cols-3 gap-4"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="light" id="light" />
+                        <Label htmlFor="light">Light</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="dark" id="dark" />
+                        <Label htmlFor="dark">Dark</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="auto" id="auto" />
+                        <Label htmlFor="auto">Auto</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="space-y-2">
                     <Label htmlFor="primary-color">Primary Color</Label>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center space-x-2">
                       <div 
-                        className="w-6 h-6 rounded border" 
+                        className="w-8 h-8 rounded cursor-pointer border" 
                         style={{ backgroundColor: primaryColor }}
-                      ></div>
+                      />
                       <Input 
                         id="primary-color" 
                         type="color" 
                         value={primaryColor} 
-                        onChange={(e) => setPrimaryColor(e.target.value)} 
-                        className="w-12 h-8 p-0 overflow-hidden"
+                        onChange={(e) => setPrimaryColor(e.target.value)}
+                        className="w-16 p-1 h-8"
                       />
                       <Input 
                         value={primaryColor} 
-                        onChange={(e) => setPrimaryColor(e.target.value)} 
-                        className="flex-1" 
+                        onChange={(e) => setPrimaryColor(e.target.value)}
+                        className="flex-1"
                       />
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Used for headers, buttons and accents
-                    </p>
                   </div>
                   
-                  <div>
+                  <div className="space-y-2">
                     <Label htmlFor="secondary-color">Background Color</Label>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center space-x-2">
                       <div 
-                        className="w-6 h-6 rounded border" 
+                        className="w-8 h-8 rounded cursor-pointer border" 
                         style={{ backgroundColor: secondaryColor }}
-                      ></div>
+                      />
                       <Input 
                         id="secondary-color" 
                         type="color" 
                         value={secondaryColor} 
-                        onChange={(e) => setSecondaryColor(e.target.value)} 
-                        className="w-12 h-8 p-0 overflow-hidden"
+                        onChange={(e) => setSecondaryColor(e.target.value)}
+                        className="w-16 p-1 h-8"
                       />
                       <Input 
                         value={secondaryColor} 
-                        onChange={(e) => setSecondaryColor(e.target.value)} 
-                        className="flex-1" 
+                        onChange={(e) => setSecondaryColor(e.target.value)}
+                        className="flex-1"
                       />
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Main background of the chat window
-                    </p>
                   </div>
                   
-                  <div>
+                  <div className="space-y-2">
                     <Label htmlFor="accent-color">Accent Color</Label>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center space-x-2">
                       <div 
-                        className="w-6 h-6 rounded border" 
+                        className="w-8 h-8 rounded cursor-pointer border" 
                         style={{ backgroundColor: accentColor }}
-                      ></div>
+                      />
                       <Input 
                         id="accent-color" 
                         type="color" 
                         value={accentColor} 
-                        onChange={(e) => setAccentColor(e.target.value)} 
-                        className="w-12 h-8 p-0 overflow-hidden"
+                        onChange={(e) => setAccentColor(e.target.value)}
+                        className="w-16 p-1 h-8"
                       />
                       <Input 
                         value={accentColor} 
-                        onChange={(e) => setAccentColor(e.target.value)} 
-                        className="flex-1" 
+                        onChange={(e) => setAccentColor(e.target.value)}
+                        className="flex-1"
                       />
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Used for highlights and secondary elements
-                    </p>
                   </div>
-                  
-                  <div>
-                    <Label>Theme Mode</Label>
-                    <div className="flex gap-2 mt-2">
-                      <Button variant="outline" className="flex-1 justify-start">
-                        <Monitor className="h-4 w-4 mr-2" /> Light Mode
-                      </Button>
-                      <Button variant="outline" className="flex-1 justify-start">
-                        <Monitor className="h-4 w-4 mr-2" /> Dark Mode
-                      </Button>
-                      <Button variant="default" className="flex-1 justify-start">
-                        <Monitor className="h-4 w-4 mr-2" /> Auto
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="layout" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Layout Settings</CardTitle>
-                  <CardDescription>
-                    Configure the shape and size of your chatbot
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </TabsContent>
+                
+                <TabsContent value="typography" className="space-y-4">
                   <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <Label>Border Radius</Label>
-                      <span className="text-sm">{borderRadius}px</span>
-                    </div>
-                    <Slider
-                      value={borderRadius}
-                      onValueChange={setBorderRadius}
-                      min={0}
-                      max={20}
-                      step={1}
-                    />
-                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>Square</span>
-                      <span>Rounded</span>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <Label>Chat Window Height</Label>
-                      <span className="text-sm">{chatWindowHeight}px</span>
-                    </div>
-                    <Slider
-                      value={chatWindowHeight}
-                      onValueChange={setChatWindowHeight}
-                      min={300}
-                      max={700}
-                      step={10}
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="show-user-avatar" className="mb-2 block">User Avatar</Label>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">Show user avatar</span>
-                        <Switch 
-                          id="show-user-avatar" 
-                          checked={showUserAvatar} 
-                          onCheckedChange={setShowUserAvatar} 
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="show-bot-avatar" className="mb-2 block">Bot Avatar</Label>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">Show bot avatar</span>
-                        <Switch 
-                          id="show-bot-avatar" 
-                          checked={showBotAvatar} 
-                          onCheckedChange={setShowBotAvatar} 
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label>Responsive Behavior</Label>
-                    <div className="flex gap-2 mt-2">
-                      <Button variant="outline" className="flex-1 justify-start">
-                        <Smartphone className="h-4 w-4 mr-2" /> Mobile
-                      </Button>
-                      <Button variant="outline" className="flex-1 justify-start">
-                        <Tablet className="h-4 w-4 mr-2" /> Tablet
-                      </Button>
-                      <Button variant="default" className="flex-1 justify-start">
-                        <Monitor className="h-4 w-4 mr-2" /> All Devices
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label>Chat Window Position</Label>
-                    <div className="grid grid-cols-3 gap-2 mt-2">
-                      <Button variant="outline" size="sm">Top Left</Button>
-                      <Button variant="outline" size="sm">Top Center</Button>
-                      <Button variant="outline" size="sm">Top Right</Button>
-                      <Button variant="outline" size="sm">Middle Left</Button>
-                      <Button variant="outline" size="sm">Center</Button>
-                      <Button variant="outline" size="sm">Middle Right</Button>
-                      <Button variant="outline" size="sm">Bottom Left</Button>
-                      <Button variant="default" size="sm">Bottom Center</Button>
-                      <Button variant="outline" size="sm">Bottom Right</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="typography" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Typography Settings</CardTitle>
-                  <CardDescription>
-                    Configure fonts and text styles
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
                     <Label htmlFor="font-family">Font Family</Label>
                     <Select value={fontFamily} onValueChange={setFontFamily}>
-                      <SelectTrigger className="w-full mt-1">
+                      <SelectTrigger id="font-family">
                         <SelectValue placeholder="Select a font" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="System UI">System UI</SelectItem>
                         <SelectItem value="Inter">Inter</SelectItem>
                         <SelectItem value="Roboto">Roboto</SelectItem>
                         <SelectItem value="Poppins">Poppins</SelectItem>
-                        <SelectItem value="Nunito">Nunito</SelectItem>
-                        <SelectItem value="IBM Plex Sans">IBM Plex Sans</SelectItem>
+                        <SelectItem value="Open Sans">Open Sans</SelectItem>
+                        <SelectItem value="Montserrat">Montserrat</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="header-color">Header Text Color</Label>
-                      <Input 
-                        id="header-color" 
-                        type="color" 
-                        defaultValue="#FFFFFF" 
-                        className="w-full h-10 mt-1" 
-                      />
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label htmlFor="font-size">Font Size</Label>
+                      <span className="text-sm text-gray-500">{fontSize}px</span>
                     </div>
-                    
-                    <div>
-                      <Label htmlFor="chat-text-color">Chat Text Color</Label>
-                      <Input 
-                        id="chat-text-color" 
-                        type="color" 
-                        defaultValue="#1F2937" 
-                        className="w-full h-10 mt-1" 
-                      />
+                    <Slider
+                      id="font-size"
+                      min={12}
+                      max={24}
+                      step={1}
+                      value={[fontSize]}
+                      onValueChange={(value) => setFontSize(value[0])}
+                    />
+                  </div>
+                  
+                  <div className="mt-4 p-4 border rounded-md">
+                    <p className="mb-2 text-sm text-gray-500">Preview:</p>
+                    <p style={{ fontFamily, fontSize: `${fontSize}px` }}>
+                      This is how your chatbot text will appear.
+                    </p>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="layout" className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label htmlFor="chat-width">Chat Width</Label>
+                      <span className="text-sm text-gray-500">{chatWidth}%</span>
+                    </div>
+                    <Slider
+                      id="chat-width"
+                      min={30}
+                      max={100}
+                      step={5}
+                      value={[chatWidth]}
+                      onValueChange={(value) => setChatWidth(value[0])}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label htmlFor="chat-height">Chat Height</Label>
+                      <span className="text-sm text-gray-500">{chatHeight}%</span>
+                    </div>
+                    <Slider
+                      id="chat-height"
+                      min={30}
+                      max={100}
+                      step={5}
+                      value={[chatHeight]}
+                      onValueChange={(value) => setChatHeight(value[0])}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="launcher-icon">Launcher Icon</Label>
+                    <div className="grid grid-cols-4 gap-2">
+                      <div className="border rounded-md p-2 text-center cursor-pointer hover:border-primary">
+                        <MessageSquare className="h-8 w-8 mx-auto mb-1" />
+                        <p className="text-xs">Chat</p>
+                      </div>
+                      <div className="border rounded-md p-2 text-center cursor-pointer hover:border-primary">
+                        <UserCircle className="h-8 w-8 mx-auto mb-1" />
+                        <p className="text-xs">User</p>
+                      </div>
+                      <div className="border rounded-md p-2 text-center cursor-pointer hover:border-primary">
+                        <Button className="h-8 w-8 rounded-full p-0 mx-auto mb-1">
+                          <PlusCircle className="h-4 w-4" />
+                        </Button>
+                        <p className="text-xs">Plus</p>
+                      </div>
+                      <div className="border rounded-md p-2 text-center cursor-pointer hover:border-primary bg-gray-50">
+                        <div className="h-8 w-8 mx-auto mb-1 flex items-center justify-center">
+                          <Upload className="h-4 w-4" />
+                        </div>
+                        <p className="text-xs">Custom</p>
+                      </div>
                     </div>
                   </div>
-                  
-                  <div>
-                    <Label htmlFor="font-size">Base Font Size</Label>
-                    <Select defaultValue="medium">
-                      <SelectTrigger className="w-full mt-1">
-                        <SelectValue placeholder="Select size" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="small">Small</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="large">Large</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="content" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Content Settings</CardTitle>
-                  <CardDescription>
-                    Configure the text content of your chatbot
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="header-text">Header Text</Label>
-                    <Input 
-                      id="header-text" 
-                      value={headerText}
-                      onChange={(e) => setHeaderText(e.target.value)}
-                      className="mt-1" 
+                </TabsContent>
+                
+                <TabsContent value="advanced" className="space-y-4">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <Switch
+                      id="custom-css-mode"
+                      checked={customCssMode}
+                      onCheckedChange={setCustomCssMode}
                     />
+                    <Label htmlFor="custom-css-mode">Enable Custom CSS</Label>
                   </div>
                   
-                  <div>
-                    <Label htmlFor="welcome-message">Welcome Message</Label>
-                    <Input 
-                      id="welcome-message" 
-                      value={welcomeMessage}
-                      onChange={(e) => setWelcomeMessage(e.target.value)}
-                      className="mt-1" 
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="placeholder-text">Input Placeholder</Label>
-                    <Input 
-                      id="placeholder-text" 
-                      defaultValue="Type your message here..." 
-                      className="mt-1" 
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="send-button-text">Send Button Text</Label>
-                    <Input 
-                      id="send-button-text" 
-                      defaultValue="Send" 
-                      className="mt-1" 
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="branding">Show Branding</Label>
+                  {customCssMode && (
+                    <div className="space-y-2">
+                      <Label htmlFor="custom-css">Custom CSS</Label>
+                      <Textarea
+                        id="custom-css"
+                        value={customCss}
+                        onChange={(e) => setCustomCss(e.target.value)}
+                        placeholder=".multiplex-chat-container { /* your styles */ }"
+                        className="font-mono h-40"
+                      />
                       <p className="text-xs text-gray-500">
-                        Display "Powered by MultiplexAI" in the chatbot
+                        Use custom CSS to override the default styles. Changes will be applied immediately.
                       </p>
                     </div>
-                    <Switch id="branding" defaultChecked />
+                  )}
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="space-y-2">
+                    <Label>Upload Custom Assets</Label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="border border-dashed rounded-md p-4 text-center">
+                        <div className="mb-2">
+                          <Image className="h-8 w-8 mx-auto text-gray-400" />
+                        </div>
+                        <p className="text-sm mb-2">Upload Logo</p>
+                        <Button size="sm" variant="outline">
+                          <Upload className="h-3 w-3 mr-1" /> Select File
+                        </Button>
+                      </div>
+                      <div className="border border-dashed rounded-md p-4 text-center">
+                        <div className="mb-2">
+                          <Image className="h-8 w-8 mx-auto text-gray-400" />
+                        </div>
+                        <p className="text-sm mb-2">Agent Avatar</p>
+                        <Button size="sm" variant="outline">
+                          <Upload className="h-3 w-3 mr-1" /> Select File
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
           
-          <div className="flex justify-between">
-            <Button variant="outline" onClick={resetToDefaults}>
-              <Undo className="h-4 w-4 mr-2" />
-              Reset to Defaults
-            </Button>
-            <Button onClick={handleSaveChanges}>
-              <Save className="h-4 w-4 mr-2" />
-              Save Changes
-            </Button>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Theme Library</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="border rounded-md overflow-hidden cursor-pointer hover:border-primary transition-colors">
+                  <div className="h-24 bg-blue-500"></div>
+                  <div className="p-3">
+                    <h4 className="font-medium text-sm">Professional Blue</h4>
+                    <p className="text-xs text-gray-500">Classic business theme</p>
+                  </div>
+                </div>
+                <div className="border rounded-md overflow-hidden cursor-pointer hover:border-primary transition-colors">
+                  <div className="h-24 bg-purple-500"></div>
+                  <div className="p-3">
+                    <h4 className="font-medium text-sm">Creative Purple</h4>
+                    <p className="text-xs text-gray-500">Modern design agency look</p>
+                  </div>
+                </div>
+                <div className="border rounded-md overflow-hidden cursor-pointer hover:border-primary transition-colors">
+                  <div className="h-24 bg-green-500"></div>
+                  <div className="p-3">
+                    <h4 className="font-medium text-sm">Eco Green</h4>
+                    <p className="text-xs text-gray-500">Sustainability focused</p>
+                  </div>
+                </div>
+                <div className="border rounded-md overflow-hidden cursor-pointer hover:border-primary transition-colors">
+                  <div className="h-24 bg-gray-800"></div>
+                  <div className="p-3">
+                    <h4 className="font-medium text-sm">Dark Mode</h4>
+                    <p className="text-xs text-gray-500">Low light environment</p>
+                  </div>
+                </div>
+                <div className="border rounded-md overflow-hidden cursor-pointer hover:border-primary transition-colors">
+                  <div className="h-24 bg-red-500"></div>
+                  <div className="p-3">
+                    <h4 className="font-medium text-sm">Vibrant Red</h4>
+                    <p className="text-xs text-gray-500">Bold and attention-grabbing</p>
+                  </div>
+                </div>
+                <div className="border border-dashed rounded-md overflow-hidden flex items-center justify-center h-[104px] cursor-pointer hover:border-primary transition-colors">
+                  <div className="text-center">
+                    <PlusCircle className="h-6 w-6 mx-auto mb-1 text-gray-400" />
+                    <p className="text-sm text-gray-500">Create Custom</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
         
-        <div className="lg:col-span-2">
-          <div className="sticky top-20">
+        <div className="lg:col-span-5">
+          <div className="sticky top-6 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Preview</CardTitle>
-                <CardDescription>
-                  See how your chatbot will look
-                </CardDescription>
+                <div className="flex justify-between items-center">
+                  <CardTitle>Preview</CardTitle>
+                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
+                    <TabsList className="grid w-[200px] grid-cols-2">
+                      <TabsTrigger value="desktop" className="flex items-center">
+                        <Monitor className="h-4 w-4 mr-2" /> Desktop
+                      </TabsTrigger>
+                      <TabsTrigger value="mobile" className="flex items-center">
+                        <Smartphone className="h-4 w-4 mr-2" /> Mobile
+                      </TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="flex justify-end mb-2">
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                      <Smartphone className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                      <Tablet className="h-4 w-4" />
-                    </Button>
-                    <Button variant="default" size="sm" className="h-8 w-8 p-0">
-                      <Monitor className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                
                 <div 
-                  className="border rounded-lg overflow-hidden"
-                  style={{ 
-                    borderRadius: `${borderRadius}px`,
-                    fontFamily: fontFamily
-                  }}
+                  className={`border rounded-md overflow-hidden mx-auto transition-all ${
+                    activeTab === "desktop" ? "w-full" : "w-[320px]"
+                  }`}
                 >
-                  {/* Chat header */}
                   <div 
-                    className="p-3 flex items-center justify-between"
-                    style={{ backgroundColor: primaryColor, color: "white" }}
-                  >
-                    <div className="font-medium">{headerText}</div>
-                    <div className="flex gap-1">
-                      <button className="p-1 rounded-full hover:bg-white/10">
-                        <Minus className="h-4 w-4" />
-                      </button>
-                      <button className="p-1 rounded-full hover:bg-white/10">
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {/* Chat messages */}
-                  <div 
-                    className="p-4 overflow-y-auto"
+                    className="bg-gray-50 border-b p-3 flex items-center justify-between"
                     style={{ 
-                      backgroundColor: secondaryColor, 
-                      height: `${chatWindowHeight}px` 
+                      backgroundColor: secondaryColor,
+                      borderRadius: `${borderRadius}px ${borderRadius}px 0 0`
                     }}
                   >
-                    {/* Bot message */}
+                    <div className="font-medium" style={{ fontFamily, fontSize: `${fontSize}px` }}>
+                      Chat with AI Assistant
+                    </div>
+                    <Settings className="h-4 w-4 text-gray-500" />
+                  </div>
+                  <div 
+                    className="h-80 p-4 overflow-y-auto"
+                    style={{ 
+                      fontFamily,
+                      fontSize: `${fontSize}px`
+                    }}
+                  >
                     <div className="flex mb-4">
-                      {showBotAvatar && (
-                        <div 
-                          className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-2 flex-shrink-0"
-                          style={{ color: primaryColor }}
-                        >
-                          <Bot className="h-4 w-4" />
-                        </div>
-                      )}
                       <div 
-                        className={`p-3 rounded-lg max-w-[80%] ${showBotAvatar ? "" : "ml-0"}`}
+                        className="rounded-full h-8 w-8 bg-gray-200 mr-2 flex-shrink-0 flex items-center justify-center"
+                        style={{ backgroundColor: accentColor }}
+                      >
+                        <MessageSquare className="h-4 w-4 text-white" />
+                      </div>
+                      <div 
+                        className="bg-gray-100 rounded-lg p-3 max-w-[80%]"
                         style={{ 
-                          backgroundColor: "white", 
-                          borderRadius: `${borderRadius}px`
+                          borderRadius: `${borderRadius}px` ,
+                          backgroundColor: secondaryColor
                         }}
                       >
-                        <p className="text-gray-800">{welcomeMessage}</p>
+                        Hello! How can I help you today?
                       </div>
                     </div>
-                    
-                    {/* User message */}
                     <div className="flex justify-end mb-4">
                       <div 
-                        className={`p-3 rounded-lg max-w-[80%] ${showUserAvatar ? "" : "mr-0"}`}
+                        className="bg-blue-500 text-white rounded-lg p-3 max-w-[80%]"
                         style={{ 
-                          backgroundColor: accentColor, 
-                          color: "white",
-                          borderRadius: `${borderRadius}px`
+                          borderRadius: `${borderRadius}px`,
+                          backgroundColor: primaryColor
                         }}
                       >
-                        <p>Hello, I have a question about your service.</p>
+                        I'm looking for information about your services.
                       </div>
-                      {showUserAvatar && (
-                        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center ml-2 flex-shrink-0">
-                          <Users className="h-4 w-4 text-gray-600" />
-                        </div>
-                      )}
                     </div>
-                    
-                    {/* Bot response */}
                     <div className="flex mb-4">
-                      {showBotAvatar && (
-                        <div 
-                          className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-2 flex-shrink-0"
-                          style={{ color: primaryColor }}
-                        >
-                          <Bot className="h-4 w-4" />
-                        </div>
-                      )}
                       <div 
-                        className={`p-3 rounded-lg max-w-[80%] ${showBotAvatar ? "" : "ml-0"}`}
+                        className="rounded-full h-8 w-8 bg-gray-200 mr-2 flex-shrink-0 flex items-center justify-center"
+                        style={{ backgroundColor: accentColor }}
+                      >
+                        <MessageSquare className="h-4 w-4 text-white" />
+                      </div>
+                      <div 
+                        className="bg-gray-100 rounded-lg p-3 max-w-[80%]"
                         style={{ 
-                          backgroundColor: "white", 
-                          borderRadius: `${borderRadius}px`
+                          borderRadius: `${borderRadius}px`,
+                          backgroundColor: secondaryColor
                         }}
                       >
-                        <p className="text-gray-800">Of course! I'd be happy to help. What would you like to know about our service?</p>
+                        I'd be happy to help! We offer several services including:
+                        <ul className="list-disc ml-4 mt-2">
+                          <li>Website development</li>
+                          <li>Mobile applications</li>
+                          <li>Custom software solutions</li>
+                        </ul>
+                        What specific area are you interested in?
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Chat input */}
-                  <div 
-                    className="p-3 border-t flex gap-2"
-                    style={{ backgroundColor: secondaryColor }}
-                  >
+                  <div className="border-t p-3 flex items-center">
                     <Input 
-                      placeholder="Type your message here..." 
-                      className="flex-1"
+                      placeholder="Type your message..."
+                      className="flex-1 mr-2"
+                      style={{ borderRadius: `${borderRadius}px` }}
                     />
-                    <Button style={{ backgroundColor: primaryColor }}>
-                      <ArrowRight className="h-4 w-4" />
+                    <Button
+                      size="sm"
+                      style={{ 
+                        backgroundColor: primaryColor,
+                        borderRadius: `${borderRadius}px`
+                      }}
+                    >
+                      Send
                     </Button>
                   </div>
+                  {showBranding && (
+                    <div className="text-center py-2 text-xs text-gray-500 border-t">
+                      Powered by MultiplexAI
+                    </div>
+                  )}
                 </div>
                 
-                <div className="mt-4 text-center text-xs text-gray-500">
-                  This is a preview of how your chatbot will appear to users.
+                <div className="mt-4 flex justify-center">
+                  <Button variant="outline" size="sm">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Theme
+                  </Button>
                 </div>
               </CardContent>
             </Card>

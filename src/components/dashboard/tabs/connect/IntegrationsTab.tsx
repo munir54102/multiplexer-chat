@@ -78,7 +78,7 @@ const IntegrationsTab = () => {
                   
                   <TabsContent value="messaging" className="space-y-4">
                     <div className="grid grid-cols-2 gap-3">
-                      {["WhatsApp", "Facebook", "Instagram", "Telegram", "Slack", "Line"].map((platform) => (
+                      {["WhatsApp", "Facebook", "Instagram", "Slack", "Line"].map((platform) => (
                         <div key={platform} className="border rounded-lg p-3 hover:border-primary hover:bg-gray-50 cursor-pointer">
                           <h4 className="font-medium">{platform}</h4>
                           <p className="text-sm text-gray-500">Connect to {platform}</p>

@@ -14,7 +14,7 @@ import GuidedTutorial from "@/components/GuidedTutorial";
 import ChatbotGrid from "./chatbot/ChatbotGrid";
 import { initialChatbots } from "./chatbot/mockData";
 import { Chatbot } from "./chatbot/ChatbotCard";
-import { Upload } from "lucide-react";
+import { Upload, ShoppingCart } from "lucide-react";
 
 const ChatbotManagement = () => {
   const [chatbots, setChatbots] = useState(initialChatbots);
@@ -83,6 +83,27 @@ const ChatbotManagement = () => {
   const handleStartTutorial = () => {
     setShowTutorial(true);
   };
+
+  const handleCreateEcommerceChatbot = () => {
+    const newBot: Chatbot = {
+      id: Math.max(...chatbots.map(b => b.id)) + 1,
+      name: "E-commerce Assistant",
+      description: "Product recommendations and order support",
+      type: "ecommerce",
+      status: "inactive" as const,
+      lastModified: "Just now",
+      messagesCount: 0,
+      integrationsCount: 0,
+      progress: 10
+    };
+    
+    setChatbots([...chatbots, newBot]);
+    
+    toast({
+      title: "E-commerce chatbot created",
+      description: "Your new e-commerce assistant has been created successfully."
+    });
+  };
   
   return (
     <div className="space-y-6">
@@ -96,6 +117,10 @@ const ChatbotManagement = () => {
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleStartTutorial}>
             Creation Guide
+          </Button>
+          <Button variant="outline" onClick={handleCreateEcommerceChatbot}>
+            <ShoppingCart className="h-4 w-4 mr-2" />
+            E-commerce Bot
           </Button>
           <CreateChatbotButton />
         </div>

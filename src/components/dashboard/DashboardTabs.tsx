@@ -1,167 +1,149 @@
 
-import { useState, useEffect } from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Bot, MessageSquare, BarChart2, Link, Database, 
-  Activity, Zap, Users, HelpCircle, PenTool, 
-  Globe, VolumeX, Laptop
-} from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  CreateTab,
-  PlaygroundTab,
-  ActivityTab,
-  AnalyticsTab,
-  ConnectTab,
-  SourcesTab,
-  ActionsTab,
-  ContactsTab,
-  LanguageSettingsTab,
-  TeamCollaborationTab,
-  HelpTab
-} from "./tabs";
-import ABTesting from "./ABTesting";
-import SentimentAnalysis from "./SentimentAnalysis";
-import TemplateLibrary from "./TemplateLibrary";
-import { settings } from "./settings";
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
+import CreateTab from "./tabs/CreateTab";
+import SourcesTab from "./tabs/SourcesTab";
+import IntegrationsTab from "./tabs/connect/IntegrationsTab";
+import AppointmentBookingTab from "./tabs/AppointmentBookingTab";
+import SalesAgentTab from "./tabs/SalesAgentTab";
+import CustomerSupportTab from "./tabs/CustomerSupportTab";
+import ActionsTab from "./tabs/ActionsTab";
+import LanguageSettingsTab from "./tabs/LanguageSettingsTab";
+import AnalyticsTab from "./tabs/AnalyticsTab";
 import { useToast } from "@/hooks/use-toast";
-import GuidedTutorial from "../GuidedTutorial";
+import { 
+  PlusCircle, 
+  Database, 
+  Link, 
+  Zap, 
+  Languages, 
+  BarChart3, 
+  Calendar, 
+  UserRound,
+  Headphones,
+  ShoppingCart
+} from "lucide-react";
+import EcommerceConnector from "./tabs/sources/EcommerceConnector";
 
 const DashboardTabs = () => {
-  const navigate = useNavigate();
-  const { section = 'create', tab } = useParams<{ section?: string; tab?: string }>();
-  const [value, setValue] = useState(section);
-  const [showTutorial, setShowTutorial] = useState(false);
+  const [activeTab, setActiveTab] = useState("create");
   const { toast } = useToast();
-  
-  useEffect(() => {
-    // Check if this is first time visiting dashboard
-    const hasTakenTutorial = localStorage.getItem('dashboardTutorialComplete');
-    if (!hasTakenTutorial) {
-      // Show the tutorial with a small delay
-      const timer = setTimeout(() => {
-        setShowTutorial(true);
-      }, 1000);
-      
-      return () => clearTimeout(timer);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    
+    // Show toast when certain tabs are selected
+    if (value === "appointment-booking") {
+      toast({
+        title: "Appointment Booking",
+        description: "Configure your chatbot to schedule appointments with customers"
+      });
+    } else if (value === "sales-agent") {
+      toast({
+        title: "Sales Agent",
+        description: "Configure your AI sales assistant capabilities"
+      });
+    } else if (value === "customer-support") {
+      toast({
+        title: "Customer Support",
+        description: "Configure how your chatbot handles customer support inquiries"
+      });
+    } else if (value === "ecommerce") {
+      toast({
+        title: "E-commerce Connection",
+        description: "Connect and sync with your e-commerce platforms"
+      });
     }
-  }, []);
-  
-  useEffect(() => {
-    setValue(section);
-  }, [section]);
-  
-  const handleValueChange = (newValue: string) => {
-    setValue(newValue);
-    navigate(`/dashboard/${newValue}${tab ? `/${tab}` : ''}`);
   };
-  
-  const handleTutorialComplete = () => {
-    setShowTutorial(false);
-    localStorage.setItem('dashboardTutorialComplete', 'true');
-    toast({
-      title: "Tutorial completed!",
-      description: "You can access it anytime from the Help section."
-    });
-  };
-  
+
   return (
-    <div className="flex flex-col flex-1 min-h-0">
-      {showTutorial && <GuidedTutorial onComplete={handleTutorialComplete} />}
-      
-      <div className="border-b">
-        <Tabs
-          defaultValue={value}
-          value={value}
-          onValueChange={handleValueChange}
-          className="w-full"
-        >
-          <div className="px-4 overflow-x-auto">
-            <TabsList className="h-14 w-max">
-              <TabsTrigger value="create" className="flex items-center gap-2">
-                <Bot className="h-4 w-4" />
-                <span>Create</span>
-              </TabsTrigger>
-              <TabsTrigger value="playground" className="flex items-center gap-2">
-                <PenTool className="h-4 w-4" />
-                <span>Playground</span>
-              </TabsTrigger>
-              <TabsTrigger value="templates" className="flex items-center gap-2">
-                <Laptop className="h-4 w-4" />
-                <span>Templates</span>
-              </TabsTrigger>
-              <TabsTrigger value="sources" className="flex items-center gap-2">
-                <Database className="h-4 w-4" />
-                <span>Knowledge</span>
-              </TabsTrigger>
-              <TabsTrigger value="connect" className="flex items-center gap-2">
-                <Link className="h-4 w-4" />
-                <span>Connect</span>
-              </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex items-center gap-2">
-                <BarChart2 className="h-4 w-4" />
-                <span>Analytics</span>
-              </TabsTrigger>
-              <TabsTrigger value="activity" className="flex items-center gap-2">
-                <Activity className="h-4 w-4" />
-                <span>Activity</span>
-              </TabsTrigger>
-              <TabsTrigger value="abtesting" className="flex items-center gap-2">
-                <Zap className="h-4 w-4" />
-                <span>A/B Testing</span>
-              </TabsTrigger>
-              <TabsTrigger value="sentimentanalysis" className="flex items-center gap-2">
-                <MessageSquare className="h-4 w-4" />
-                <span>Sentiment</span>
-              </TabsTrigger>
-              <TabsTrigger value="contacts" className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                <span>Contacts</span>
-              </TabsTrigger>
-              <TabsTrigger value="actions" className="flex items-center gap-2">
-                <Zap className="h-4 w-4" />
-                <span>Actions</span>
-              </TabsTrigger>
-              <TabsTrigger value="languages" className="flex items-center gap-2">
-                <Globe className="h-4 w-4" />
-                <span>Languages</span>
-              </TabsTrigger>
-              <TabsTrigger value="voicesettings" className="flex items-center gap-2">
-                <VolumeX className="h-4 w-4" />
-                <span>Voice</span>
-              </TabsTrigger>
-              <TabsTrigger value="team" className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                <span>Team</span>
-              </TabsTrigger>
-              <TabsTrigger value="help" className="flex items-center gap-2">
-                <HelpCircle className="h-4 w-4" />
-                <span>Help</span>
-              </TabsTrigger>
-            </TabsList>
-          </div>
-        </Tabs>
-      </div>
-      
-      <div className="flex-1 p-6 overflow-y-auto">
-        {value === "create" && <CreateTab />}
-        {value === "playground" && <PlaygroundTab />}
-        {value === "templates" && <TemplateLibrary />}
-        {value === "analytics" && <AnalyticsTab />}
-        {value === "sources" && <SourcesTab />}
-        {value === "connect" && <ConnectTab />}
-        {value === "activity" && <ActivityTab />}
-        {value === "contacts" && <ContactsTab />}
-        {value === "actions" && <ActionsTab />}
-        {value === "settings" && settings[tab || "general"]}
-        {value === "abtesting" && <ABTesting />}
-        {value === "sentimentanalysis" && <SentimentAnalysis />}
-        {value === "languages" && <LanguageSettingsTab />}
-        {value === "voicesettings" && settings["voice"]}
-        {value === "team" && <TeamCollaborationTab />}
-        {value === "help" && <HelpTab />}
-      </div>
-    </div>
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+      <TabsList className="mb-6 flex flex-wrap">
+        <TabsTrigger value="create" className="flex items-center">
+          <PlusCircle className="h-4 w-4 mr-2" />
+          Create
+        </TabsTrigger>
+        <TabsTrigger value="sources" className="flex items-center">
+          <Database className="h-4 w-4 mr-2" />
+          Sources
+        </TabsTrigger>
+        <TabsTrigger value="connect" className="flex items-center">
+          <Link className="h-4 w-4 mr-2" />
+          Connect
+        </TabsTrigger>
+        <TabsTrigger value="actions" className="flex items-center">
+          <Zap className="h-4 w-4 mr-2" />
+          Actions
+        </TabsTrigger>
+        <TabsTrigger value="ecommerce" className="flex items-center">
+          <ShoppingCart className="h-4 w-4 mr-2" />
+          E-commerce
+        </TabsTrigger>
+        <TabsTrigger value="appointment-booking" className="flex items-center">
+          <Calendar className="h-4 w-4 mr-2" />
+          Appointment Booking
+        </TabsTrigger>
+        <TabsTrigger value="sales-agent" className="flex items-center">
+          <UserRound className="h-4 w-4 mr-2" />
+          Sales Agent
+        </TabsTrigger>
+        <TabsTrigger value="customer-support" className="flex items-center">
+          <Headphones className="h-4 w-4 mr-2" />
+          Customer Support
+        </TabsTrigger>
+        <TabsTrigger value="language" className="flex items-center">
+          <Languages className="h-4 w-4 mr-2" />
+          Language
+        </TabsTrigger>
+        <TabsTrigger value="analytics" className="flex items-center">
+          <BarChart3 className="h-4 w-4 mr-2" />
+          Analytics
+        </TabsTrigger>
+      </TabsList>
+
+      <Card className="p-6">
+        <TabsContent value="create">
+          <CreateTab />
+        </TabsContent>
+
+        <TabsContent value="sources">
+          <SourcesTab />
+        </TabsContent>
+
+        <TabsContent value="connect">
+          <IntegrationsTab />
+        </TabsContent>
+
+        <TabsContent value="actions">
+          <ActionsTab />
+        </TabsContent>
+        
+        <TabsContent value="ecommerce">
+          <EcommerceConnector />
+        </TabsContent>
+        
+        <TabsContent value="appointment-booking">
+          <AppointmentBookingTab />
+        </TabsContent>
+        
+        <TabsContent value="sales-agent">
+          <SalesAgentTab />
+        </TabsContent>
+        
+        <TabsContent value="customer-support">
+          <CustomerSupportTab />
+        </TabsContent>
+
+        <TabsContent value="language">
+          <LanguageSettingsTab />
+        </TabsContent>
+
+        <TabsContent value="analytics">
+          <AnalyticsTab />
+        </TabsContent>
+      </Card>
+    </Tabs>
   );
 };
 

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import PlatformIntegration from "./PlatformIntegration";
-import { MessageCircle, Facebook, Instagram, Slack, Telegram } from "lucide-react";
+import { MessageCircle, Facebook, Instagram, Slack } from "lucide-react";
 import {
   Dialog,
   DialogContent,

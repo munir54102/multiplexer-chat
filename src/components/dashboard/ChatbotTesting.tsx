@@ -146,7 +146,7 @@ const ChatbotTesting = ({ botName }: ChatbotTestingProps) => {
     if (!inputText.trim()) return;
 
     // Add user message
-    const userMessage = { id: messages.length + 1, text: inputText, sender: "user" };
+    const userMessage: ChatMessage = { id: messages.length + 1, text: inputText, sender: "user" };
     setMessages([...messages, userMessage]);
     setInputText("");
     
@@ -157,7 +157,8 @@ const ChatbotTesting = ({ botName }: ChatbotTestingProps) => {
     setTimeout(() => {
       setIsTyping(false);
       const botResponse = generateResponse(inputText);
-      setMessages(prev => [...prev, { id: prev.length + 1, text: botResponse, sender: "bot" }]);
+      const botMessage: ChatMessage = { id: messages.length + 2, text: botResponse, sender: "bot" };
+      setMessages(prev => [...prev, botMessage]);
     }, 1500);
   };
 

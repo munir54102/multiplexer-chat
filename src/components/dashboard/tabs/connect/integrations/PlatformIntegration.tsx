@@ -31,6 +31,7 @@ interface PlatformIntegrationProps {
   buttonText: string;
   isConnected?: boolean;
   isVerified?: boolean;
+  onConnect?: () => void;
 }
 
 const PlatformIntegration = ({
@@ -40,6 +41,7 @@ const PlatformIntegration = ({
   buttonText,
   isConnected = false,
   isVerified = false,
+  onConnect,
 }: PlatformIntegrationProps) => {
   const { toast } = useToast();
   const [connected, setConnected] = useState(isConnected);
@@ -85,6 +87,15 @@ const PlatformIntegration = ({
       title: "Disconnected",
       description: `${name} integration has been removed`,
     });
+  };
+
+  const handleDialogOpen = () => {
+    // Call the onConnect prop if provided
+    if (onConnect) {
+      onConnect();
+    }
+    // Then open the dialog
+    setIsDialogOpen(true);
   };
 
   return (
@@ -136,7 +147,7 @@ const PlatformIntegration = ({
         ) : (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="w-full">{buttonText}</Button>
+              <Button className="w-full" onClick={handleDialogOpen}>{buttonText}</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>

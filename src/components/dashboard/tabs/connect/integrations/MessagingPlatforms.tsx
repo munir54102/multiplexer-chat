@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import PlatformIntegration from "./PlatformIntegration";
-import { MessageCircle, Facebook, Instagram, Slack, MessageSquare } from "lucide-react";
+import { MessageCircle, Facebook, Instagram, Slack, Telegram } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -78,6 +78,11 @@ const MessagingPlatforms = () => {
     }
   ];
 
+  const handlePlatformConnect = (platformName: string) => {
+    setSelectedPlatform(platformName);
+    setIsDialogOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -93,10 +98,7 @@ const MessagingPlatforms = () => {
             icon={platform.icon}
             buttonText={platform.buttonText}
             isConnected={false}
-            onConnect={() => {
-              setSelectedPlatform(platform.name);
-              setIsDialogOpen(true);
-            }}
+            onConnect={() => handlePlatformConnect(platform.name)}
           />
         ))}
       </div>

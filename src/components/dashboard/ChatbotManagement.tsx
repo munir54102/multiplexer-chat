@@ -14,6 +14,7 @@ import GuidedTutorial from "@/components/GuidedTutorial";
 import ChatbotGrid from "./chatbot/ChatbotGrid";
 import { initialChatbots } from "./chatbot/mockData";
 import { Chatbot } from "./chatbot/ChatbotCard";
+import { Upload } from "lucide-react";
 
 const ChatbotManagement = () => {
   const [chatbots, setChatbots] = useState(initialChatbots);
@@ -58,11 +59,11 @@ const ChatbotManagement = () => {
     const botToDuplicate = chatbots.find(b => b.id === id);
     if (!botToDuplicate) return;
     
-    const newBot = {
+    const newBot: Chatbot = {
       ...botToDuplicate,
       id: Math.max(...chatbots.map(b => b.id)) + 1,
       name: `${botToDuplicate.name} (Copy)`,
-      status: "inactive",
+      status: "inactive" as const,  // Explicitly set to "inactive" as a literal type
       progress: 20
     };
     

@@ -34,7 +34,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Bot, MoreHorizontal, Edit, Copy, Trash, MessageSquare, BarChart3, Clock, Users, ArrowRight, Database, Link, Zap, Play, Palette } from "lucide-react";
+import { Bot, MoreHorizontal, Edit, Copy, Trash, MessageSquare, BarChart3, Clock, Users, ArrowRight, Database, Link, Zap, Play, Palette, Upload } from "lucide-react";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
 import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";

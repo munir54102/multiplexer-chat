@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Bot, Send, User, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,13 +12,135 @@ interface ChatbotTestingProps {
   botName: string;
 }
 
+interface ChatMessage {
+  id: number;
+  text: string;
+  sender: "bot" | "user";
+}
+
+// Mock knowledge base that would be populated from the crawler
+const knowledgeBase = {
+  pricing: [
+    {
+      plan: "Basic",
+      price: "$29",
+      period: "month",
+      features: ["1 chatbot", "1,000 messages/month", "Basic integrations", "Email support"]
+    },
+    {
+      plan: "Professional",
+      price: "$79",
+      period: "month",
+      features: ["3 chatbots", "10,000 messages/month", "All integrations", "Priority support"]
+    },
+    {
+      plan: "Enterprise",
+      price: "Custom",
+      features: ["Unlimited chatbots", "Unlimited messages", "Custom integrations", "Dedicated support"]
+    }
+  ],
+  features: [
+    "Multi-Platform Integration with WhatsApp, Facebook, Instagram, and your website",
+    "AI-Powered Responses with context-aware message handling",
+    "Visual Flow Builder with drag-and-drop interface",
+    "Analytics Dashboard for performance tracking",
+    "Live Agent Takeover for complex customer issues",
+    "Enterprise-grade security and compliance"
+  ],
+  faqs: [
+    {
+      question: "How do I get started?",
+      answer: "Sign up for a free account, create your first chatbot, and connect it to your preferred platform."
+    },
+    {
+      question: "Can I customize the chatbot appearance?",
+      answer: "Yes, you can fully customize the look and feel of your chatbot to match your brand."
+    },
+    {
+      question: "Do you offer a free trial?",
+      answer: "Yes, all plans include a 14-day free trial with no credit card required."
+    }
+  ]
+};
+
 const ChatbotTesting = ({ botName }: ChatbotTestingProps) => {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     { id: 1, text: `Hello! I'm ${botName}. How can I help you today?`, sender: "bot" }
   ]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [activeTab, setActiveTab] = useState("test");
+
+  const generateResponse = (userInput: string): string => {
+    const lowercaseInput = userInput.toLowerCase();
+    
+    // Check for pricing related queries
+    if (lowercaseInput.includes("pricing") || lowercaseInput.includes("cost") || lowercaseInput.includes("price") || 
+        lowercaseInput.includes("plan") || lowercaseInput.includes("subscription")) {
+      let response = "We offer the following plans:\n\n";
+      
+      knowledgeBase.pricing.forEach(plan => {
+        response += `• ${plan.plan}: ${plan.price}${plan.period ? '/' + plan.period : ''}\n`;
+        response += `  Top features: ${plan.features.slice(0, 2).join(", ")}\n\n`;
+      });
+      
+      response += "Would you like more details about a specific plan?";
+      return response;
+    }
+    
+    // Check for feature related queries
+    if (lowercaseInput.includes("feature") || lowercaseInput.includes("capability") || 
+        lowercaseInput.includes("can you") || lowercaseInput.includes("what can")) {
+      let response = "Our platform offers these key features:\n\n";
+      
+      knowledgeBase.features.slice(0, 4).forEach(feature => {
+        response += `• ${feature}\n`;
+      });
+      
+      if (knowledgeBase.features.length > 4) {
+        response += "And more! Which feature would you like to learn more about?";
+      }
+      
+      return response;
+    }
+
+    // Check for specific feature inquiries
+    if (lowercaseInput.includes("whatsapp") || lowercaseInput.includes("facebook") || 
+        lowercaseInput.includes("instagram") || lowercaseInput.includes("integration")) {
+      return "Our Multi-Platform Integration allows you to connect your chatbot to WhatsApp, Facebook Messenger, Instagram, and your website with seamless integration. This means your customers can reach you on their preferred platform while you manage all conversations from a single dashboard.";
+    }
+    
+    if (lowercaseInput.includes("analytics") || lowercaseInput.includes("dashboard") || 
+        lowercaseInput.includes("tracking") || lowercaseInput.includes("report")) {
+      return "Our Analytics Dashboard provides comprehensive insights into your chatbot's performance. You can track metrics like conversation volume, resolution rate, popular topics, user satisfaction, and conversion rates. This data helps you optimize your chatbot for better customer engagement and business outcomes.";
+    }
+    
+    // Check for FAQ related queries
+    if (lowercaseInput.includes("faq") || lowercaseInput.includes("question") || 
+        lowercaseInput.includes("how do i") || lowercaseInput.includes("trial")) {
+      // Find a relevant FAQ
+      for (const faq of knowledgeBase.faqs) {
+        const questionLower = faq.question.toLowerCase();
+        if (lowercaseInput.includes(questionLower.substring(0, 5)) || 
+            questionLower.includes(lowercaseInput.substring(0, 5))) {
+          return faq.answer;
+        }
+      }
+    }
+    
+    // Greetings
+    if (lowercaseInput.match(/hi|hello|hey|greetings/i)) {
+      return `Hello there! I'm ${botName}. How can I assist you today?`;
+    }
+    
+    // Help or support
+    if (lowercaseInput.includes("help") || lowercaseInput.includes("support")) {
+      return "I'm here to help! You can ask me about our products, pricing plans, features, or how to get started. What would you like to know?";
+    }
+    
+    // Default response
+    return "I understand you're asking about " + userInput + ". Could you please provide more details so I can give you the most accurate information?";
+  };
 
   const handleSend = () => {
     if (!inputText.trim()) return;
@@ -34,22 +156,7 @@ const ChatbotTesting = ({ botName }: ChatbotTestingProps) => {
     // Generate bot response after a delay
     setTimeout(() => {
       setIsTyping(false);
-      
-      // Simulate a smart response based on the input
-      let botResponse = "I understand your question. Let me help you with that!";
-      
-      const lowercaseInput = inputText.toLowerCase();
-      
-      if (lowercaseInput.includes("pricing") || lowercaseInput.includes("cost") || lowercaseInput.includes("price")) {
-        botResponse = "Our pricing starts at $29/month for the Basic plan, $79/month for the Professional plan, and custom pricing for Enterprise solutions.";
-      } else if (lowercaseInput.includes("help") || lowercaseInput.includes("support")) {
-        botResponse = "I'm here to help! You can ask me about our products, services, pricing, or any other questions you might have.";
-      } else if (lowercaseInput.includes("feature") || lowercaseInput.includes("can you")) {
-        botResponse = "I can help with product information, customer support, lead generation, appointment scheduling, and much more!";
-      } else if (lowercaseInput.match(/hi|hello|hey|greetings/i)) {
-        botResponse = `Hello there! I'm ${botName}. How can I assist you today?`;
-      } 
-      
+      const botResponse = generateResponse(inputText);
       setMessages(prev => [...prev, { id: prev.length + 1, text: botResponse, sender: "bot" }]);
     }, 1500);
   };

@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Info, X, ArrowRight, ArrowLeft, Bot, Database, Link, 
   Zap, Settings, BookOpen, Globe, PenTool, MessageSquare,
-  BarChart3, CheckCircle
+  BarChart3, CheckCircle, Palette, Play, Upload
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
@@ -18,8 +19,8 @@ const tutorialSteps = [
     substeps: []
   },
   {
-    title: "Create Your First Chatbot",
-    description: "Start by naming your chatbot and defining its primary purpose.",
+    title: "1. Create Your Chatbot",
+    description: "Start by giving your chatbot a name, purpose, and basic configuration.",
     icon: <Bot className="h-8 w-8 text-primary" />,
     action: "Next",
     substeps: [
@@ -28,41 +29,49 @@ const tutorialSteps = [
         description: "Choose a name that represents your brand or its function."
       },
       {
-        title: "Select a Template",
-        description: "Choose from pre-built templates for customer support, lead generation, or sales."
+        title: "Define Purpose",
+        description: "Specify what your chatbot will help your customers with: customer support, lead generation, sales, etc."
       },
       {
-        title: "Define Purpose",
-        description: "Specify what your chatbot will help your customers with."
+        title: "Select a Template",
+        description: "Choose from pre-built templates to get started quickly or start from scratch."
+      },
+      {
+        title: "Set Business Goals",
+        description: "Define what metrics and outcomes you want to achieve with your chatbot."
       }
     ]
   },
   {
-    title: "Build Knowledge Base",
+    title: "2. Build Knowledge Base",
     description: "Teach your AI chatbot by adding information it can use to answer questions.",
     icon: <Database className="h-8 w-8 text-primary" />,
     action: "Next",
     substeps: [
       {
         title: "Upload Documents",
-        description: "Add PDFs, DOCs, or text files containing your product information."
+        description: "Add PDFs, DOCs, or text files containing your product information, manuals, or FAQs."
       },
       {
         title: "Connect Website",
-        description: "Let your chatbot learn from your existing website content."
+        description: "Let your chatbot learn from your existing website content by providing URLs."
       },
       {
         title: "Create Q&A Pairs",
-        description: "Add specific questions and answers for common inquiries."
+        description: "Add specific questions and answers for common inquiries to train your chatbot."
       },
       {
         title: "Add Custom Text",
-        description: "Enter important information directly into the knowledge base."
+        description: "Enter important information directly into the knowledge base when needed."
+      },
+      {
+        title: "Review & Test Knowledge",
+        description: "Verify that your chatbot correctly understands and uses the information you've provided."
       }
     ]
   },
   {
-    title: "Design Conversation Flows",
+    title: "3. Design Conversation Flows",
     description: "Create structured conversation paths to guide users through complex interactions.",
     icon: <PenTool className="h-8 w-8 text-primary" />,
     action: "Next",
@@ -73,47 +82,83 @@ const tutorialSteps = [
       },
       {
         title: "Decision Trees",
-        description: "Create branching conversations based on user responses."
+        description: "Create branching conversations based on user responses for guided journeys."
       },
       {
         title: "Fallback Responses",
-        description: "Define what happens when your chatbot doesn't know the answer."
+        description: "Define what happens when your chatbot doesn't know the answer to maintain good UX."
+      },
+      {
+        title: "Conversation Goals",
+        description: "Set up specific conversion points like collecting contact info or booking a demo."
       }
     ]
   },
   {
-    title: "Customize Appearance",
+    title: "4. Customize Appearance",
     description: "Make your chatbot match your brand by customizing its look and feel.",
-    icon: <Settings className="h-8 w-8 text-primary" />,
+    icon: <Palette className="h-8 w-8 text-primary" />,
     action: "Next",
     substeps: [
       {
         title: "Brand Colors",
-        description: "Set primary and secondary colors to match your brand identity."
+        description: "Set primary and secondary colors to match your brand identity for chat bubbles and UI."
       },
       {
         title: "Chat Bubble Style",
-        description: "Choose between different chat bubble shapes and designs."
+        description: "Choose between different chat bubble shapes and designs that fit your website aesthetic."
       },
       {
         title: "Avatar Selection",
-        description: "Pick an avatar or upload your own custom image."
+        description: "Pick an avatar or upload your own custom image to represent your chatbot."
       },
       {
         title: "Widget Position",
-        description: "Decide where the chat widget appears on your website."
+        description: "Decide where the chat widget appears on your website and how it's initially displayed."
+      },
+      {
+        title: "Custom CSS",
+        description: "For advanced users, apply custom CSS to completely tailor the chatbot appearance."
       }
     ]
   },
   {
-    title: "Deploy & Connect",
+    title: "5. Test Your Chatbot",
+    description: "Ensure your chatbot is working correctly before going live with your audience.",
+    icon: <Play className="h-8 w-8 text-primary" />,
+    action: "Next",
+    substeps: [
+      {
+        title: "Preview Mode",
+        description: "Test your chatbot in a sandbox environment to see how it responds to various inputs."
+      },
+      {
+        title: "Common Questions",
+        description: "Try asking frequently asked questions to verify correct responses and tone."
+      },
+      {
+        title: "Edge Cases",
+        description: "Test unusual questions to see how your chatbot handles unexpected scenarios."
+      },
+      {
+        title: "User Flows",
+        description: "Walk through complete user journeys to ensure they can achieve their goals."
+      },
+      {
+        title: "Mobile Testing",
+        description: "Verify that your chatbot works properly on mobile devices and different screen sizes."
+      }
+    ]
+  },
+  {
+    title: "6. Deploy & Connect",
     description: "Make your chatbot available to your customers across multiple platforms.",
-    icon: <Link className="h-8 w-8 text-primary" />,
+    icon: <Upload className="h-8 w-8 text-primary" />,
     action: "Next",
     substeps: [
       {
         title: "Website Integration",
-        description: "Add a single line of code to your website to embed the chatbot."
+        description: "Add the chatbot to your website with a single line of JavaScript or with our WordPress plugin."
       },
       {
         title: "WhatsApp Connection",
@@ -121,37 +166,21 @@ const tutorialSteps = [
       },
       {
         title: "Facebook Integration",
-        description: "Link your Facebook business page to handle Messenger conversations."
+        description: "Link your Facebook business page to handle Messenger conversations automatically."
       },
       {
         title: "Instagram Setup",
-        description: "Connect to Instagram direct messages for seamless customer engagement."
+        description: "Connect to Instagram direct messages for seamless customer engagement on social media."
+      },
+      {
+        title: "Email Integration",
+        description: "Set up email notifications for when human intervention is needed."
       }
     ]
   },
   {
-    title: "Test Your Chatbot",
-    description: "Ensure your chatbot is working correctly before going live.",
-    icon: <MessageSquare className="h-8 w-8 text-primary" />,
-    action: "Next",
-    substeps: [
-      {
-        title: "Preview Mode",
-        description: "Test your chatbot in a sandbox environment to see how it responds."
-      },
-      {
-        title: "Common Questions",
-        description: "Try asking frequently asked questions to verify correct responses."
-      },
-      {
-        title: "Edge Cases",
-        description: "Test unusual questions to see how your chatbot handles them."
-      }
-    ]
-  },
-  {
-    title: "Monitor & Improve",
-    description: "Track performance metrics and optimize your chatbot over time.",
+    title: "7. Monitor & Improve",
+    description: "Track performance metrics and optimize your chatbot over time for better results.",
     icon: <BarChart3 className="h-8 w-8 text-primary" />,
     action: "Finish",
     substeps: [
@@ -161,15 +190,19 @@ const tutorialSteps = [
       },
       {
         title: "Conversation Review",
-        description: "Browse through actual conversations to identify improvement areas."
+        description: "Browse through actual conversations to identify improvement areas and common issues."
       },
       {
         title: "A/B Testing",
-        description: "Compare different versions of your chatbot to see which performs better."
+        description: "Compare different versions of your chatbot to see which performs better with users."
       },
       {
         title: "Continuous Learning",
-        description: "Enable your chatbot to improve automatically based on interactions."
+        description: "Enable your chatbot to improve automatically based on interactions and feedback."
+      },
+      {
+        title: "Regular Updates",
+        description: "Schedule time to review and update your chatbot's knowledge and responses regularly."
       }
     ]
   }
@@ -278,7 +311,7 @@ const GuidedTutorial = ({ onComplete, initialStep = 0 }: GuidedTutorialProps) =>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div className="flex items-center">
             <Info className="mr-2 h-5 w-5 text-primary" />
-            <CardTitle>Guided Tutorial</CardTitle>
+            <CardTitle>Chatbot Creation Guide</CardTitle>
           </div>
           <Button variant="ghost" size="icon" onClick={handleSkip}>
             <X className="h-4 w-4" />

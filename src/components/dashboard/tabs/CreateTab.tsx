@@ -8,12 +8,13 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-import { Bot, Database, Link, MessageSquare, Zap, ArrowRight, CheckCircle } from "lucide-react";
+import { Bot, Database, Link, MessageSquare, Zap, ArrowRight, CheckCircle, Palette, Play, Upload, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
 import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CreateTab = () => {
   const { toast } = useToast();
@@ -31,6 +32,12 @@ const CreateTab = () => {
       toast({
         title: "Moving to Connect phase",
         description: "Now you can integrate your chatbot with different platforms"
+      });
+      navigate("/dashboard");
+    } else if (section === 'playground') {
+      toast({
+        title: "Moving to Test phase",
+        description: "Now you can test your chatbot's responses"
       });
       navigate("/dashboard");
     }
@@ -69,22 +76,79 @@ const CreateTab = () => {
       isComplete: activeStep > 1
     },
     {
-      title: "Connect",
-      description: "Deploy your chatbot to your website or other platforms",
-      icon: Link,
+      title: "Design",
+      description: "Customize appearance and conversation flows",
+      icon: Palette,
+      action: (
+        <Button 
+          variant="outline" 
+          className="w-full" 
+          onClick={() => {
+            toast({
+              title: "Moving to Design phase",
+              description: "Now you can customize your chatbot's appearance"
+            });
+            setActiveStep(3);
+          }}
+        >
+          Customize Appearance
+        </Button>
+      ),
+      isComplete: activeStep > 2
+    },
+    {
+      title: "Test",
+      description: "Preview and test your chatbot's responses",
+      icon: Play,
+      action: (
+        <Button 
+          variant="outline" 
+          className="w-full" 
+          onClick={() => {
+            handleNavigate('playground');
+            setActiveStep(4);
+          }}
+        >
+          Test Your Chatbot
+        </Button>
+      ),
+      isComplete: activeStep > 3
+    },
+    {
+      title: "Deploy",
+      description: "Deploy to your website and other platforms",
+      icon: Upload,
       action: (
         <Button 
           variant="outline" 
           className="w-full" 
           onClick={() => {
             handleNavigate('connect');
-            setActiveStep(3);
+            setActiveStep(5);
           }}
         >
-          Set Up Connections
+          Deploy & Connect
         </Button>
       ),
-      isComplete: activeStep > 2
+      isComplete: activeStep > 4
+    },
+    {
+      title: "Analyze",
+      description: "Monitor and improve performance",
+      icon: BarChart3,
+      action: (
+        <Button 
+          variant="outline" 
+          className="w-full" 
+          onClick={() => {
+            navigate("/dashboard/analytics");
+            setActiveStep(6);
+          }}
+        >
+          View Analytics
+        </Button>
+      ),
+      isComplete: activeStep > 5
     }
   ];
   
@@ -92,31 +156,33 @@ const CreateTab = () => {
     <div className="space-y-8">
       <div>
         <h2 className="text-xl font-semibold mb-4">Create Your Chatbot</h2>
-        <p className="text-gray-600 mb-6">Start building your AI chatbot in three simple steps</p>
+        <p className="text-gray-600 mb-6">Complete these steps to build and deploy your AI chatbot</p>
         
         <div className="bg-white p-6 rounded-lg border border-gray-200 mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium">Setup Progress</span>
-            <span className="text-sm font-medium">{activeStep * 33}%</span>
+            <span className="text-sm font-medium">{Math.round(activeStep / (steps.length - 1) * 100)}%</span>
           </div>
-          <Progress value={activeStep * 33} className="h-2" />
-          <div className="flex justify-between mt-4 text-sm">
-            {steps.map((step, index) => (
-              <div key={index} className={`flex flex-col items-center ${index <= activeStep ? 'text-primary' : 'text-gray-400'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${index < activeStep ? 'bg-primary/20' : 'bg-gray-100'}`}>
-                  {index < activeStep ? (
-                    <CheckCircle className="h-5 w-5 text-primary" />
-                  ) : (
-                    <span>{index + 1}</span>
-                  )}
+          <Progress value={Math.round(activeStep / (steps.length - 1) * 100)} className="h-2" />
+          <ScrollArea className="w-full">
+            <div className="flex justify-between mt-4 text-sm py-2">
+              {steps.map((step, index) => (
+                <div key={index} className={`flex flex-col items-center px-2 ${index <= activeStep ? 'text-primary' : 'text-gray-400'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${index < activeStep ? 'bg-primary/20' : 'bg-gray-100'}`}>
+                    {index < activeStep ? (
+                      <CheckCircle className="h-5 w-5 text-primary" />
+                    ) : (
+                      <span>{index + 1}</span>
+                    )}
+                  </div>
+                  <span className="mt-1 text-center whitespace-nowrap">{step.title}</span>
                 </div>
-                <span className="mt-1">{step.title}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </ScrollArea>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {steps.map((step, index) => (
             <Card 
               key={index}
@@ -151,8 +217,11 @@ const CreateTab = () => {
                 {index < activeStep ? (
                   <p className="text-sm text-gray-500">
                     {index === 0 ? "Chatbot created successfully! Now add knowledge to it." : 
-                     index === 1 ? "Knowledge base configured. Now set up platform connections." : 
-                     "Setup complete. Your chatbot is ready to use!"}
+                     index === 1 ? "Knowledge base configured. Now customize appearance." : 
+                     index === 2 ? "Design customized. Test your chatbot's functionality." :
+                     index === 3 ? "Testing completed. Ready to deploy to platforms." :
+                     index === 4 ? "Chatbot deployed. Now monitor performance." :
+                     "All steps completed. Your chatbot is live and optimized!"}
                   </p>
                 ) : index === activeStep ? (
                   <p className="text-sm text-primary">Current step - complete this to continue</p>

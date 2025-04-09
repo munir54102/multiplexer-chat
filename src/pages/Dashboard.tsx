@@ -22,10 +22,11 @@ import ABTesting from "@/components/dashboard/ABTesting";
 import SentimentAnalysis from "@/components/dashboard/SentimentAnalysis";
 import TemplateLibrary from "@/components/dashboard/TemplateLibrary";
 import GuidedTutorial from "@/components/GuidedTutorial";
-import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages, HelpCircle } from "lucide-react";
+import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages, HelpCircle, BookOpen } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -33,6 +34,7 @@ const Dashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   useEffect(() => {
     // Check if user is authenticated
@@ -48,6 +50,14 @@ const Dashboard = () => {
       localStorage.setItem('hasVisitedDashboard', 'true');
     }
   }, [navigate]);
+
+  const handleStartTutorial = () => {
+    setShowTutorial(true);
+    toast({
+      title: "Tutorial started",
+      description: "Follow the steps to create your first chatbot.",
+    });
+  };
 
   // Content based on active tab
   const renderTabContent = () => {
@@ -130,13 +140,14 @@ const Dashboard = () => {
               {(activeTab === "overview" || activeTab === "create" || activeTab === "templates") && (
                 <CreateChatbotButton />
               )}
+              
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      onClick={() => setShowTutorial(true)}
+                      onClick={handleStartTutorial}
                       className="ml-2"
                     >
                       <HelpCircle className="h-5 w-5" />
@@ -144,6 +155,24 @@ const Dashboard = () => {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Open Guided Tutorial</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="default" 
+                      onClick={handleStartTutorial}
+                      className="hidden md:flex"
+                    >
+                      <BookOpen className="h-5 w-5 mr-2" />
+                      Chatbot Creation Guide
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Start the step-by-step tutorial</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

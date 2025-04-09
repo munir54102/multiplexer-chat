@@ -34,10 +34,11 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Bot, MoreHorizontal, Edit, Copy, Trash, MessageSquare, BarChart3, Clock, Users, ArrowRight, Database, Link, Zap } from "lucide-react";
+import { Bot, MoreHorizontal, Edit, Copy, Trash, MessageSquare, BarChart3, Clock, Users, ArrowRight, Database, Link, Zap, Play, Palette } from "lucide-react";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
 import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
+import GuidedTutorial from "@/components/GuidedTutorial";
 
 // Mock data for chatbots
 const initialChatbots = [
@@ -79,6 +80,7 @@ const initialChatbots = [
 const ChatbotManagement = () => {
   const [chatbots, setChatbots] = useState(initialChatbots);
   const [currentTab, setCurrentTab] = useState("all");
+  const [showTutorial, setShowTutorial] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -138,12 +140,26 @@ const ChatbotManagement = () => {
     navigate(`/dashboard`);
     // Additional logic if needed
   };
+
+  const handleStartTutorial = () => {
+    setShowTutorial(true);
+  };
   
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">My Chatbots</h2>
-        <CreateChatbotButton />
+      {showTutorial && <GuidedTutorial onComplete={() => setShowTutorial(false)} />}
+      
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-semibold">My Chatbots</h2>
+          <p className="text-gray-600">Manage your chatbots or create a new one</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleStartTutorial}>
+            Creation Guide
+          </Button>
+          <CreateChatbotButton />
+        </div>
       </div>
       
       <Tabs defaultValue="all" value={currentTab} onValueChange={setCurrentTab}>
@@ -165,6 +181,7 @@ const ChatbotManagement = () => {
                 onDelete={deleteChatbot}
                 onDuplicate={duplicateChatbot}
                 setActiveTab={setActiveTab}
+                onStartTutorial={handleStartTutorial}
               />
             ))}
           </div>
@@ -180,6 +197,7 @@ const ChatbotManagement = () => {
                 onDelete={deleteChatbot}
                 onDuplicate={duplicateChatbot}
                 setActiveTab={setActiveTab}
+                onStartTutorial={handleStartTutorial}
               />
             ))}
           </div>
@@ -195,6 +213,7 @@ const ChatbotManagement = () => {
                 onDelete={deleteChatbot}
                 onDuplicate={duplicateChatbot}
                 setActiveTab={setActiveTab}
+                onStartTutorial={handleStartTutorial}
               />
             ))}
           </div>
@@ -210,29 +229,108 @@ interface ChatbotCardProps {
   onDelete: (id: number) => void;
   onDuplicate: (id: number) => void;
   setActiveTab: (tab: string) => void;
+  onStartTutorial: () => void;
 }
 
-const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate, setActiveTab }: ChatbotCardProps) => {
+const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate, setActiveTab, onStartTutorial }: ChatbotCardProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const getBuildStage = (progress: number) => {
-    if (progress < 25) return "Create";
-    if (progress < 50) return "Build";
-    if (progress < 75) return "Connect";
-    return "Complete";
+    if (progress < 17) return "Create";
+    if (progress < 34) return "Build";
+    if (progress < 51) return "Design";
+    if (progress < 68) return "Test";
+    if (progress < 85) return "Deploy";
+    return "Analyze";
+  };
+  
+  const getStageIcon = (stage: string) => {
+    switch(stage) {
+      case "Create": return <Bot className="h-4 w-4 mr-1" />;
+      case "Build": return <Database className="h-4 w-4 mr-1" />;
+      case "Design": return <Palette className="h-4 w-4 mr-1" />;
+      case "Test": return <Play className="h-4 w-4 mr-1" />;
+      case "Deploy": return <Upload className="h-4 w-4 mr-1" />;
+      case "Analyze": return <BarChart3 className="h-4 w-4 mr-1" />;
+      default: return <Bot className="h-4 w-4 mr-1" />;
+    }
   };
   
   const handleContinue = () => {
     const stage = getBuildStage(chatbot.progress);
-    if (stage === "Create") setActiveTab("create");
-    if (stage === "Build") setActiveTab("sources");
-    if (stage === "Connect") setActiveTab("connect");
+    
+    if (stage === "Create") {
+      navigate("/dashboard/create");
+    } else if (stage === "Build") {
+      navigate("/dashboard/sources");
+    } else if (stage === "Design") {
+      navigate("/dashboard/settings/chat");
+    } else if (stage === "Test") {
+      navigate("/dashboard/playground");
+    } else if (stage === "Deploy") {
+      navigate("/dashboard/connect");
+    } else if (stage === "Analyze") {
+      navigate("/dashboard/analytics");
+    }
     
     toast({
       title: "Continuing setup",
       description: `Navigating to the ${stage} stage for "${chatbot.name}"`
     });
+  };
+  
+  const getNextStepAction = () => {
+    const stage = getBuildStage(chatbot.progress);
+    
+    if (chatbot.progress < 100) {
+      if (stage === "Create") {
+        return (
+          <div className="text-sm text-green-600 flex items-center mt-2">
+            <Bot className="h-4 w-4 mr-1" /> 
+            Next: Create your chatbot
+          </div>
+        );
+      } else if (stage === "Build") {
+        return (
+          <div className="text-sm text-green-600 flex items-center mt-2">
+            <Database className="h-4 w-4 mr-1" /> 
+            Next: Build knowledge base
+          </div>
+        );
+      } else if (stage === "Design") {
+        return (
+          <div className="text-sm text-green-600 flex items-center mt-2">
+            <Palette className="h-4 w-4 mr-1" /> 
+            Next: Design appearance
+          </div>
+        );
+      } else if (stage === "Test") {
+        return (
+          <div className="text-sm text-green-600 flex items-center mt-2">
+            <Play className="h-4 w-4 mr-1" /> 
+            Next: Test responses
+          </div>
+        );
+      } else if (stage === "Deploy") {
+        return (
+          <div className="text-sm text-green-600 flex items-center mt-2">
+            <Link className="h-4 w-4 mr-1" /> 
+            Next: Deploy to platforms
+          </div>
+        );
+      } else {
+        return (
+          <div className="text-sm text-green-600 flex items-center mt-2">
+            <BarChart3 className="h-4 w-4 mr-1" /> 
+            Next: Analyze performance
+          </div>
+        );
+      }
+    }
+    
+    return null;
   };
   
   return (
@@ -252,6 +350,9 @@ const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate, setActive
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => handleContinue()}>
                 <Edit className="mr-2 h-4 w-4" /> Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onStartTutorial()}>
+                <Bot className="mr-2 h-4 w-4" /> Creation Guide
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onDuplicate(chatbot.id)}>
                 <Copy className="mr-2 h-4 w-4" /> Duplicate
@@ -293,7 +394,8 @@ const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate, setActive
             {chatbot.status === "active" ? "Active" : "Inactive"}
           </Badge>
           
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="text-xs flex items-center">
+            {getStageIcon(getBuildStage(chatbot.progress))}
             {getBuildStage(chatbot.progress)}
           </Badge>
         </div>
@@ -306,11 +408,15 @@ const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate, setActive
               <span className="text-xs font-medium">{chatbot.progress}%</span>
             </div>
             <Progress value={chatbot.progress} className="h-1" />
-            <div className="mt-1 flex justify-between text-xs text-gray-400">
-              <span>Create</span>
-              <span>Build</span>
-              <span>Connect</span>
+            <div className="mt-1 grid grid-cols-6 text-xs text-gray-400">
+              <span className="text-center">Create</span>
+              <span className="text-center">Build</span>
+              <span className="text-center">Design</span>
+              <span className="text-center">Test</span>
+              <span className="text-center">Deploy</span>
+              <span className="text-center">Analyze</span>
             </div>
+            {getNextStepAction()}
           </div>
         )}
         
@@ -349,7 +455,7 @@ const ChatbotCard = ({ chatbot, onToggleStatus, onDelete, onDuplicate, setActive
             Continue Setup <ArrowRight className="ml-1 h-4 w-4" />
           </Button>
         ) : (
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => navigate("/dashboard/analytics")}>
             <BarChart3 className="h-4 w-4 mr-2" /> Stats
           </Button>
         )}

@@ -24,7 +24,7 @@ import TemplateLibrary from "@/components/dashboard/TemplateLibrary";
 import GuidedTutorial from "@/components/GuidedTutorial";
 import DashboardHelp from "@/components/dashboard/DashboardHelp";
 import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages, 
-  HelpCircle, BookOpen, ChevronRight, MessageSquare, Link, Bot, Rocket, Wrench, Upload } from "lucide-react";
+  HelpCircle, BookOpen, ChevronRight, MessageSquare, Link, Bot, Rocket, Wrench, Upload, PlayCircle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -177,7 +177,7 @@ const Dashboard = () => {
               onClick={() => setActiveTab("playground")}>
           <CardContent className="p-4 flex flex-col items-center text-center">
             <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-3 mt-2">
-              <PlaygroundTab className="w-6 h-6 text-amber-600" />
+              <PlayCircle className="w-6 h-6 text-amber-600" />
             </div>
             <h3 className="font-medium">Test Chatbot</h3>
             <p className="text-sm text-gray-500 mt-1">Try out your AI assistant</p>

@@ -14,7 +14,7 @@ import GuidedTutorial from "@/components/GuidedTutorial";
 import ChatbotGrid from "./chatbot/ChatbotGrid";
 import { initialChatbots } from "./chatbot/mockData";
 import { Chatbot } from "./chatbot/ChatbotCard";
-import { Upload, ShoppingCart, BookOpen, ArrowRight, Wrench, Database, Link, PlayCircle, BarChart3 } from "lucide-react";
+import { BookOpen, ShoppingCart, ArrowRight, Wrench, Database, Link, BarChart3 } from "lucide-react";
 import { Card, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
 const ChatbotManagement = () => {
@@ -187,32 +187,36 @@ const ChatbotManagement = () => {
       
       {renderTutorialSteps()}
       
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold">My Chatbots</h2>
-          <p className="text-gray-600">Manage your chatbots or create a new one</p>
+      {hasChatbots && (
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+          <div>
+            <h2 className="text-2xl font-semibold">Your Chatbots</h2>
+            <p className="text-gray-600">Manage your existing chatbots or create a new one</p>
+          </div>
+          <div className="flex gap-2">
+            <CreateChatbotButton variant="default" />
+            <Button variant="outline" onClick={handleCreateEcommerceChatbot}>
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              E-commerce Bot
+            </Button>
+            <Button variant="outline" onClick={handleStartTutorial}>
+              <BookOpen className="h-4 w-4 mr-2" />
+              Creation Guide
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleStartTutorial}>
-            <BookOpen className="h-4 w-4 mr-2" />
-            Creation Guide
-          </Button>
-          <Button variant="outline" onClick={handleCreateEcommerceChatbot}>
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            E-commerce Bot
-          </Button>
-          <CreateChatbotButton />
-        </div>
-      </div>
+      )}
       
-      <Tabs defaultValue="all" value={currentTab} onValueChange={setCurrentTab}>
-        <div className="flex justify-between items-center mb-4">
-          <TabsList>
-            <TabsTrigger value="all">All Chatbots</TabsTrigger>
-            <TabsTrigger value="active">Active</TabsTrigger>
-            <TabsTrigger value="inactive">Inactive</TabsTrigger>
-          </TabsList>
-        </div>
+      <Tabs defaultValue="all" value={currentTab} onValueChange={setCurrentTab} className="mt-6">
+        {hasChatbots && (
+          <div className="flex justify-between items-center mb-4">
+            <TabsList>
+              <TabsTrigger value="all">All Chatbots</TabsTrigger>
+              <TabsTrigger value="active">Active</TabsTrigger>
+              <TabsTrigger value="inactive">Inactive</TabsTrigger>
+            </TabsList>
+          </div>
+        )}
         
         {hasChatbots ? (
           <>

@@ -23,14 +23,19 @@ import SentimentAnalysis from "@/components/dashboard/SentimentAnalysis";
 import TemplateLibrary from "@/components/dashboard/TemplateLibrary";
 import GuidedTutorial from "@/components/GuidedTutorial";
 import DashboardHelp from "@/components/dashboard/DashboardHelp";
-import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages, 
-  HelpCircle, BookOpen, ChevronRight, MessageSquare, Link, Bot, Rocket, Wrench, Upload, PlayCircle } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { 
+  Activity, 
+  BarChart3, 
+  BookOpen, 
+  ChevronRight, 
+  HelpCircle, 
+  Rocket 
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -112,7 +117,7 @@ const Dashboard = () => {
   const getTabTitle = () => {
     switch (activeTab) {
       case "overview":
-        return "Dashboard";
+        return "My Chatbots";
       case "create":
         return "Create Chatbot";
       case "sources":
@@ -132,59 +137,6 @@ const Dashboard = () => {
       default:
         return activeTab.charAt(0).toUpperCase() + activeTab.slice(1);
     }
-  };
-
-  // Quick action buttons for the dashboard
-  const renderQuickActions = () => {
-    if (activeTab !== "overview") return null;
-    
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="border-primary/20 hover:border-primary/50 transition-colors cursor-pointer" 
-              onClick={() => setActiveTab("create")}>
-          <CardContent className="p-4 flex flex-col items-center text-center">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3 mt-2">
-              <Wrench className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="font-medium">Create Chatbot</h3>
-            <p className="text-sm text-gray-500 mt-1">Create your first AI assistant</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-indigo-200 hover:border-indigo-400 transition-colors cursor-pointer"
-              onClick={() => setActiveTab("sources")}>
-          <CardContent className="p-4 flex flex-col items-center text-center">
-            <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-3 mt-2">
-              <Database className="w-6 h-6 text-indigo-600" />
-            </div>
-            <h3 className="font-medium">Build Knowledge</h3>
-            <p className="text-sm text-gray-500 mt-1">Add data to train your AI</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-green-200 hover:border-green-400 transition-colors cursor-pointer"
-              onClick={() => setActiveTab("connect")}>
-          <CardContent className="p-4 flex flex-col items-center text-center">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 mt-2">
-              <Link className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="font-medium">Connect Chatbot</h3>
-            <p className="text-sm text-gray-500 mt-1">Deploy to your platforms</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-amber-200 hover:border-amber-400 transition-colors cursor-pointer"
-              onClick={() => setActiveTab("playground")}>
-          <CardContent className="p-4 flex flex-col items-center text-center">
-            <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-3 mt-2">
-              <PlayCircle className="w-6 h-6 text-amber-600" />
-            </div>
-            <h3 className="font-medium">Test Chatbot</h3>
-            <p className="text-sm text-gray-500 mt-1">Try out your AI assistant</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
   };
 
   return (
@@ -218,7 +170,7 @@ const Dashboard = () => {
             <div>
               <h1 className="text-2xl font-bold">{getTabTitle()}</h1>
               {activeTab === "overview" && (
-                <p className="text-gray-600 mt-1">Manage your chatbots and get started quickly</p>
+                <p className="text-gray-600 mt-1">Manage your existing chatbots or create a new one</p>
               )}
             </div>
             <div className="flex space-x-2">
@@ -263,8 +215,6 @@ const Dashboard = () => {
               </TooltipProvider>
             </div>
           </div>
-          
-          {renderQuickActions()}
           
           <DashboardContent>
             {activeTab === "settings" ? (

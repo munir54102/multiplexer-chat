@@ -10,7 +10,6 @@ import {
   PlayCircle,
   Clock,
   BarChart3,
-  Zap,
   Database,
   ArrowUpDown,
   UserPlus,
@@ -47,19 +46,19 @@ export const settingsItems: NavItem[] = [
 // Main navigation items - organized by workflow
 export const mainNavItems: NavSection[] = [
   { 
-    heading: "Overview",
+    heading: "Main",
     items: [
-      { id: "overview", label: "Dashboard", icon: LayoutDashboard },
-      { id: "activity", label: "Activity", icon: Clock },
+      { id: "overview", label: "My Chatbots", icon: LayoutDashboard },
+      { id: "activity", label: "Recent Activity", icon: Clock },
       { id: "analytics", label: "Analytics", icon: BarChart3 },
     ]
   },
   {
-    heading: "Build Process",
+    heading: "Chatbot Setup",
     items: [
-      { id: "create", label: "1. Create", icon: Wrench },
-      { id: "sources", label: "2. Build", icon: Database },
-      { id: "connect", label: "3. Connect", icon: Link },
+      { id: "create", label: "Create Chatbot", icon: Wrench },
+      { id: "sources", label: "Build Knowledge", icon: Database },
+      { id: "connect", label: "Deploy & Connect", icon: Link },
     ]
   },
   {

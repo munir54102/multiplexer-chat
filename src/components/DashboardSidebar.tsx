@@ -19,7 +19,11 @@ import {
   LogOut,
   FileText,
   Layers,
-  Link
+  Link,
+  Rocket,
+  LayoutDashboard,
+  Wrench,
+  HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -37,6 +41,7 @@ const DashboardSidebar = ({ activeSection, setActiveSection, activeTab, setActiv
   const { toast } = useToast();
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
+  const [isNewUser, setIsNewUser] = useState(false);
   
   useEffect(() => {
     const userStr = localStorage.getItem('user');
@@ -48,6 +53,10 @@ const DashboardSidebar = ({ activeSection, setActiveSection, activeTab, setActiv
         setUserName("User");
       }
     }
+    
+    // Check if this is a new user
+    const hasVisitedBefore = localStorage.getItem('hasVisitedDashboard') === 'true';
+    setIsNewUser(!hasVisitedBefore);
   }, []);
   
   // Settings sidebar items
@@ -66,7 +75,7 @@ const DashboardSidebar = ({ activeSection, setActiveSection, activeTab, setActiv
     { 
       heading: "Overview",
       items: [
-        { id: "overview", label: "Dashboard", icon: Home },
+        { id: "overview", label: "Dashboard", icon: LayoutDashboard },
         { id: "activity", label: "Activity", icon: Clock },
         { id: "analytics", label: "Analytics", icon: BarChart3 },
       ]
@@ -74,17 +83,24 @@ const DashboardSidebar = ({ activeSection, setActiveSection, activeTab, setActiv
     {
       heading: "Build Process",
       items: [
-        { id: "create", label: "Create", icon: Plus },
-        { id: "sources", label: "Build", icon: Database },
-        { id: "connect", label: "Connect", icon: Link },
+        { id: "create", label: "1. Create", icon: Wrench },
+        { id: "sources", label: "2. Build", icon: Database },
+        { id: "connect", label: "3. Connect", icon: Link },
       ]
     },
     {
       heading: "Management",
       items: [
-        { id: "playground", label: "Playground", icon: PlayCircle },
-        { id: "actions", label: "Actions", icon: ArrowUpDown },
-        { id: "contacts", label: "Contacts", icon: UserPlus },
+        { id: "playground", label: "Test Playground", icon: PlayCircle },
+        { id: "actions", label: "Custom Actions", icon: ArrowUpDown },
+        { id: "contacts", label: "Manage Contacts", icon: UserPlus },
+      ]
+    },
+    {
+      heading: "Resources",
+      items: [
+        { id: "templates", label: "Templates", icon: Layers },
+        { id: "help", label: "Help & Guides", icon: HelpCircle },
       ]
     }
   ];
@@ -146,8 +162,24 @@ const DashboardSidebar = ({ activeSection, setActiveSection, activeTab, setActiv
         </Button>
       </div>
       
+      {isNewUser && (
+        <div className="p-3 mb-6 bg-primary/10 border border-primary/30 rounded-lg">
+          <h3 className="text-sm font-medium text-primary mb-2">Getting Started</h3>
+          <p className="text-xs text-gray-600 mb-2">Follow these steps to create your first AI chatbot:</p>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full flex items-center justify-center gap-1 border-primary/40 text-primary"
+            onClick={() => handleNav('create')}
+          >
+            <Rocket size={14} />
+            <span>Start Building</span>
+          </Button>
+        </div>
+      )}
+      
       {mainNavItems.map((section, idx) => (
-        <div key={idx} className="mb-6">
+        <div key={idx} className={`mb-6 ${section.heading === 'Build Process' && isNewUser ? 'border-l-2 border-primary pl-2' : ''}`}>
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">{section.heading}</h2>
           <ul className="space-y-1">
             {section.items.map((item) => (

@@ -14,7 +14,7 @@ import GuidedTutorial from "@/components/GuidedTutorial";
 import ChatbotGrid from "./chatbot/ChatbotGrid";
 import { initialChatbots } from "./chatbot/mockData";
 import { Chatbot } from "./chatbot/ChatbotCard";
-import { Upload, ShoppingCart, BookOpen, ArrowRight } from "lucide-react";
+import { Upload, ShoppingCart, BookOpen, ArrowRight, Wrench, Database, Link, PlayCircle, BarChart3 } from "lucide-react";
 import { Card, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
 const ChatbotManagement = () => {
@@ -108,6 +108,56 @@ const ChatbotManagement = () => {
       description: "Your new e-commerce assistant has been created successfully."
     });
   };
+
+  // Tutorial steps cards for new users
+  const renderTutorialSteps = () => {
+    if (hasChatbots) return null;
+    
+    const steps = [
+      { 
+        title: "1. Create", 
+        description: "Name your chatbot and define its purpose", 
+        icon: <Wrench className="h-6 w-6 text-primary" />,
+        onClick: () => navigate("/dashboard/create")
+      },
+      { 
+        title: "2. Build", 
+        description: "Add knowledge from files, websites, or custom text", 
+        icon: <Database className="h-6 w-6 text-indigo-600" />,
+        onClick: () => navigate("/dashboard/sources")
+      },
+      { 
+        title: "3. Connect", 
+        description: "Deploy to your website and other platforms", 
+        icon: <Link className="h-6 w-6 text-green-600" />,
+        onClick: () => navigate("/dashboard/connect")
+      },
+      { 
+        title: "4. Analyze", 
+        description: "Monitor and improve performance", 
+        icon: <BarChart3 className="h-6 w-6 text-amber-600" />,
+        onClick: () => navigate("/dashboard/analytics")
+      }
+    ];
+    
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+        {steps.map((step, index) => (
+          <Card key={index} className="border hover:shadow-md transition-all cursor-pointer" onClick={step.onClick}>
+            <CardContent className="p-4 pt-6">
+              <div className="flex items-center mb-3">
+                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-3">
+                  {step.icon}
+                </div>
+                <h3 className="font-medium">{step.title}</h3>
+              </div>
+              <p className="text-sm text-gray-600">{step.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  };
   
   return (
     <div className="space-y-6">
@@ -134,6 +184,8 @@ const ChatbotManagement = () => {
           </CardContent>
         </Card>
       )}
+      
+      {renderTutorialSteps()}
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>

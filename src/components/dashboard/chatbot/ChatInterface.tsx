@@ -1,12 +1,12 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Bot, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { ChatMessage } from "@/types/chat";
 import ChatMessageList from "@/components/chat/ChatMessageList";
 import ChatInput from "@/components/chat/ChatInput";
-import { generateResponse } from "@/utils/chatResponseGenerator";
+import { generateAIResponse } from "@/services/aiService";
 
 interface ChatInterfaceProps {
   botName: string;
@@ -14,31 +14,65 @@ interface ChatInterfaceProps {
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ botName }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: 1, text: `Hello! I'm ${botName}. How can I help you today?`, sender: "bot" }
+    { id: 1, text: `Hello! I'm ${botName}. How can I help you today?`, sender: "bot", isAIGenerated: false }
   ]);
   const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Format chat history for AI context
+  const formatChatHistory = () => {
+    return messages.map(msg => 
+      `${msg.sender === 'bot' ? 'Assistant' : 'User'}: ${msg.text}`
+    ).join('\n');
+  };
 
   const resetConversation = () => {
     setMessages([
-      { id: 1, text: `Hello! I'm ${botName}. How can I help you today?`, sender: "bot" }
+      { id: 1, text: `Hello! I'm ${botName}. How can I help you today?`, sender: "bot", isAIGenerated: false }
     ]);
   };
 
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = async (text: string) => {
     // Add user message
-    const userMessage: ChatMessage = { id: messages.length + 1, text, sender: "user" };
-    setMessages([...messages, userMessage]);
+    const userMessage: ChatMessage = { 
+      id: messages.length + 1, 
+      text, 
+      sender: "user" 
+    };
+    setMessages(prev => [...prev, userMessage]);
     
     // Simulate bot typing
     setIsTyping(true);
     
-    // Generate bot response after a delay
-    setTimeout(() => {
-      setIsTyping(false);
-      const botResponse = generateResponse(text, botName);
-      const botMessage: ChatMessage = { id: messages.length + 2, text: botResponse, sender: "bot" };
+    try {
+      // Get chat history to provide context to the AI
+      const chatHistory = formatChatHistory();
+      
+      // Generate AI response
+      const botResponse = await generateAIResponse(text, chatHistory);
+      
+      // Add bot message
+      const botMessage: ChatMessage = { 
+        id: messages.length + 2, 
+        text: botResponse, 
+        sender: "bot",
+        isAIGenerated: true
+      };
+      
       setMessages(prev => [...prev, botMessage]);
-    }, 1500);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      // Add fallback error message
+      const errorMessage: ChatMessage = {
+        id: messages.length + 2,
+        text: "Sorry, I encountered an error. Please try again later.",
+        sender: "bot",
+        isAIGenerated: false
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   return (

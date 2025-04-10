@@ -1,12 +1,31 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { AIModelConfig } from "@/types/chat";
+import { getAIConfig, saveAIConfig } from "@/services/aiService";
+import { useToast } from "@/hooks/use-toast";
 
 const AISection = () => {
+  const [config, setConfig] = useState<AIModelConfig>(getAIConfig());
+  const { toast } = useToast();
+
+  const handleSaveConfig = () => {
+    saveAIConfig(config);
+    toast({
+      title: "AI Configuration Saved",
+      description: "Your AI model settings have been updated successfully."
+    });
+  };
+
+  const handleReset = () => {
+    const defaultConfig = getAIConfig();
+    setConfig(defaultConfig);
+  };
+
   return (
     <div>
       <h2 className="text-xl font-semibold mb-6">AI Settings</h2>
@@ -16,19 +35,49 @@ const AISection = () => {
         
         <div className="space-y-4">
           <div>
-            <Label htmlFor="model" className="mb-1 block">AI Model</Label>
-            <select id="model" className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary">
-              <option value="gpt-4">GPT-4 (Recommended)</option>
-              <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-              <option value="claude-v2">Claude 2</option>
+            <Label htmlFor="provider" className="mb-1 block">AI Provider</Label>
+            <select 
+              id="provider" 
+              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+              value={config.provider}
+              onChange={(e) => setConfig({...config, provider: e.target.value as "gemini" | "openai" | "claude"})}
+            >
+              <option value="gemini">Google Gemini (Recommended)</option>
+              <option value="openai" disabled>OpenAI (Coming Soon)</option>
+              <option value="claude" disabled>Anthropic Claude (Coming Soon)</option>
             </select>
+          </div>
+          
+          <div>
+            <Label htmlFor="apiKey" className="mb-1 block">API Key</Label>
+            <Input 
+              id="apiKey"
+              type="password" 
+              value={config.apiKey}
+              onChange={(e) => setConfig({...config, apiKey: e.target.value})}
+              className="w-full" 
+              placeholder="Enter your Gemini API key"
+            />
             <p className="text-xs text-gray-500 mt-1">
-              GPT-4 provides the best performance but uses more credits
+              Get your Gemini API key from <a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google AI Studio</a>
             </p>
           </div>
           
           <div>
-            <Label htmlFor="temperature" className="mb-1 block">Temperature</Label>
+            <Label htmlFor="model" className="mb-1 block">AI Model</Label>
+            <select 
+              id="model" 
+              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+              value={config.model}
+              onChange={(e) => setConfig({...config, model: e.target.value})}
+            >
+              <option value="gemini-pro">Gemini Pro</option>
+              <option value="gemini-pro-vision" disabled>Gemini Pro Vision (Coming Soon)</option>
+            </select>
+          </div>
+          
+          <div>
+            <Label htmlFor="temperature" className="mb-1 block">Temperature: {config.temperature}</Label>
             <div className="flex items-center">
               <input 
                 type="range" 
@@ -36,10 +85,11 @@ const AISection = () => {
                 min="0" 
                 max="1" 
                 step="0.1" 
-                defaultValue="0.7" 
+                value={config.temperature}
+                onChange={(e) => setConfig({...config, temperature: parseFloat(e.target.value)})}
                 className="w-full mr-4"
               />
-              <span className="text-sm font-medium">0.7</span>
+              <span className="text-sm font-medium">{config.temperature}</span>
             </div>
             <p className="text-xs text-gray-500 mt-1">
               Higher values make output more creative, lower values make it more deterministic
@@ -51,12 +101,18 @@ const AISection = () => {
             <Input 
               id="max-tokens"
               type="number" 
-              defaultValue="1024" 
+              value={config.maxTokens}
+              onChange={(e) => setConfig({...config, maxTokens: parseInt(e.target.value)})}
               className="w-full" 
             />
             <p className="text-xs text-gray-500 mt-1">
               Maximum number of tokens in AI responses
             </p>
+          </div>
+          
+          <div className="flex space-x-2">
+            <Button onClick={handleSaveConfig} className="flex-1">Save Configuration</Button>
+            <Button variant="outline" onClick={handleReset}>Reset</Button>
           </div>
         </div>
       </div>

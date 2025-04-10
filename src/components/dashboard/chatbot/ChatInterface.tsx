@@ -12,7 +12,7 @@ interface ChatInterfaceProps {
   botName: string;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ botName }) => {
+export const ChatInterface: React.FC<ChatInterfaceProps> = ({ botName }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: 1, text: `Hello! I'm ${botName}. How can I help you today?`, sender: "bot", isAIGenerated: false }
   ]);

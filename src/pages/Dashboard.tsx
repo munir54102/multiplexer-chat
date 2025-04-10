@@ -22,17 +22,20 @@ import ABTesting from "@/components/dashboard/ABTesting";
 import SentimentAnalysis from "@/components/dashboard/SentimentAnalysis";
 import TemplateLibrary from "@/components/dashboard/TemplateLibrary";
 import GuidedTutorial from "@/components/GuidedTutorial";
-import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages, HelpCircle, BookOpen } from "lucide-react";
+import DashboardHelp from "@/components/dashboard/DashboardHelp";
+import { Clock, PlusCircle, Activity, BarChart3, Database, ArrowUpDown, Users, Settings, Zap, Languages, HelpCircle, BookOpen, ChevronRight } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [activeSection, setActiveSection] = useState("general");
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -45,9 +48,14 @@ const Dashboard = () => {
     
     // Check if this is the first visit
     const hasVisitedBefore = localStorage.getItem('hasVisitedDashboard') === 'true';
+    const tutorialCompleted = localStorage.getItem('guidedTutorialCompleted') === 'true';
+    
     if (!hasVisitedBefore) {
       setShowOnboarding(true);
+      setIsNewUser(true);
       localStorage.setItem('hasVisitedDashboard', 'true');
+    } else if (!tutorialCompleted) {
+      setIsNewUser(true);
     }
   }, [navigate]);
 
@@ -86,6 +94,8 @@ const Dashboard = () => {
         return <ABTesting />;
       case "sentiment":
         return <SentimentAnalysis />;
+      case "help":
+        return <DashboardHelp />;
       default:
         return <ChatbotManagement />;
     }
@@ -115,6 +125,8 @@ const Dashboard = () => {
         return "A/B Testing";
       case "sentiment":
         return "Sentiment Analysis";
+      case "help":
+        return "Help & Resources";
       default:
         return activeTab.charAt(0).toUpperCase() + activeTab.slice(1);
     }
@@ -134,6 +146,19 @@ const Dashboard = () => {
         />
         
         <main className="flex-1 p-4 md:p-6">
+          {isNewUser && !showTutorial && activeTab === "overview" && (
+            <Alert className="mb-6 border-primary/50 bg-primary/10">
+              <BookOpen className="h-5 w-5 text-primary" />
+              <AlertTitle className="text-primary">Ready to build your first chatbot?</AlertTitle>
+              <AlertDescription className="flex justify-between items-center">
+                <span>Follow our step-by-step guide to create an AI chatbot in just a few minutes.</span>
+                <Button onClick={handleStartTutorial} className="mt-2 sm:mt-0">
+                  Start Tutorial <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
+
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">{getTabTitle()}</h1>
             <div className="flex space-x-2">

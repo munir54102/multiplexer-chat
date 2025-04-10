@@ -14,7 +14,8 @@ import GuidedTutorial from "@/components/GuidedTutorial";
 import ChatbotGrid from "./chatbot/ChatbotGrid";
 import { initialChatbots } from "./chatbot/mockData";
 import { Chatbot } from "./chatbot/ChatbotCard";
-import { Upload, ShoppingCart } from "lucide-react";
+import { Upload, ShoppingCart, BookOpen, ArrowRight } from "lucide-react";
+import { Card, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
 const ChatbotManagement = () => {
   const [chatbots, setChatbots] = useState(initialChatbots);
@@ -22,6 +23,9 @@ const ChatbotManagement = () => {
   const [showTutorial, setShowTutorial] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  
+  // Check if user has any chatbots
+  const hasChatbots = chatbots.length > 0;
   
   // Filter chatbots based on tab
   const filteredChatbots = chatbots.filter(chatbot => {
@@ -63,7 +67,7 @@ const ChatbotManagement = () => {
       ...botToDuplicate,
       id: Math.max(...chatbots.map(b => b.id)) + 1,
       name: `${botToDuplicate.name} (Copy)`,
-      status: "inactive" as const,  // Explicitly set to "inactive" as a literal type
+      status: "inactive" as const,
       progress: 20
     };
     
@@ -109,6 +113,28 @@ const ChatbotManagement = () => {
     <div className="space-y-6">
       {showTutorial && <GuidedTutorial onComplete={() => setShowTutorial(false)} />}
       
+      {!hasChatbots && (
+        <Card className="border-2 border-primary/30 bg-primary/5 mb-8">
+          <CardContent className="pt-6">
+            <div className="text-center mb-6">
+              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                <BookOpen className="h-8 w-8 text-primary" />
+              </div>
+              <CardTitle className="text-2xl mb-2">Create Your First Chatbot</CardTitle>
+              <CardDescription className="text-lg">
+                Start by creating your first AI chatbot and follow our step-by-step guide
+              </CardDescription>
+            </div>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+              <CreateChatbotButton size="lg" />
+              <Button size="lg" variant="outline" onClick={handleStartTutorial}>
+                Follow Tutorial Guide <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-2xl font-semibold">My Chatbots</h2>
@@ -116,6 +142,7 @@ const ChatbotManagement = () => {
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleStartTutorial}>
+            <BookOpen className="h-4 w-4 mr-2" />
             Creation Guide
           </Button>
           <Button variant="outline" onClick={handleCreateEcommerceChatbot}>
@@ -135,38 +162,47 @@ const ChatbotManagement = () => {
           </TabsList>
         </div>
         
-        <TabsContent value="all" className="mt-0">
-          <ChatbotGrid 
-            chatbots={filteredChatbots}
-            onToggleStatus={toggleStatus}
-            onDelete={deleteChatbot}
-            onDuplicate={duplicateChatbot}
-            setActiveTab={setActiveTab}
-            onStartTutorial={handleStartTutorial}
-          />
-        </TabsContent>
-        
-        <TabsContent value="active" className="mt-0">
-          <ChatbotGrid 
-            chatbots={filteredChatbots}
-            onToggleStatus={toggleStatus}
-            onDelete={deleteChatbot}
-            onDuplicate={duplicateChatbot}
-            setActiveTab={setActiveTab}
-            onStartTutorial={handleStartTutorial}
-          />
-        </TabsContent>
-        
-        <TabsContent value="inactive" className="mt-0">
-          <ChatbotGrid 
-            chatbots={filteredChatbots}
-            onToggleStatus={toggleStatus}
-            onDelete={deleteChatbot}
-            onDuplicate={duplicateChatbot}
-            setActiveTab={setActiveTab}
-            onStartTutorial={handleStartTutorial}
-          />
-        </TabsContent>
+        {hasChatbots ? (
+          <>
+            <TabsContent value="all" className="mt-0">
+              <ChatbotGrid 
+                chatbots={filteredChatbots}
+                onToggleStatus={toggleStatus}
+                onDelete={deleteChatbot}
+                onDuplicate={duplicateChatbot}
+                setActiveTab={setActiveTab}
+                onStartTutorial={handleStartTutorial}
+              />
+            </TabsContent>
+            
+            <TabsContent value="active" className="mt-0">
+              <ChatbotGrid 
+                chatbots={filteredChatbots}
+                onToggleStatus={toggleStatus}
+                onDelete={deleteChatbot}
+                onDuplicate={duplicateChatbot}
+                setActiveTab={setActiveTab}
+                onStartTutorial={handleStartTutorial}
+              />
+            </TabsContent>
+            
+            <TabsContent value="inactive" className="mt-0">
+              <ChatbotGrid 
+                chatbots={filteredChatbots}
+                onToggleStatus={toggleStatus}
+                onDelete={deleteChatbot}
+                onDuplicate={duplicateChatbot}
+                setActiveTab={setActiveTab}
+                onStartTutorial={handleStartTutorial}
+              />
+            </TabsContent>
+          </>
+        ) : (
+          <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
+            <p className="text-gray-500 mb-4">You don't have any chatbots yet</p>
+            <CreateChatbotButton />
+          </div>
+        )}
       </Tabs>
     </div>
   );

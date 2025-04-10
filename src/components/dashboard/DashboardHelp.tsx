@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { HelpCircle, Video, FileText, BookOpen, ExternalLink, ChevronRight } from "lucide-react";
+import { HelpCircle, Video, FileText, BookOpen, ExternalLink, ChevronRight, Bot, Database, Globe, Palette } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import GuidedTutorial from "../GuidedTutorial";
+import { ChatInterface } from "../dashboard/chatbot/ChatInterface";
 
 interface HelpResourceProps {
   title: string;
@@ -50,6 +51,7 @@ const HelpResource = ({ title, description, icon, buttonText, url, onClick }: He
 
 const DashboardHelp = () => {
   const [showTutorial, setShowTutorial] = useState(false);
+  const [showChatbotDemo, setShowChatbotDemo] = useState(false);
   
   const startGuidedTutorial = () => {
     setShowTutorial(true);
@@ -63,6 +65,61 @@ const DashboardHelp = () => {
         <h2 className="text-2xl font-bold">Help & Resources</h2>
         <Button onClick={startGuidedTutorial}>Start Guided Tutorial</Button>
       </div>
+      
+      <Card className="mb-6 border-primary/20 bg-primary/5">
+        <CardHeader>
+          <CardTitle>Chatbot Creation Guide</CardTitle>
+          <CardDescription>
+            Our step-by-step tutorial walks you through the entire process of creating, configuring, and deploying your AI chatbot.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+              <Bot className="h-8 w-8 text-primary mx-auto mb-2" />
+              <h3 className="font-medium">1. Create</h3>
+              <p className="text-sm text-gray-600">Name and define your chatbot</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+              <Database className="h-8 w-8 text-primary mx-auto mb-2" />
+              <h3 className="font-medium">2. Build</h3>
+              <p className="text-sm text-gray-600">Add knowledge and train AI</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+              <Palette className="h-8 w-8 text-primary mx-auto mb-2" />
+              <h3 className="font-medium">3. Design</h3>
+              <p className="text-sm text-gray-600">Customize appearance</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+              <Globe className="h-8 w-8 text-primary mx-auto mb-2" />
+              <h3 className="font-medium">4. Deploy</h3>
+              <p className="text-sm text-gray-600">Connect to platforms</p>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full" onClick={startGuidedTutorial}>
+            Start Guided Tutorial
+          </Button>
+        </CardFooter>
+      </Card>
+      
+      <Dialog open={showChatbotDemo} onOpenChange={setShowChatbotDemo}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>AI Assistant Demo</DialogTitle>
+            <DialogDescription>
+              See how your chatbot would interact with users
+            </DialogDescription>
+          </DialogHeader>
+          <div className="h-[400px] border rounded-md overflow-hidden">
+            <ChatInterface botName="Help Assistant" />
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setShowChatbotDemo(false)}>Close Demo</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <HelpResource
@@ -106,11 +163,11 @@ const DashboardHelp = () => {
         />
         
         <HelpResource
-          title="API Documentation"
-          description="Technical documentation for developers"
-          icon={<FileText className="h-5 w-5 text-primary" />}
-          buttonText="View API Docs"
-          url="#"
+          title="Chatbot Demo"
+          description="See a live example of how your chatbot will work"
+          icon={<Bot className="h-5 w-5 text-primary" />}
+          buttonText="View Demo"
+          onClick={() => setShowChatbotDemo(true)}
         />
       </div>
       

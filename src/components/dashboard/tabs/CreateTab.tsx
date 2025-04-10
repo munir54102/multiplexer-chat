@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Card, 
@@ -15,11 +14,13 @@ import CreateChatbotButton from "@/components/CreateChatbotButton";
 import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import GuidedTutorial from "@/components/GuidedTutorial";
 
 const CreateTab = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(false);
   
   const handleNavigate = (section: string) => {
     if (section === 'sources') {
@@ -41,6 +42,10 @@ const CreateTab = () => {
       });
       navigate("/dashboard");
     }
+  };
+
+  const handleStartTutorial = () => {
+    setShowTutorial(true);
   };
 
   const steps = [
@@ -154,14 +159,21 @@ const CreateTab = () => {
   
   return (
     <div className="space-y-8">
+      {showTutorial && <GuidedTutorial onComplete={() => setShowTutorial(false)} initialStep={0} />}
+      
       <div>
-        <h2 className="text-xl font-semibold mb-4">Create Your Chatbot</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Create Your Chatbot</h2>
+          <Button variant="outline" onClick={handleStartTutorial}>
+            Open Guided Tutorial
+          </Button>
+        </div>
         <p className="text-gray-600 mb-6">Complete these steps to build and deploy your AI chatbot</p>
         
         <div className="bg-white p-6 rounded-lg border border-gray-200 mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium">Setup Progress</span>
-            <span className="text-sm font-medium">{Math.round(activeStep / (steps.length - 1) * 100)}%</span>
+            <span className="text-sm">{Math.round(activeStep / (steps.length - 1) * 100)}%</span>
           </div>
           <Progress value={Math.round(activeStep / (steps.length - 1) * 100)} className="h-2" />
           <ScrollArea className="w-full">

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -81,6 +80,11 @@ const AppContent = () => {
           </ProtectedRoute>
         } />
         <Route path="/dashboard/:section/:tab" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/help" element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>

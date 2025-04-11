@@ -1,100 +1,182 @@
 
 import React, { useState, useEffect, useRef } from "react";
-import { Bot, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CardContent, CardFooter } from "@/components/ui/card";
-import { ChatMessage } from "@/types/chat";
-import ChatMessageList from "@/components/chat/ChatMessageList";
-import ChatInput from "@/components/chat/ChatInput";
-import { generateAIResponse } from "@/services/aiService";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { generateChatResponse } from "@/utils/chatResponseGenerator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ArrowUpIcon, ThumbsUp, ThumbsDown, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { getKnowledgeBase } from "@/utils/knowledgeBase";
 
-interface ChatInterfaceProps {
-  botName: string;
-}
+const ChatInterface = ({ botName }) => {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState({});
+  const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
+  const { toast } = useToast();
 
-export const ChatInterface: React.FC<ChatInterfaceProps> = ({ botName }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: 1, text: `Hello! I'm ${botName}. How can I help you today?`, sender: "bot", isAIGenerated: false }
-  ]);
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Format chat history for AI context
-  const formatChatHistory = () => {
-    return messages.map(msg => 
-      `${msg.sender === 'bot' ? 'Assistant' : 'User'}: ${msg.text}`
-    ).join('\n');
-  };
-
-  const resetConversation = () => {
-    setMessages([
-      { id: 1, text: `Hello! I'm ${botName}. How can I help you today?`, sender: "bot", isAIGenerated: false }
-    ]);
-  };
-
-  const handleSendMessage = async (text: string) => {
-    // Add user message
-    const userMessage: ChatMessage = { 
-      id: messages.length + 1, 
-      text, 
-      sender: "user" 
-    };
-    setMessages(prev => [...prev, userMessage]);
+  useEffect(() => {
+    // Add welcome message
+    if (messages.length === 0) {
+      setMessages([{
+        id: "welcome",
+        role: "assistant",
+        content: `Hello! I'm ${botName}. How can I help you today?`,
+        timestamp: new Date()
+      }]);
+    }
     
-    // Simulate bot typing
-    setIsTyping(true);
+    scrollToBottom();
+  }, [messages, botName]);
+  
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    
+    if (!input.trim()) return;
+    
+    const userMessage = {
+      id: `user-${Date.now()}`,
+      role: "user",
+      content: input,
+      timestamp: new Date()
+    };
+    
+    setMessages(prevMessages => [...prevMessages, userMessage]);
+    setInput("");
+    setLoading(true);
+    
+    // Fetch the knowledge base to use in response generation
+    const knowledgeBase = getKnowledgeBase();
     
     try {
-      // Get chat history to provide context to the AI
-      const chatHistory = formatChatHistory();
-      
-      // Generate AI response
-      const botResponse = await generateAIResponse(text, chatHistory);
-      
-      // Add bot message
-      const botMessage: ChatMessage = { 
-        id: messages.length + 2, 
-        text: botResponse, 
-        sender: "bot",
-        isAIGenerated: true
-      };
-      
-      setMessages(prev => [...prev, botMessage]);
+      // Wait a moment to simulate processing
+      setTimeout(async () => {
+        const response = await generateChatResponse(input, knowledgeBase);
+        
+        const botResponse = {
+          id: `bot-${Date.now()}`,
+          role: "assistant",
+          content: response,
+          timestamp: new Date()
+        };
+        
+        setMessages(prevMessages => [...prevMessages, botResponse]);
+        setLoading(false);
+      }, 1000);
     } catch (error) {
-      console.error("Error getting AI response:", error);
-      // Add fallback error message
-      const errorMessage: ChatMessage = {
-        id: messages.length + 2,
-        text: "Sorry, I encountered an error. Please try again later.",
-        sender: "bot",
-        isAIGenerated: false
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsTyping(false);
+      console.error("Error generating response:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate a response. Please try again.",
+        variant: "destructive",
+      });
+      setLoading(false);
     }
   };
 
+  const handleFeedback = (messageId, isPositive) => {
+    setFeedback(prev => ({
+      ...prev,
+      [messageId]: isPositive
+    }));
+    
+    toast({
+      title: "Feedback Recorded",
+      description: `Thank you for your ${isPositive ? "positive" : "negative"} feedback. This helps improve the AI.`,
+    });
+  };
+
   return (
-    <>
-      <CardContent className="py-2">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center">
-            <Bot className="h-5 w-5 mr-2 text-primary" />
-            <span className="font-medium">{botName}</span>
+    <Card className="border h-full flex flex-col">
+      <CardContent className="p-4 flex flex-col h-full">
+        <ScrollArea className="flex-1 pr-4">
+          <div className="space-y-4 pb-4">
+            {messages.map((message) => (
+              <div 
+                key={message.id} 
+                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div 
+                  className={`max-w-[80%] p-3 rounded-lg ${
+                    message.role === "user" 
+                      ? "bg-primary text-primary-foreground" 
+                      : "bg-muted"
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap">{message.content}</div>
+                  {message.role === "assistant" && (
+                    <div className="flex items-center justify-end mt-2 space-x-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className={`h-6 w-6 ${feedback[message.id] === true ? "text-green-500" : ""}`}
+                        onClick={() => handleFeedback(message.id, true)}
+                      >
+                        <ThumbsUp className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className={`h-6 w-6 ${feedback[message.id] === false ? "text-red-500" : ""}`}
+                        onClick={() => handleFeedback(message.id, false)}
+                      >
+                        <ThumbsDown className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+            
+            {loading && (
+              <div className="flex justify-start">
+                <div className="max-w-[80%] p-3 rounded-lg bg-muted flex items-center space-x-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Thinking...</span>
+                </div>
+              </div>
+            )}
+            
+            <div ref={messagesEndRef} />
           </div>
-          <Button variant="ghost" size="sm" onClick={resetConversation}>
-            <RefreshCcw className="h-4 w-4 mr-2" />
-            Reset
-          </Button>
-        </div>
+        </ScrollArea>
         
-        <ChatMessageList messages={messages} isTyping={isTyping} />
+        <Separator className="my-4" />
+        
+        <form onSubmit={handleSendMessage} className="flex space-x-2">
+          <Input
+            ref={inputRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1"
+            disabled={loading}
+          />
+          <Button 
+            type="submit" 
+            size="icon" 
+            disabled={loading || !input.trim()}
+          >
+            <ArrowUpIcon className="h-4 w-4" />
+          </Button>
+        </form>
       </CardContent>
-      <CardFooter className="border-t pt-4">
-        <ChatInput onSendMessage={handleSendMessage} />
-      </CardFooter>
-    </>
+    </Card>
   );
 };
 

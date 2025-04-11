@@ -13,14 +13,15 @@ import {
   ActionsTab,
   ContactsTab,
   CreateTab,
-  DesignTab
+  DesignTab,
+  PublishTab
 } from "@/components/dashboard/tabs";
 import ChatbotManagement from "@/components/dashboard/ChatbotManagement";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
 import ABTesting from "@/components/dashboard/ABTesting";
 import SentimentAnalysis from "@/components/dashboard/SentimentAnalysis";
-import TemplateLibrary from "@/components/dashboard/TemplateLibrary";
+import ChatbotTesting from "@/components/dashboard/ChatbotTesting";
 import GuidedTutorial from "@/components/GuidedTutorial";
 import DashboardHelp from "@/components/dashboard/DashboardHelp";
 import { 
@@ -94,9 +95,13 @@ const Dashboard = () => {
       case "design":
         return <DesignTab />;
       case "test":
-        return <PlaygroundTab />;
-      case "deploy":
+        return <ChatbotTesting botName={localStorage.getItem('currentChatbot') || "My Chatbot"} />;
+      case "connect":
         return <ConnectTab />;
+      case "publish":
+        return <PublishTab />;
+      case "deploy":
+        return <PublishTab />;
       case "analyze":
         return <AnalyticsTab />;
       case "playground":
@@ -105,16 +110,12 @@ const Dashboard = () => {
         return <ActivityTab />;
       case "analytics":
         return <AnalyticsTab />;
-      case "connect":
-        return <ConnectTab />;
       case "sources":
         return <SourcesTab />;
       case "actions":
         return <ActionsTab />;
       case "contacts":
         return <ContactsTab />;
-      case "templates":
-        return <TemplateLibrary />;
       case "abtesting":
         return <ABTesting />;
       case "sentiment":
@@ -142,22 +143,14 @@ const Dashboard = () => {
         return "Design Your Chatbot";
       case "test":
         return "Test Your Chatbot";
-      case "deploy":
-        return "Deploy Your Chatbot";
-      case "analyze":
-        return "Analyze Performance";
-      case "sources":
-        return "Build Your Chatbot";
       case "connect":
         return "Connect Your Chatbot";
+      case "publish":
+        return "Publish Your Chatbot";
+      case "analyze":
+        return "Analyze Performance";
       case "settings":
         return "Settings";
-      case "templates":
-        return "Template Library";
-      case "abtesting":
-        return "A/B Testing";
-      case "sentiment":
-        return "Sentiment Analysis";
       case "help":
         return "Help & Resources";
       default:

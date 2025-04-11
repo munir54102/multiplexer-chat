@@ -1,62 +1,44 @@
 
-import React from "react";
-import GeneralSection from "./GeneralSection";
 import AISection from "./AISection";
+import AppearanceCustomization from "./AppearanceCustomization";
 import ChatInterfaceSection from "./ChatInterfaceSection";
-import SecuritySection from "./SecuritySection";
+import DiscountSection from "./DiscountSection";
+import GeneralSection from "./GeneralSection";
+import LanguageSettings from "./LanguageSettings";
 import LeadsSection from "./LeadsSection";
 import NotificationsSection from "./NotificationsSection";
-import WebhooksSection from "./WebhooksSection";
-import LanguageSettings from "./LanguageSettings";
+import PaymentSection from "./PaymentSection";
+import SecuritySection from "./SecuritySection";
 import VoiceSettings from "./VoiceSettings";
+import WebhooksSection from "./WebhooksSection";
 
-// Export individual components
-export {
-  GeneralSection,
-  AISection,
-  ChatInterfaceSection,
-  SecuritySection,
-  LeadsSection,
-  NotificationsSection,
-  WebhooksSection
-};
-
-// Create a settings map for tab navigation
-// Using React.createElement instead of JSX in a .ts file
-export const settings = {
-  "general": React.createElement(GeneralSection),
-  "ai": React.createElement(AISection),
-  "chat": React.createElement(ChatInterfaceSection),
-  "security": React.createElement(SecuritySection),
-  "leads": React.createElement(LeadsSection),
-  "notifications": React.createElement(NotificationsSection),
-  "webhooks": React.createElement(WebhooksSection),
-  "language": React.createElement(LanguageSettings),
-  "voice": React.createElement(VoiceSettings)
-};
-
-// Create a function to get the settings component
 export const getSettingsComponent = (section: string) => {
   switch (section) {
     case "general":
-      return React.createElement(GeneralSection);
+      return <GeneralSection />;
     case "ai":
-      return React.createElement(AISection);
+      return <AISection />;
     case "chat":
-      return React.createElement(ChatInterfaceSection);
+      return <ChatInterfaceSection />;
     case "security":
-      return React.createElement(SecuritySection);
+      return <SecuritySection />;
     case "leads":
-      return React.createElement(LeadsSection);
+      return <LeadsSection />;
     case "notifications":
-      return React.createElement(NotificationsSection);
+      return <NotificationsSection />;
     case "webhooks":
-      return React.createElement(WebhooksSection);
-    case "language":
-      return React.createElement(LanguageSettings);
+      return <WebhooksSection />;
+    case "appearance":
+      return <AppearanceCustomization />;
     case "voice":
-      return React.createElement(VoiceSettings);
+      return <VoiceSettings />;
+    case "language":
+      return <LanguageSettings />;
+    case "discounts":
+      return <DiscountSection />;
+    case "payment":
+      return <PaymentSection />;
     default:
-      return React.createElement(GeneralSection);
+      return <GeneralSection />;
   }
 };

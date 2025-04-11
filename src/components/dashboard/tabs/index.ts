@@ -14,6 +14,7 @@ import SalesAgentTab from "./SalesAgentTab";
 import AppointmentBookingTab from "./AppointmentBookingTab";
 import TeamCollaborationTab from "./TeamCollaborationTab";
 import LanguageSettingsTab from "./LanguageSettingsTab";
+import PublishTab from "./PublishTab";
 
 export {
   PlaygroundTab,
@@ -30,5 +31,6 @@ export {
   SalesAgentTab,
   AppointmentBookingTab,
   TeamCollaborationTab,
-  LanguageSettingsTab
+  LanguageSettingsTab,
+  PublishTab
 };

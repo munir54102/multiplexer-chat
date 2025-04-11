@@ -20,7 +20,10 @@ import {
   HelpCircle,
   Palette,
   Play,
-  Upload
+  Upload,
+  Share,
+  Globe,
+  CreditCard
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -41,6 +44,7 @@ export const settingsItems: NavItem[] = [
   { id: "ai", label: "AI", icon: BrainCircuit },
   { id: "chat", label: "Chat Interface", icon: MessageSquare },
   { id: "security", label: "Security", icon: Shield },
+  { id: "payment", label: "Payment", icon: CreditCard },
   { id: "leads", label: "Leads", icon: Users },
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "webhooks", label: "Webhooks", icon: Webhook },
@@ -63,7 +67,8 @@ export const mainNavItems: NavSection[] = [
       { id: "build", label: "Build", icon: Database },
       { id: "design", label: "Design", icon: Palette },
       { id: "test", label: "Test", icon: Play },
-      { id: "deploy", label: "Deploy", icon: Upload },
+      { id: "connect", label: "Connect", icon: Link },
+      { id: "publish", label: "Publish", icon: Globe },
       { id: "analyze", label: "Analyze", icon: BarChart3 },
     ]
   },
@@ -78,7 +83,6 @@ export const mainNavItems: NavSection[] = [
   {
     heading: "Resources",
     items: [
-      { id: "templates", label: "Templates", icon: Layers },
       { id: "help", label: "Help & Guides", icon: HelpCircle },
     ]
   }

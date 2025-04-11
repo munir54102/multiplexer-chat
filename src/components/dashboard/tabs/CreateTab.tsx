@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { 
@@ -27,7 +26,6 @@ const CreateTab = () => {
   const [purpose, setPurpose] = useState("");
   const [showPurposeSelection, setShowPurposeSelection] = useState(false);
   
-  // Check if we're coming from the initial creation with a name
   useEffect(() => {
     if (location.state) {
       const { botName, step } = location.state as { botName: string; step: string };
@@ -45,19 +43,19 @@ const CreateTab = () => {
     
     if (section === 'build' || section === 'sources') {
       nextStep = 2;
-      navigate("/dashboard/build");
+      navigate("/dashboard/build", { state: { botName, purpose } });
     } else if (section === 'design') {
       nextStep = 3;
-      navigate("/dashboard/design");
+      navigate("/dashboard/design", { state: { botName, purpose } });
     } else if (section === 'test' || section === 'playground') {
       nextStep = 4;
-      navigate("/dashboard/test");
+      navigate("/dashboard/test", { state: { botName, purpose } });
     } else if (section === 'deploy' || section === 'connect') {
       nextStep = 5;
-      navigate("/dashboard/deploy");
+      navigate("/dashboard/deploy", { state: { botName, purpose } });
     } else if (section === 'analyze' || section === 'analytics') {
       nextStep = 6;
-      navigate("/dashboard/analyze");
+      navigate("/dashboard/analyze", { state: { botName, purpose } });
     }
     
     setActiveStep(nextStep);
@@ -78,31 +76,30 @@ const CreateTab = () => {
 
   const handleEdit = (stepIndex: number) => {
     setActiveStep(stepIndex);
+    
     toast({
       title: "Editing step",
       description: `Now editing step ${stepIndex + 1}`
     });
 
-    // Navigate to appropriate section based on step
     switch(stepIndex) {
       case 0: // Create
-        // Stay on current page but show create dialog
-        navigate("/dashboard/create");
+        navigate("/dashboard/create", { state: { botName, purpose } });
         break;
       case 1: // Build
-        navigate("/dashboard/build");
+        navigate("/dashboard/build", { state: { botName, purpose } });
         break;
       case 2: // Design
-        navigate("/dashboard/design");
+        navigate("/dashboard/design", { state: { botName, purpose } });
         break;
       case 3: // Test
-        navigate("/dashboard/test");
+        navigate("/dashboard/test", { state: { botName, purpose } });
         break;
       case 4: // Deploy
-        navigate("/dashboard/deploy");
+        navigate("/dashboard/deploy", { state: { botName, purpose } });
         break;
       case 5: // Analyze
-        navigate("/dashboard/analyze");
+        navigate("/dashboard/analyze", { state: { botName, purpose } });
         break;
       default:
         break;
@@ -119,8 +116,7 @@ const CreateTab = () => {
       description: `Your chatbot is now configured as a ${selectedPurpose} assistant.`
     });
     
-    // Navigate to the next step (Build)
-    navigate("/dashboard/build");
+    navigate("/dashboard/build", { state: { botName, purpose: selectedPurpose } });
   };
 
   const steps = [
@@ -224,10 +220,8 @@ const CreateTab = () => {
     }
   ];
   
-  // Calculate progress correctly
   const progressPercentage = Math.min(activeStep / (steps.length) * 100, 100);
   
-  // If we're showing the purpose selection screen
   if (showPurposeSelection) {
     return (
       <div className="space-y-8">
@@ -318,7 +312,6 @@ const CreateTab = () => {
     );
   }
   
-  // Default view with the creation steps
   return (
     <div className="space-y-8">
       {showTutorial && <GuidedTutorial onComplete={() => setShowTutorial(false)} initialStep={0} />}

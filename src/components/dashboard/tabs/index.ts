@@ -7,12 +7,15 @@ import SourcesTab from "./SourcesTab";
 import ActionsTab from "./ActionsTab";
 import ContactsTab from "./ContactsTab";
 import CreateTab from "./CreateTab";
-import LanguageSettingsTab from "./LanguageSettingsTab";
-import TeamCollaborationTab from "./TeamCollaborationTab";
+import DesignTab from "./DesignTab";
 import HelpTab from "./HelpTab";
+import CustomerSupportTab from "./CustomerSupportTab";
+import SalesAgentTab from "./SalesAgentTab";
+import AppointmentBookingTab from "./AppointmentBookingTab";
+import TeamCollaborationTab from "./TeamCollaborationTab";
+import LanguageSettingsTab from "./LanguageSettingsTab";
 
 export {
-  CreateTab,
   PlaygroundTab,
   ActivityTab,
   AnalyticsTab,
@@ -20,7 +23,12 @@ export {
   SourcesTab,
   ActionsTab,
   ContactsTab,
-  LanguageSettingsTab,
+  CreateTab,
+  DesignTab,
+  HelpTab,
+  CustomerSupportTab,
+  SalesAgentTab,
+  AppointmentBookingTab,
   TeamCollaborationTab,
-  HelpTab
+  LanguageSettingsTab
 };

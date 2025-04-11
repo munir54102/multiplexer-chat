@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "@/components/Header";
@@ -13,7 +12,8 @@ import {
   SourcesTab,
   ActionsTab,
   ContactsTab,
-  CreateTab
+  CreateTab,
+  DesignTab
 } from "@/components/dashboard/tabs";
 import ChatbotManagement from "@/components/dashboard/ChatbotManagement";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
@@ -48,13 +48,11 @@ const Dashboard = () => {
   const { toast } = useToast();
   
   useEffect(() => {
-    // Check if user is authenticated
     const isAuthenticated = localStorage.getItem('auth') === 'true';
     if (!isAuthenticated) {
       navigate('/login');
     }
     
-    // Check if this is the first visit
     const hasVisitedBefore = localStorage.getItem('hasVisitedDashboard') === 'true';
     const tutorialCompleted = localStorage.getItem('guidedTutorialCompleted') === 'true';
     
@@ -66,13 +64,11 @@ const Dashboard = () => {
       setIsNewUser(true);
     }
     
-    // Extract step from URL if available
     const pathParts = location.pathname.split('/');
     if (pathParts.length > 2) {
       const section = pathParts[2];
       setActiveTab(section);
       
-      // If we're in create section, check for specific step
       if (section === 'create' && location.state && location.state.step) {
         // The step will be handled by the CreateTab component
       }
@@ -87,9 +83,7 @@ const Dashboard = () => {
     });
   };
 
-  // Content based on active tab
   const renderTabContent = () => {
-    // Map sidebar steps to the appropriate components
     switch (activeTab) {
       case "overview":
         return <ChatbotManagement />;
@@ -98,7 +92,7 @@ const Dashboard = () => {
       case "build":
         return <SourcesTab />;
       case "design":
-        return <AnalyticsTab />;
+        return <DesignTab />;
       case "test":
         return <PlaygroundTab />;
       case "deploy":
@@ -132,12 +126,10 @@ const Dashboard = () => {
     }
   };
 
-  // Content based on active settings section
   const renderSettingsContent = () => {
     return getSettingsComponent(activeSection);
   };
 
-  // Get the tab section title
   const getTabTitle = () => {
     switch (activeTab) {
       case "overview":

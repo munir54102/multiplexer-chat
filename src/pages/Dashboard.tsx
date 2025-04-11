@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardContent from "@/components/DashboardContent";
@@ -44,6 +44,7 @@ const Dashboard = () => {
   const [showTutorial, setShowTutorial] = useState(false);
   const [isNewUser, setIsNewUser] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   
   useEffect(() => {
@@ -64,7 +65,19 @@ const Dashboard = () => {
     } else if (!tutorialCompleted) {
       setIsNewUser(true);
     }
-  }, [navigate]);
+    
+    // Extract step from URL if available
+    const pathParts = location.pathname.split('/');
+    if (pathParts.length > 2) {
+      const section = pathParts[2];
+      setActiveTab(section);
+      
+      // If we're in create section, check for specific step
+      if (section === 'create' && location.state && location.state.step) {
+        // The step will be handled by the CreateTab component
+      }
+    }
+  }, [navigate, location]);
 
   const handleStartTutorial = () => {
     setShowTutorial(true);
@@ -76,11 +89,22 @@ const Dashboard = () => {
 
   // Content based on active tab
   const renderTabContent = () => {
+    // Map sidebar steps to the appropriate components
     switch (activeTab) {
       case "overview":
         return <ChatbotManagement />;
       case "create":
         return <CreateTab />;
+      case "build":
+        return <SourcesTab />;
+      case "design":
+        return <AnalyticsTab />;
+      case "test":
+        return <PlaygroundTab />;
+      case "deploy":
+        return <ConnectTab />;
+      case "analyze":
+        return <AnalyticsTab />;
       case "playground":
         return <PlaygroundTab />;
       case "activity":
@@ -120,6 +144,16 @@ const Dashboard = () => {
         return "My Chatbots";
       case "create":
         return "Create Chatbot";
+      case "build":
+        return "Build Your Chatbot";
+      case "design":
+        return "Design Your Chatbot";
+      case "test":
+        return "Test Your Chatbot";
+      case "deploy":
+        return "Deploy Your Chatbot";
+      case "analyze":
+        return "Analyze Performance";
       case "sources":
         return "Build Your Chatbot";
       case "connect":

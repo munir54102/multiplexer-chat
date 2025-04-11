@@ -17,7 +17,10 @@ import {
   LayoutDashboard,
   Wrench,
   Link,
-  HelpCircle
+  HelpCircle,
+  Palette,
+  Play,
+  Upload
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -56,9 +59,12 @@ export const mainNavItems: NavSection[] = [
   {
     heading: "Chatbot Setup",
     items: [
-      { id: "create", label: "Create Chatbot", icon: Wrench },
-      { id: "sources", label: "Build Knowledge", icon: Database },
-      { id: "connect", label: "Deploy & Connect", icon: Link },
+      { id: "create", label: "Create", icon: Wrench },
+      { id: "build", label: "Build", icon: Database },
+      { id: "design", label: "Design", icon: Palette },
+      { id: "test", label: "Test", icon: Play },
+      { id: "deploy", label: "Deploy", icon: Upload },
+      { id: "analyze", label: "Analyze", icon: BarChart3 },
     ]
   },
   {

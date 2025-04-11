@@ -41,25 +41,35 @@ const CreateTab = () => {
   }, [location]);
 
   const handleNavigate = (section: string) => {
-    if (section === 'sources') {
-      toast({
-        title: "Moving to Build phase",
-        description: "Now you can add knowledge to your chatbot"
-      });
-      navigate("/dashboard");
-    } else if (section === 'connect') {
-      toast({
-        title: "Moving to Connect phase",
-        description: "Now you can integrate your chatbot with different platforms"
-      });
-      navigate("/dashboard");
-    } else if (section === 'playground') {
-      toast({
-        title: "Moving to Test phase",
-        description: "Now you can test your chatbot's responses"
-      });
-      navigate("/dashboard");
+    let nextStep = activeStep;
+    
+    if (section === 'build' || section === 'sources') {
+      nextStep = 2;
+      navigate("/dashboard/build");
+    } else if (section === 'design') {
+      nextStep = 3;
+      navigate("/dashboard/design");
+    } else if (section === 'test' || section === 'playground') {
+      nextStep = 4;
+      navigate("/dashboard/test");
+    } else if (section === 'deploy' || section === 'connect') {
+      nextStep = 5;
+      navigate("/dashboard/deploy");
+    } else if (section === 'analyze' || section === 'analytics') {
+      nextStep = 6;
+      navigate("/dashboard/analyze");
     }
+    
+    setActiveStep(nextStep);
+    
+    toast({
+      title: `Moving to ${section} phase`,
+      description: `Now you can ${section === 'build' ? 'add knowledge to' : 
+                    section === 'design' ? 'customize' : 
+                    section === 'test' ? 'test' : 
+                    section === 'deploy' ? 'deploy' : 
+                    'analyze'} your chatbot`
+    });
   };
 
   const handleStartTutorial = () => {
@@ -76,22 +86,23 @@ const CreateTab = () => {
     // Navigate to appropriate section based on step
     switch(stepIndex) {
       case 0: // Create
-        // Show create dialog or navigate to create page
+        // Stay on current page but show create dialog
+        navigate("/dashboard/create");
         break;
       case 1: // Build
-        navigate("/dashboard/sources");
+        navigate("/dashboard/build");
         break;
       case 2: // Design
-        navigate("/dashboard/settings/chat");
+        navigate("/dashboard/design");
         break;
       case 3: // Test
-        navigate("/dashboard/playground");
+        navigate("/dashboard/test");
         break;
       case 4: // Deploy
-        navigate("/dashboard/connect");
+        navigate("/dashboard/deploy");
         break;
       case 5: // Analyze
-        navigate("/dashboard/analytics");
+        navigate("/dashboard/analyze");
         break;
       default:
         break;
@@ -109,7 +120,7 @@ const CreateTab = () => {
     });
     
     // Navigate to the next step (Build)
-    navigate("/dashboard/sources");
+    navigate("/dashboard/build");
   };
 
   const steps = [
@@ -135,8 +146,7 @@ const CreateTab = () => {
           variant="outline" 
           className="w-full" 
           onClick={() => {
-            handleNavigate('sources');
-            setActiveStep(2);
+            handleNavigate('build');
           }}
         >
           Start Building Knowledge Base
@@ -153,11 +163,7 @@ const CreateTab = () => {
           variant="outline" 
           className="w-full" 
           onClick={() => {
-            toast({
-              title: "Moving to Design phase",
-              description: "Now you can customize your chatbot's appearance"
-            });
-            setActiveStep(3);
+            handleNavigate('design');
           }}
         >
           Customize Appearance
@@ -174,8 +180,7 @@ const CreateTab = () => {
           variant="outline" 
           className="w-full" 
           onClick={() => {
-            handleNavigate('playground');
-            setActiveStep(4);
+            handleNavigate('test');
           }}
         >
           Test Your Chatbot
@@ -192,8 +197,7 @@ const CreateTab = () => {
           variant="outline" 
           className="w-full" 
           onClick={() => {
-            handleNavigate('connect');
-            setActiveStep(5);
+            handleNavigate('deploy');
           }}
         >
           Deploy & Connect
@@ -210,8 +214,7 @@ const CreateTab = () => {
           variant="outline" 
           className="w-full" 
           onClick={() => {
-            navigate("/dashboard/analytics");
-            setActiveStep(6);
+            handleNavigate('analyze');
           }}
         >
           View Analytics
@@ -220,6 +223,9 @@ const CreateTab = () => {
       isComplete: activeStep > 5
     }
   ];
+  
+  // Calculate progress correctly
+  const progressPercentage = Math.min(activeStep / (steps.length) * 100, 100);
   
   // If we're showing the purpose selection screen
   if (showPurposeSelection) {
@@ -329,9 +335,9 @@ const CreateTab = () => {
         <div className="bg-white p-6 rounded-lg border border-gray-200 mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium">Setup Progress</span>
-            <span className="text-sm">{Math.min(Math.round(activeStep / (steps.length - 1) * 100), 100)}%</span>
+            <span className="text-sm">{Math.round(progressPercentage)}%</span>
           </div>
-          <Progress value={Math.min(Math.round(activeStep / (steps.length - 1) * 100), 100)} className="h-2" />
+          <Progress value={progressPercentage} className="h-2" />
           <ScrollArea className="w-full">
             <div className="flex justify-between mt-4 text-sm py-2">
               {steps.map((step, index) => (

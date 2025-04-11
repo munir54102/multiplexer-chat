@@ -68,7 +68,7 @@ const CreateChatbotButton = ({
         onSuccess();
       }
       
-      // Navigate to purpose selection page
+      // Navigate directly to the create tab with the 6-step guide
       navigate("/dashboard/create", { state: { botName, step: 'purpose' } });
     }, 1500);
   };

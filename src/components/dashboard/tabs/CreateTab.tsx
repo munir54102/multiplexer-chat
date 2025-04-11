@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { 
   Card, 
@@ -46,6 +47,39 @@ const CreateTab = () => {
 
   const handleStartTutorial = () => {
     setShowTutorial(true);
+  };
+
+  // Add this new function to handle the edit button click
+  const handleEdit = (stepIndex: number) => {
+    setActiveStep(stepIndex);
+    toast({
+      title: "Editing step",
+      description: `Now editing step ${stepIndex + 1}`
+    });
+
+    // Navigate to appropriate section based on step
+    switch(stepIndex) {
+      case 0: // Create
+        // Show create dialog or navigate to create page
+        break;
+      case 1: // Build
+        navigate("/dashboard/sources");
+        break;
+      case 2: // Design
+        navigate("/dashboard/settings/chat");
+        break;
+      case 3: // Test
+        navigate("/dashboard/playground");
+        break;
+      case 4: // Deploy
+        navigate("/dashboard/connect");
+        break;
+      case 5: // Analyze
+        navigate("/dashboard/analytics");
+        break;
+      default:
+        break;
+    }
   };
 
   const steps = [
@@ -173,9 +207,9 @@ const CreateTab = () => {
         <div className="bg-white p-6 rounded-lg border border-gray-200 mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium">Setup Progress</span>
-            <span className="text-sm">{Math.round(activeStep / (steps.length - 1) * 100)}%</span>
+            <span className="text-sm">{Math.min(Math.round(activeStep / (steps.length - 1) * 100), 100)}%</span>
           </div>
-          <Progress value={Math.round(activeStep / (steps.length - 1) * 100)} className="h-2" />
+          <Progress value={Math.min(Math.round(activeStep / (steps.length - 1) * 100), 100)} className="h-2" />
           <ScrollArea className="w-full">
             <div className="flex justify-between mt-4 text-sm py-2">
               {steps.map((step, index) => (
@@ -245,7 +279,11 @@ const CreateTab = () => {
                 {index === activeStep ? (
                   step.action
                 ) : index < activeStep ? (
-                  <Button variant="secondary" className="w-full" onClick={() => setActiveStep(index)}>
+                  <Button 
+                    variant="secondary" 
+                    className="w-full" 
+                    onClick={() => handleEdit(index)}
+                  >
                     Edit
                   </Button>
                 ) : (

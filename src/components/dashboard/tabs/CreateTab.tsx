@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { 
   Card, 
   CardContent, 
@@ -8,21 +9,37 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-import { Bot, Database, Link, MessageSquare, Zap, ArrowRight, CheckCircle, Palette, Play, Upload, BarChart3 } from "lucide-react";
+import { Bot, Database, Link, MessageSquare, Zap, ArrowRight, CheckCircle, Palette, Play, Upload, BarChart3, FileText, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import CreateChatbotButton from "@/components/CreateChatbotButton";
 import { Progress } from "@/components/ui/progress";
-import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import GuidedTutorial from "@/components/GuidedTutorial";
 
 const CreateTab = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeStep, setActiveStep] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [botName, setBotName] = useState("");
+  const [purpose, setPurpose] = useState("");
+  const [showPurposeSelection, setShowPurposeSelection] = useState(false);
   
+  // Check if we're coming from the initial creation with a name
+  useEffect(() => {
+    if (location.state) {
+      const { botName, step } = location.state as { botName: string; step: string };
+      if (botName) {
+        setBotName(botName);
+        if (step === 'purpose') {
+          setShowPurposeSelection(true);
+        }
+      }
+    }
+  }, [location]);
+
   const handleNavigate = (section: string) => {
     if (section === 'sources') {
       toast({
@@ -49,7 +66,6 @@ const CreateTab = () => {
     setShowTutorial(true);
   };
 
-  // Add this new function to handle the edit button click
   const handleEdit = (stepIndex: number) => {
     setActiveStep(stepIndex);
     toast({
@@ -80,6 +96,20 @@ const CreateTab = () => {
       default:
         break;
     }
+  };
+
+  const handleSelectPurpose = (selectedPurpose: string) => {
+    setPurpose(selectedPurpose);
+    setShowPurposeSelection(false);
+    setActiveStep(1);
+    
+    toast({
+      title: "Purpose selected",
+      description: `Your chatbot is now configured as a ${selectedPurpose} assistant.`
+    });
+    
+    // Navigate to the next step (Build)
+    navigate("/dashboard/sources");
   };
 
   const steps = [
@@ -191,6 +221,98 @@ const CreateTab = () => {
     }
   ];
   
+  // If we're showing the purpose selection screen
+  if (showPurposeSelection) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Tell Us What Your Chatbot Will Do</h2>
+          <p className="text-gray-600 mb-6">Select the primary purpose for "{botName}"</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <Card 
+              className="border hover:border-primary hover:shadow-md transition-all cursor-pointer"
+              onClick={() => handleSelectPurpose('Customer Support')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start mb-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                    <MessageSquare className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-1">Customer Support</h3>
+                    <p className="text-gray-600 text-sm">Handle FAQs and support requests automatically</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className="border hover:border-primary hover:shadow-md transition-all cursor-pointer"
+              onClick={() => handleSelectPurpose('Lead Generation')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start mb-4">
+                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4">
+                    <Zap className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-1">Lead Generation</h3>
+                    <p className="text-gray-600 text-sm">Capture and qualify leads from website visitors</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className="border hover:border-primary hover:shadow-md transition-all cursor-pointer"
+              onClick={() => handleSelectPurpose('Knowledge Base')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start mb-4">
+                  <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mr-4">
+                    <FileText className="h-6 w-6 text-amber-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-1">Knowledge Base</h3>
+                    <p className="text-gray-600 text-sm">Answer questions from your documents and content</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className="border hover:border-primary hover:shadow-md transition-all cursor-pointer"
+              onClick={() => handleSelectPurpose('Website Assistant')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start mb-4">
+                  <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
+                    <Globe className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-1">Website Assistant</h3>
+                    <p className="text-gray-600 text-sm">Guide users through your website and content</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="flex justify-between">
+            <Button variant="outline" onClick={() => navigate("/dashboard")}>
+              Cancel
+            </Button>
+            <Button onClick={() => handleSelectPurpose('Custom')}>
+              Custom Purpose <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  // Default view with the creation steps
   return (
     <div className="space-y-8">
       {showTutorial && <GuidedTutorial onComplete={() => setShowTutorial(false)} initialStep={0} />}

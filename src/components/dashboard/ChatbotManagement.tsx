@@ -14,8 +14,8 @@ import GuidedTutorial from "@/components/GuidedTutorial";
 import ChatbotGrid from "./chatbot/ChatbotGrid";
 import { initialChatbots } from "./chatbot/mockData";
 import { Chatbot } from "./chatbot/ChatbotCard";
-import { BookOpen, ShoppingCart, ArrowRight, Wrench, Database, Link, BarChart3 } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { BookOpen, Check, X, Loader, Grid2X2 } from "lucide-react";
+import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 
 const ChatbotManagement = () => {
   const [chatbots, setChatbots] = useState(initialChatbots);
@@ -30,7 +30,10 @@ const ChatbotManagement = () => {
   // Filter chatbots based on tab
   const filteredChatbots = chatbots.filter(chatbot => {
     if (currentTab === "all") return true;
-    return chatbot.status === currentTab;
+    if (currentTab === "active") return chatbot.status === "active";
+    if (currentTab === "inactive") return chatbot.status === "inactive";
+    if (currentTab === "in-progress") return chatbot.progress < 100;
+    return true;
   });
   
   const toggleStatus = (id: number) => {
@@ -88,27 +91,6 @@ const ChatbotManagement = () => {
     setShowTutorial(true);
   };
 
-  const handleCreateEcommerceChatbot = () => {
-    const newBot: Chatbot = {
-      id: Math.max(...chatbots.map(b => b.id)) + 1,
-      name: "E-commerce Assistant",
-      description: "Product recommendations and order support",
-      type: "ecommerce",
-      status: "inactive" as const,
-      lastModified: "Just now",
-      messagesCount: 0,
-      integrationsCount: 0,
-      progress: 10
-    };
-    
-    setChatbots([...chatbots, newBot]);
-    
-    toast({
-      title: "E-commerce chatbot created",
-      description: "Your new e-commerce assistant has been created successfully."
-    });
-  };
-
   // Tutorial steps cards for new users
   const renderTutorialSteps = () => {
     if (hasChatbots) return null;
@@ -117,25 +99,25 @@ const ChatbotManagement = () => {
       { 
         title: "1. Create", 
         description: "Name your chatbot and define its purpose", 
-        icon: <Wrench className="h-6 w-6 text-primary" />,
+        icon: <BookOpen className="h-6 w-6 text-primary" />,
         onClick: () => navigate("/dashboard/create")
       },
       { 
         title: "2. Build", 
         description: "Add knowledge from files, websites, or custom text", 
-        icon: <Database className="h-6 w-6 text-indigo-600" />,
+        icon: <BookOpen className="h-6 w-6 text-indigo-600" />,
         onClick: () => navigate("/dashboard/sources")
       },
       { 
         title: "3. Connect", 
         description: "Deploy to your website and other platforms", 
-        icon: <Link className="h-6 w-6 text-green-600" />,
+        icon: <BookOpen className="h-6 w-6 text-green-600" />,
         onClick: () => navigate("/dashboard/connect")
       },
       { 
         title: "4. Analyze", 
         description: "Monitor and improve performance", 
-        icon: <BarChart3 className="h-6 w-6 text-amber-600" />,
+        icon: <BookOpen className="h-6 w-6 text-amber-600" />,
         onClick: () => navigate("/dashboard/analytics")
       }
     ];
@@ -178,7 +160,7 @@ const ChatbotManagement = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
               <CreateChatbotButton size="lg" />
               <Button size="lg" variant="outline" onClick={handleStartTutorial}>
-                Follow Tutorial Guide <ArrowRight className="ml-2 h-4 w-4" />
+                Follow Tutorial Guide
               </Button>
             </div>
           </CardContent>
@@ -190,15 +172,11 @@ const ChatbotManagement = () => {
       {hasChatbots && (
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
           <div>
-            <h2 className="text-2xl font-semibold">Your Chatbots</h2>
+            <h2 className="text-2xl font-semibold">My Chatbots</h2>
             <p className="text-gray-600">Manage your existing chatbots or create a new one</p>
           </div>
           <div className="flex gap-2">
             <CreateChatbotButton variant="default" />
-            <Button variant="outline" onClick={handleCreateEcommerceChatbot}>
-              <ShoppingCart className="h-4 w-4 mr-2" />
-              E-commerce Bot
-            </Button>
             <Button variant="outline" onClick={handleStartTutorial}>
               <BookOpen className="h-4 w-4 mr-2" />
               Creation Guide
@@ -211,9 +189,22 @@ const ChatbotManagement = () => {
         {hasChatbots && (
           <div className="flex justify-between items-center mb-4">
             <TabsList>
-              <TabsTrigger value="all">All Chatbots</TabsTrigger>
-              <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="inactive">Inactive</TabsTrigger>
+              <TabsTrigger value="all" className="flex items-center gap-1">
+                <Grid2X2 className="h-4 w-4" />
+                <span>All Chatbots</span>
+              </TabsTrigger>
+              <TabsTrigger value="active" className="flex items-center gap-1">
+                <Check className="h-4 w-4 text-green-600" />
+                <span>Active</span>
+              </TabsTrigger>
+              <TabsTrigger value="inactive" className="flex items-center gap-1">
+                <X className="h-4 w-4 text-gray-600" />
+                <span>Inactive</span>
+              </TabsTrigger>
+              <TabsTrigger value="in-progress" className="flex items-center gap-1">
+                <Loader className="h-4 w-4 text-amber-600" />
+                <span>In Progress</span>
+              </TabsTrigger>
             </TabsList>
           </div>
         )}
@@ -243,6 +234,17 @@ const ChatbotManagement = () => {
             </TabsContent>
             
             <TabsContent value="inactive" className="mt-0">
+              <ChatbotGrid 
+                chatbots={filteredChatbots}
+                onToggleStatus={toggleStatus}
+                onDelete={deleteChatbot}
+                onDuplicate={duplicateChatbot}
+                setActiveTab={setActiveTab}
+                onStartTutorial={handleStartTutorial}
+              />
+            </TabsContent>
+            
+            <TabsContent value="in-progress" className="mt-0">
               <ChatbotGrid 
                 chatbots={filteredChatbots}
                 onToggleStatus={toggleStatus}
